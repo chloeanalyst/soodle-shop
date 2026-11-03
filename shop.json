@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "newItems": [
     {
       "category": "jumper",
@@ -125,8 +125,8 @@
       "id": "bed-bolster",
       "style": "bed",
       "kicker": "IN FASHION",
-      "title": "Hearts bolster",
-      "subtitle": "A cosy launch favourite",
+      "title": "Spotted bolster",
+      "subtitle": "Oat on cocoa",
       "cta": "Shop now",
       "colours": [
         "F7E8DA",
@@ -134,9 +134,9 @@
         "FBE7CF"
       ],
       "itemIds": [
-        "bed:36"
+        "bed:20"
       ],
-      "link": "item:bed:36"
+      "link": "item:bed:20"
     },
     {
       "id": "bowls-own",
@@ -171,8 +171,8 @@
         "FFF0D6"
       ],
       "itemIds": [
-        "jumper:5",
-        "jumper:13",
+        "jumper:8",
+        "jumper:12",
         "jumper:15"
       ],
       "link": "category:jumper"
@@ -238,11 +238,9 @@
     "jumper:4",
     "jumper:6",
     "jumper:7",
-    "jumper:8",
     "jumper:9",
     "jumper:10",
     "jumper:11",
-    "jumper:12",
     "jumper:14",
     "jumper:16",
     "jumper:18",
@@ -250,7 +248,6 @@
     "bed:4",
     "bed:5",
     "bed:6",
-    "bed:7",
     "bed:8",
     "bed:9",
     "bed:10",
@@ -263,7 +260,6 @@
     "bed:17",
     "bed:18",
     "bed:19",
-    "bed:20",
     "bed:22",
     "bed:23",
     "bed:24",
@@ -284,7 +280,6 @@
     "glasses:2",
     "glasses:3",
     "glasses:5",
-    "glasses:6",
     "glasses:7",
     "glasses:8",
     "bandana:1",
