@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "newItems": [
     {
       "category": "jumper",
@@ -96,6 +96,18 @@
       "k": 158,
       "name": "Charcoal jumper",
       "hearts": 8
+    },
+    {
+      "category": "jumper",
+      "k": 108,
+      "name": "Zebra with fluffy trim",
+      "hearts": 112
+    },
+    {
+      "category": "jumper",
+      "k": 129,
+      "name": "Chocolate with chocolate fluff",
+      "hearts": 112
     }
   ],
   "events": [
