@@ -1,6 +1,103 @@
 {
-  "version": 5,
-  "newItems": [],
+  "version": 6,
+  "newItems": [
+    {
+      "category": "jumper",
+      "k": 21,
+      "name": "Deer skin",
+      "hearts": 72
+    },
+    {
+      "category": "jumper",
+      "k": 28,
+      "name": "Navy gingham",
+      "hearts": 48
+    },
+    {
+      "category": "jumper",
+      "k": 33,
+      "name": "Charcoal argyle",
+      "hearts": 40
+    },
+    {
+      "category": "jumper",
+      "k": 37,
+      "name": "Pink and white polka dot",
+      "hearts": 32
+    },
+    {
+      "category": "jumper",
+      "k": 44,
+      "name": "Lilac and plum hearts",
+      "hearts": 16
+    },
+    {
+      "category": "jumper",
+      "k": 57,
+      "name": "Powder blue painted mohair stripe",
+      "hearts": 96
+    },
+    {
+      "category": "jumper",
+      "k": 62,
+      "name": "Burgundy and rose mohair stripe",
+      "hearts": 96
+    },
+    {
+      "category": "jumper",
+      "k": 72,
+      "name": "Fair Isle diamonds",
+      "hearts": 56
+    },
+    {
+      "category": "jumper",
+      "k": 74,
+      "name": "Heart yoke",
+      "hearts": 56
+    },
+    {
+      "category": "jumper",
+      "k": 80,
+      "name": "Blue brick ladder",
+      "hearts": 56
+    },
+    {
+      "category": "jumper",
+      "k": 95,
+      "name": "Candy rainbow stripe",
+      "hearts": 72
+    },
+    {
+      "category": "jumper",
+      "k": 99,
+      "name": "Embroidered flowers on lilac",
+      "hearts": 32
+    },
+    {
+      "category": "jumper",
+      "k": 105,
+      "name": "Embroidered stars on butter",
+      "hearts": 32
+    },
+    {
+      "category": "jumper",
+      "k": 143,
+      "name": "Cream jumper",
+      "hearts": 8
+    },
+    {
+      "category": "jumper",
+      "k": 145,
+      "name": "Sage jumper",
+      "hearts": 8
+    },
+    {
+      "category": "jumper",
+      "k": 158,
+      "name": "Charcoal jumper",
+      "hearts": 8
+    }
+  ],
   "events": [
     {
       "id": "double-hearts-nov",
@@ -43,9 +140,9 @@
       ],
       "itemIds": [
         "bowl:1",
-        "bowl:2",
         "bowl:4",
-        "bowl:11"
+        "bowl:8",
+        "bowl:18"
       ],
       "link": "category:bowl"
     },
@@ -245,13 +342,20 @@
     "wall:5",
     "rug:3",
     "rug:4",
+    "bowl:2",
     "bowl:3",
     "bowl:5",
     "bowl:6",
     "bowl:7",
-    "bowl:8",
     "bowl:9",
-    "bowl:10"
+    "bowl:10",
+    "bowl:11",
+    "bowl:12",
+    "bowl:13",
+    "bowl:14",
+    "bowl:15",
+    "bowl:16",
+    "bowl:17"
   ],
   "popularSearches": [
     "Jumpers",
