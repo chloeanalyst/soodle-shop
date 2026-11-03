@@ -1,36 +1,143 @@
 {
-  "version": 3,
-  "newItems": [],
+  "version": 4,
+  "newItems": [
+    {
+      "category": "glasses",
+      "k": 9,
+      "name": "Test shades",
+      "hearts": 40
+    }
+  ],
   "events": [
-    { "id": "double-hearts-nov", "title": "Double hearts weekend", "blurb": "Every heart you earn counts twice.",
-      "start": "2026-11-01", "end": "2026-11-08", "multiplier": 2 }
+    {
+      "id": "double-hearts-nov",
+      "title": "Double hearts weekend",
+      "blurb": "Every heart you earn counts twice.",
+      "start": "2026-11-01",
+      "end": "2026-11-08",
+      "multiplier": 2
+    }
   ],
   "banners": [
-    { "id": "bed-bolster", "style": "bed", "kicker": "IN FASHION", "title": "Spotted bolster",
-      "subtitle": "Oat on cocoa", "cta": "Shop now", "colours": ["F7E8DA", "E9CBB0", "FBE7CF"],
-      "itemIds": ["bed:20"], "link": "item:bed:20" },
-    { "id": "bowls-own", "style": "bowls", "kicker": "NEW BOWLS", "title": "{pet}'s own bowls",
-      "subtitle": "18 designs, from", "cta": "Shop now", "colours": ["E3F6F2", "BFE5E0", "FDF1CC"],
-      "itemIds": ["bowl:3", "bowl:4", "bowl:5", "bowl:6"], "link": "category:bowl" },
-    { "id": "jumpers-fan", "style": "jumpers", "kicker": "COSY SEASON", "title": "Knit jumpers",
-      "subtitle": "20 knits, from", "cta": "Shop now", "colours": ["ECE4FB", "F8D9EC", "FFF0D6"],
-      "itemIds": ["jumper:8", "jumper:12", "jumper:15"], "link": "category:jumper" }
+    {
+      "id": "bed-bolster",
+      "style": "bed",
+      "kicker": "IN FASHION",
+      "title": "Spotted bolster",
+      "subtitle": "Oat on cocoa",
+      "cta": "Shop now",
+      "colours": [
+        "F7E8DA",
+        "E9CBB0",
+        "FBE7CF"
+      ],
+      "itemIds": [
+        "bed:20"
+      ],
+      "link": "item:bed:20"
+    },
+    {
+      "id": "bowls-own",
+      "style": "bowls",
+      "kicker": "NEW BOWLS",
+      "title": "{pet}'s own bowls",
+      "subtitle": "18 designs, from",
+      "cta": "Shop now",
+      "colours": [
+        "E3F6F2",
+        "BFE5E0",
+        "FDF1CC"
+      ],
+      "itemIds": [
+        "bowl:3",
+        "bowl:4",
+        "bowl:5",
+        "bowl:6"
+      ],
+      "link": "category:bowl"
+    },
+    {
+      "id": "jumpers-fan",
+      "style": "jumpers",
+      "kicker": "COSY SEASON",
+      "title": "Knit jumpers",
+      "subtitle": "20 knits, from",
+      "cta": "Shop now",
+      "colours": [
+        "ECE4FB",
+        "F8D9EC",
+        "FFF0D6"
+      ],
+      "itemIds": [
+        "jumper:8",
+        "jumper:12",
+        "jumper:15"
+      ],
+      "link": "category:jumper"
+    }
   ],
   "collections": [
-    { "id": "autumn-walk", "title": "Autumn walk", "tag": "COLLECTION",
+    {
+      "id": "autumn-walk",
+      "title": "Autumn walk",
+      "tag": "COLLECTION",
       "blurb": "Three cosy pieces for crunchy-leaf walks. Buy them together and save.",
-      "theme": "autumn", "itemIds": ["jumper:12", "bandana:4", "necklace:5"], "discountPercent": 20,
-      "start": "2026-10-01", "end": "2026-11-30" },
-    { "id": "snowy-walk", "title": "Snowy walk", "tag": "WINTER COLLECTION",
+      "theme": "autumn",
+      "itemIds": [
+        "jumper:12",
+        "bandana:4",
+        "necklace:5"
+      ],
+      "discountPercent": 20,
+      "start": "2026-10-01",
+      "end": "2026-11-30"
+    },
+    {
+      "id": "snowy-walk",
+      "title": "Snowy walk",
+      "tag": "WINTER COLLECTION",
       "blurb": "Warm layers for frosty mornings. Buy them together and save.",
-      "theme": "winter", "itemIds": ["jumper:3", "bandana:25", "necklace:1"], "discountPercent": 20,
-      "start": "2026-12-01", "end": "2027-02-28" }
+      "theme": "winter",
+      "itemIds": [
+        "jumper:3",
+        "bandana:25",
+        "necklace:1"
+      ],
+      "discountPercent": 20,
+      "start": "2026-12-01",
+      "end": "2027-02-28"
+    }
   ],
   "sales": [
-    { "id": "weekend-deals", "title": "Weekend deals", "itemIds": ["jumper:3", "bandana:4", "jumper:12", "glasses:8"],
-      "percent": 20, "start": "2026-11-01", "end": "2026-11-08", "countdown": true }
+    {
+      "id": "weekend-deals",
+      "title": "Weekend deals",
+      "itemIds": [
+        "jumper:3",
+        "bandana:4",
+        "jumper:12",
+        "glasses:8"
+      ],
+      "percent": 20,
+      "start": "2026-11-01",
+      "end": "2026-11-08",
+      "countdown": true
+    }
   ],
-  "newIds": ["jumper:15", "bandana:25", "necklace:5", "glasses:8"],
+  "newIds": [
+    "jumper:15",
+    "bandana:25",
+    "necklace:5",
+    "glasses:8",
+    "glasses:9"
+  ],
   "hiddenIds": [],
-  "popularSearches": ["Jumpers", "Under 100 hearts", "On sale", "Glasses", "Cosy beds", "New this week"]
+  "popularSearches": [
+    "Jumpers",
+    "Under 100 hearts",
+    "On sale",
+    "Glasses",
+    "Cosy beds",
+    "New this week"
+  ]
 }
