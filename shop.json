@@ -1,594 +1,692 @@
 {
-  "version": 26,
+  "version": 27,
   "imageRev": 10,
   "newItems": [
     {
       "category": "jumper",
       "k": 21,
       "name": "Deer skin",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 22,
       "name": "Chocolate deer skin",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 23,
       "name": "Brown cow print",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 24,
       "name": "Pink gingham",
-      "hearts": 48
+      "hearts": 48,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 25,
       "name": "Sky blue gingham",
-      "hearts": 48
+      "hearts": 48,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 26,
       "name": "Sage green gingham",
-      "hearts": 48
+      "hearts": 48,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 27,
       "name": "Lilac gingham",
-      "hearts": 48
+      "hearts": 48,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 28,
       "name": "Navy gingham",
-      "hearts": 48
+      "hearts": 48,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 29,
       "name": "Mustard gingham",
-      "hearts": 48
+      "hearts": 48,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 30,
       "name": "Navy argyle",
-      "hearts": 40
+      "hearts": 40,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 31,
       "name": "Burgundy argyle",
-      "hearts": 40
+      "hearts": 40,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 32,
       "name": "Chocolate argyle",
-      "hearts": 40
+      "hearts": 40,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 33,
       "name": "Charcoal argyle",
-      "hearts": 40
+      "hearts": 40,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 34,
       "name": "Dusty rose argyle",
-      "hearts": 40
+      "hearts": 40,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 35,
       "name": "Plum argyle",
-      "hearts": 40
+      "hearts": 40,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 36,
       "name": "Cream and red polka dot",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 37,
       "name": "Pink and white polka dot",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 38,
       "name": "Sage and cream polka dot",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 39,
       "name": "Navy and white polka dot",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 40,
       "name": "Mustard and chocolate polka dot",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 41,
       "name": "Lilac and white polka dot",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 42,
       "name": "Sky blue and navy hearts",
-      "hearts": 16
+      "hearts": 16,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 43,
       "name": "Cream and red hearts",
-      "hearts": 16
+      "hearts": 16,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 44,
       "name": "Lilac and plum hearts",
-      "hearts": 16
+      "hearts": 16,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 45,
       "name": "Sage and forest hearts",
-      "hearts": 16
+      "hearts": 16,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 46,
       "name": "Butter and orange hearts",
-      "hearts": 16
+      "hearts": 16,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 47,
       "name": "Navy and blush hearts",
-      "hearts": 16
+      "hearts": 16,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 48,
       "name": "Forest and cream stars",
-      "hearts": 24
+      "hearts": 24,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 49,
       "name": "Burgundy and cream stars",
-      "hearts": 24
+      "hearts": 24,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 50,
       "name": "Black and gold stars",
-      "hearts": 24
+      "hearts": 24,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 51,
       "name": "Chocolate and cream stars",
-      "hearts": 24
+      "hearts": 24,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 52,
       "name": "Blush and white stars",
-      "hearts": 24
+      "hearts": 24,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 53,
       "name": "Teal and cream stars",
-      "hearts": 24
+      "hearts": 24,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 54,
       "name": "Painted mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 55,
       "name": "Navy and moss mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 56,
       "name": "Navy and lilac stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 57,
       "name": "Powder blue painted mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 58,
       "name": "Cream painted mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 59,
       "name": "Lilac painted mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 60,
       "name": "Mint painted mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 61,
       "name": "Butter painted mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 62,
       "name": "Burgundy and rose mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 63,
       "name": "Teal and mustard mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 64,
       "name": "Charcoal and sage mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 65,
       "name": "Chocolate and oat mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 66,
       "name": "Plum and lilac mohair stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 67,
       "name": "Forest and blush stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 68,
       "name": "Burgundy and oat stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 69,
       "name": "Charcoal and lilac stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 70,
       "name": "Chocolate and sage stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 71,
       "name": "Navy and butter stripe",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 72,
       "name": "Fair Isle diamonds",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 73,
       "name": "Brick ladder",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 74,
       "name": "Heart yoke",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 75,
       "name": "Blue Fair Isle diamonds",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 76,
       "name": "Forest and rust Fair Isle",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 77,
       "name": "Plum and butter Fair Isle",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 78,
       "name": "Red and navy Fair Isle",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 79,
       "name": "Teal and coral Fair Isle",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 80,
       "name": "Blue brick ladder",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 81,
       "name": "Earth brick ladder",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 82,
       "name": "Green brick ladder",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 83,
       "name": "Purple brick ladder",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 84,
       "name": "Red and cream brick ladder",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 85,
       "name": "Blue heart yoke",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 86,
       "name": "Green heart yoke",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 87,
       "name": "Pink heart yoke",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 88,
       "name": "Navy and blush heart yoke",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 89,
       "name": "Mustard heart yoke",
-      "hearts": 56
+      "hearts": 56,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 90,
       "name": "Rainbow pastel stripe",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 91,
       "name": "Embroidered flowers on orange",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 92,
       "name": "Embroidered stars on cream",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 93,
       "name": "Sunset rainbow stripe",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 94,
       "name": "Ocean rainbow stripe",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 95,
       "name": "Candy rainbow stripe",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 96,
       "name": "Earthy rainbow stripe",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 97,
       "name": "Berry rainbow stripe",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 98,
       "name": "Embroidered flowers on pink",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 99,
       "name": "Embroidered flowers on lilac",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 100,
       "name": "Embroidered flowers on butter",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 101,
       "name": "Embroidered flowers on sky blue",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 102,
       "name": "Embroidered flowers on sage",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 103,
       "name": "Embroidered stars on pink",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 104,
       "name": "Embroidered stars on sky blue",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 105,
       "name": "Embroidered stars on butter",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 106,
       "name": "Embroidered stars on mint",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 107,
       "name": "Embroidered stars on navy",
-      "hearts": 32
+      "hearts": 32,
+      "added": "2026-11-05T23:36"
     },
     {
       "category": "jumper",
       "k": 143,
       "name": "Cream jumper",
-      "hearts": 8
+      "hearts": 8,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 145,
       "name": "Sage jumper",
-      "hearts": 8
+      "hearts": 8,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 158,
       "name": "Charcoal jumper",
-      "hearts": 8
+      "hearts": 8,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 108,
       "name": "Zebra with fluffy trim",
-      "hearts": 112
+      "hearts": 112,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 129,
       "name": "Chocolate with chocolate fluff",
-      "hearts": 112
+      "hearts": 112,
+      "added": "2026-11-03T19:39"
     },
     {
       "category": "jumper",
       "k": 159,
       "name": "Cocoa and denim stripe",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-06T00:14"
     },
     {
       "category": "jumper",
       "k": 160,
       "name": "Meadow rib stripe",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-06T00:19"
     },
     {
       "category": "jumper",
       "k": 161,
       "name": "Colour block candy",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-06T00:22"
     },
     {
       "category": "jumper",
       "k": 162,
       "name": "Cocoa stars",
-      "hearts": 24
+      "hearts": 24,
+      "added": "2026-11-06T00:25"
     },
     {
       "category": "jumper",
       "k": 163,
       "name": "Sunset ombre",
-      "hearts": 96
+      "hearts": 96,
+      "added": "2026-11-06T00:25"
     },
     {
       "category": "jumper",
       "k": 164,
       "name": "Lilac and lemon stripe",
-      "hearts": 72
+      "hearts": 72,
+      "added": "2026-11-06T00:25"
     }
   ],
   "events": [
