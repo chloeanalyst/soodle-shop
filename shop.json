@@ -1,6 +1,6 @@
 {
-  "version": 42,
-  "imageRev": 20,
+  "version": 43,
+  "imageRev": 21,
   "newItems": [
     {
       "category": "jumper",
@@ -1022,6 +1022,48 @@
       "name": "Cocoa button-up jumper",
       "hearts": 30,
       "added": "2026-11-06T11:20"
+    },
+    {
+      "category": "bandana",
+      "k": 40,
+      "name": "Rose pink glitter scarf",
+      "hearts": 30,
+      "added": "2026-11-06T14:30"
+    },
+    {
+      "category": "bandana",
+      "k": 41,
+      "name": "Cherry red glitter scarf",
+      "hearts": 30,
+      "added": "2026-11-06T14:30"
+    },
+    {
+      "category": "bandana",
+      "k": 42,
+      "name": "Butter yellow glitter scarf",
+      "hearts": 30,
+      "added": "2026-11-06T14:30"
+    },
+    {
+      "category": "bandana",
+      "k": 43,
+      "name": "Sage glitter scarf",
+      "hearts": 30,
+      "added": "2026-11-06T14:30"
+    },
+    {
+      "category": "bandana",
+      "k": 44,
+      "name": "Lilac glitter scarf",
+      "hearts": 30,
+      "added": "2026-11-06T14:30"
+    },
+    {
+      "category": "bandana",
+      "k": 45,
+      "name": "Sky blue glitter scarf",
+      "hearts": 30,
+      "added": "2026-11-06T14:30"
     }
   ],
   "events": [
