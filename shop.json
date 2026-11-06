@@ -1,6 +1,6 @@
 {
-  "version": 31,
-  "imageRev": 11,
+  "version": 32,
+  "imageRev": 12,
   "newItems": [
     {
       "category": "jumper",
@@ -729,6 +729,55 @@
       "name": "Lilac flannel check",
       "hearts": 48,
       "added": "2026-11-06T05:24"
+    },
+    {
+      "category": "bandana",
+      "k": 28,
+      "name": "Candyfloss fluffy scarf",
+      "hearts": 40,
+      "added": "2026-11-06T07:49"
+    },
+    {
+      "category": "bandana",
+      "k": 29,
+      "name": "Lagoon fluffy scarf",
+      "hearts": 40,
+      "added": "2026-11-06T07:49"
+    },
+    {
+      "category": "bandana",
+      "k": 30,
+      "name": "Pink to turquoise fluffy scarf",
+      "hearts": 40,
+      "added": "2026-11-06T07:49"
+    },
+    {
+      "category": "bandana",
+      "k": 31,
+      "name": "Lilac fluffy scarf",
+      "hearts": 40,
+      "added": "2026-11-06T07:49"
+    },
+    {
+      "category": "bandana",
+      "k": 32,
+      "name": "Buttercup fluffy scarf",
+      "hearts": 40,
+      "added": "2026-11-06T07:49"
+    },
+    {
+      "category": "bandana",
+      "k": 33,
+      "name": "Cocoa fluffy scarf",
+      "hearts": 40,
+      "added": "2026-11-06T07:49"
+    },
+    {
+      "category": "bandana",
+      "k": 34,
+      "name": "Sage fluffy scarf",
+      "hearts": 40,
+      "added": "2026-11-06T07:49"
     }
   ],
   "events": [
