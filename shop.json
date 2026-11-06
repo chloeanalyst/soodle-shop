@@ -1,5 +1,5 @@
 {
-  "version": 46,
+  "version": 47,
   "imageRev": 22,
   "newItems": [
     {
@@ -1164,6 +1164,21 @@
       "discountPercent": 20,
       "start": "2026-12-01",
       "end": "2027-02-28"
+    },
+    {
+      "id": "christmas-set",
+      "title": "Christmas set",
+      "tag": "CHRISTMAS COLLECTION",
+      "blurb": "A tree hat, a velvet bow and a cosy flannel jumper for the festive walks. Buy them together and save.",
+      "theme": "winter",
+      "itemIds": [
+        "hat:1",
+        "collar:16",
+        "jumper:165"
+      ],
+      "discountPercent": 20,
+      "start": "2026-11-25",
+      "end": "2026-12-31"
     }
   ],
   "sales": [
