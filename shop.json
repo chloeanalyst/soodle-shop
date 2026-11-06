@@ -1,6 +1,6 @@
 {
-  "version": 32,
-  "imageRev": 12,
+  "version": 33,
+  "imageRev": 13,
   "newItems": [
     {
       "category": "jumper",
@@ -778,6 +778,41 @@
       "name": "Sage fluffy scarf",
       "hearts": 40,
       "added": "2026-11-06T07:49"
+    },
+    {
+      "category": "bandana",
+      "k": 35,
+      "name": "Pink and gold star bandana",
+      "hearts": 32,
+      "added": "2026-11-06T07:51"
+    },
+    {
+      "category": "bandana",
+      "k": 36,
+      "name": "Sky and blush star bandana",
+      "hearts": 32,
+      "added": "2026-11-06T07:51"
+    },
+    {
+      "category": "bandana",
+      "k": 37,
+      "name": "Lilac star bandana",
+      "hearts": 32,
+      "added": "2026-11-06T07:51"
+    },
+    {
+      "category": "bandana",
+      "k": 38,
+      "name": "Sage star bandana",
+      "hearts": 32,
+      "added": "2026-11-06T07:51"
+    },
+    {
+      "category": "bandana",
+      "k": 39,
+      "name": "Navy night star bandana",
+      "hearts": 32,
+      "added": "2026-11-06T07:51"
     }
   ],
   "events": [
