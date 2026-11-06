@@ -1,5 +1,5 @@
 {
-  "version": 36,
+  "version": 37,
   "imageRev": 16,
   "newItems": [
     {
@@ -862,7 +862,17 @@
       "name": "Powder blue tulip ruffle collar",
       "hearts": 75,
       "added": "2026-11-06T08:00",
-      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
+      "tag": {
+        "x": 200,
+        "y": 297,
+        "size": 0.1,
+        "spacing": 0,
+        "serif": false,
+        "upper": false,
+        "fill": "#FFFFFF",
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0
+      }
     },
     {
       "category": "necklace",
@@ -870,7 +880,17 @@
       "name": "Blush tulip ruffle collar",
       "hearts": 75,
       "added": "2026-11-06T08:00",
-      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
+      "tag": {
+        "x": 200,
+        "y": 297,
+        "size": 0.1,
+        "spacing": 0,
+        "serif": false,
+        "upper": false,
+        "fill": "#FFFFFF",
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0
+      }
     },
     {
       "category": "necklace",
@@ -878,7 +898,17 @@
       "name": "Sage tulip ruffle collar",
       "hearts": 75,
       "added": "2026-11-06T08:00",
-      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
+      "tag": {
+        "x": 200,
+        "y": 297,
+        "size": 0.1,
+        "spacing": 0,
+        "serif": false,
+        "upper": false,
+        "fill": "#FFFFFF",
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0
+      }
     },
     {
       "category": "necklace",
@@ -886,7 +916,17 @@
       "name": "Lilac tulip ruffle collar",
       "hearts": 75,
       "added": "2026-11-06T08:00",
-      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
+      "tag": {
+        "x": 200,
+        "y": 297,
+        "size": 0.1,
+        "spacing": 0,
+        "serif": false,
+        "upper": false,
+        "fill": "#FFFFFF",
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0
+      }
     },
     {
       "category": "necklace",
@@ -894,7 +934,17 @@
       "name": "Butter tulip ruffle collar",
       "hearts": 75,
       "added": "2026-11-06T08:00",
-      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
+      "tag": {
+        "x": 200,
+        "y": 297,
+        "size": 0.1,
+        "spacing": 0,
+        "serif": false,
+        "upper": false,
+        "fill": "#FFFFFF",
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0
+      }
     }
   ],
   "events": [
@@ -1179,6 +1229,60 @@
     "socks:5": "2026-11-06T00:56",
     "socks:6": "2026-11-06T00:56",
     "hat:1": "2026-11-06T01:01",
-    "hat:2": "2026-11-06T01:03"
+    "hat:2": "2026-11-06T01:03",
+    "hat:3": "2026-11-06T05:29",
+    "hat:4": "2026-11-06T05:29",
+    "hat:5": "2026-11-06T05:29",
+    "hat:6": "2026-11-06T05:29",
+    "hat:7": "2026-11-06T05:29",
+    "hat:8": "2026-11-06T05:29",
+    "clips:1": "2026-11-06T05:34",
+    "clips:2": "2026-11-06T05:34",
+    "clips:3": "2026-11-06T05:34",
+    "clips:4": "2026-11-06T05:34",
+    "clips:5": "2026-11-06T05:34",
+    "clips:6": "2026-11-06T05:34",
+    "clips:7": "2026-11-06T05:34",
+    "wallArt:1": "2026-11-06T07:43",
+    "lamp:1": "2026-11-06T07:47",
+    "lamp:2": "2026-11-06T07:47",
+    "lamp:3": "2026-11-06T07:47",
+    "lamp:4": "2026-11-06T07:47",
+    "lamp:5": "2026-11-06T07:47",
+    "flowerBasket:1": "2026-11-06T07:48",
+    "flowerBasket:2": "2026-11-06T07:48",
+    "flowerBasket:3": "2026-11-06T07:48",
+    "flowerBasket:4": "2026-11-06T07:48",
+    "flowerBasket:5": "2026-11-06T07:48",
+    "toyBasket:1": "2026-11-06T07:50",
+    "toyBasket:2": "2026-11-06T07:50",
+    "toyBasket:3": "2026-11-06T07:50",
+    "toyBasket:4": "2026-11-06T07:50",
+    "toyBasket:5": "2026-11-06T07:50",
+    "lamp:10": "2026-11-06T07:52",
+    "lamp:6": "2026-11-06T07:52",
+    "lamp:7": "2026-11-06T07:52",
+    "lamp:8": "2026-11-06T07:52",
+    "lamp:9": "2026-11-06T07:52",
+    "table:1": "2026-11-06T07:52",
+    "table:2": "2026-11-06T07:52",
+    "table:3": "2026-11-06T07:52",
+    "table:4": "2026-11-06T07:52",
+    "table:5": "2026-11-06T07:52",
+    "keychain:10": "2026-11-06T07:55",
+    "keychain:11": "2026-11-06T07:55",
+    "keychain:12": "2026-11-06T07:55",
+    "keychain:13": "2026-11-06T07:55",
+    "keychain:14": "2026-11-06T07:55",
+    "keychain:6": "2026-11-06T07:55",
+    "keychain:7": "2026-11-06T07:55",
+    "keychain:8": "2026-11-06T07:55",
+    "keychain:9": "2026-11-06T07:55",
+    "books:1": "2026-11-06T08:04",
+    "floorLamp:1": "2026-11-06T08:12",
+    "floorLamp:2": "2026-11-06T08:12",
+    "floorLamp:3": "2026-11-06T08:12",
+    "floorLamp:4": "2026-11-06T08:12",
+    "floorLamp:5": "2026-11-06T08:12"
   }
 }
