@@ -1,6 +1,6 @@
 {
-  "version": 21,
-  "imageRev": 5,
+  "version": 22,
+  "imageRev": 6,
   "newItems": [
     {
       "category": "jumper",
@@ -558,6 +558,12 @@
       "category": "jumper",
       "k": 159,
       "name": "Cocoa and denim stripe",
+      "hearts": 72
+    },
+    {
+      "category": "jumper",
+      "k": 160,
+      "name": "Meadow rib stripe",
       "hearts": 72
     }
   ],
