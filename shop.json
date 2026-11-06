@@ -1,6 +1,6 @@
 {
-  "version": 41,
-  "imageRev": 19,
+  "version": 42,
+  "imageRev": 20,
   "newItems": [
     {
       "category": "jumper",
@@ -987,6 +987,41 @@
       "name": "Diamond stripe jumper",
       "hearts": 60,
       "added": "2026-11-06T11:05"
+    },
+    {
+      "category": "jumper",
+      "k": 172,
+      "name": "Button-up jumper",
+      "hearts": 30,
+      "added": "2026-11-06T11:20"
+    },
+    {
+      "category": "jumper",
+      "k": 173,
+      "name": "Sage button-up jumper",
+      "hearts": 30,
+      "added": "2026-11-06T11:20"
+    },
+    {
+      "category": "jumper",
+      "k": 174,
+      "name": "Blush button-up jumper",
+      "hearts": 30,
+      "added": "2026-11-06T11:20"
+    },
+    {
+      "category": "jumper",
+      "k": 175,
+      "name": "Butter button-up jumper",
+      "hearts": 30,
+      "added": "2026-11-06T11:20"
+    },
+    {
+      "category": "jumper",
+      "k": 176,
+      "name": "Cocoa button-up jumper",
+      "hearts": 30,
+      "added": "2026-11-06T11:20"
     }
   ],
   "events": [
