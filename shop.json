@@ -1,6 +1,6 @@
 {
-  "version": 33,
-  "imageRev": 13,
+  "version": 34,
+  "imageRev": 14,
   "newItems": [
     {
       "category": "jumper",
@@ -813,6 +813,41 @@
       "name": "Navy night star bandana",
       "hearts": 32,
       "added": "2026-11-06T07:51"
+    },
+    {
+      "category": "glasses",
+      "k": 9,
+      "name": "Candy pink wayfarers",
+      "hearts": 30,
+      "added": "2026-11-06T07:53"
+    },
+    {
+      "category": "glasses",
+      "k": 10,
+      "name": "Lemon wayfarers",
+      "hearts": 30,
+      "added": "2026-11-06T07:53"
+    },
+    {
+      "category": "glasses",
+      "k": 11,
+      "name": "Sky blue wayfarers",
+      "hearts": 30,
+      "added": "2026-11-06T07:53"
+    },
+    {
+      "category": "glasses",
+      "k": 12,
+      "name": "Latte wayfarers",
+      "hearts": 30,
+      "added": "2026-11-06T07:53"
+    },
+    {
+      "category": "glasses",
+      "k": 13,
+      "name": "Black wayfarers",
+      "hearts": 30,
+      "added": "2026-11-06T07:53"
     }
   ],
   "events": [
