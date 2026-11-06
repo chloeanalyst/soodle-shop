@@ -1,6 +1,6 @@
 {
-  "version": 22,
-  "imageRev": 6,
+  "version": 23,
+  "imageRev": 7,
   "newItems": [
     {
       "category": "jumper",
@@ -564,6 +564,12 @@
       "category": "jumper",
       "k": 160,
       "name": "Meadow rib stripe",
+      "hearts": 72
+    },
+    {
+      "category": "jumper",
+      "k": 161,
+      "name": "Colour block candy",
       "hearts": 72
     }
   ],
