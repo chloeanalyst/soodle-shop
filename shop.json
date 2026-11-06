@@ -1,6 +1,6 @@
 {
-  "version": 40,
-  "imageRev": 18,
+  "version": 41,
+  "imageRev": 19,
   "newItems": [
     {
       "category": "jumper",
@@ -980,6 +980,13 @@
       "name": "Cocoa chunky sunglasses",
       "hearts": 22,
       "added": "2026-11-06T11:00"
+    },
+    {
+      "category": "jumper",
+      "k": 171,
+      "name": "Diamond stripe jumper",
+      "hearts": 60,
+      "added": "2026-11-06T11:05"
     }
   ],
   "events": [
