@@ -1,6 +1,6 @@
 {
-  "version": 30,
-  "imageRev": 10,
+  "version": 31,
+  "imageRev": 11,
   "newItems": [
     {
       "category": "jumper",
@@ -687,6 +687,18 @@
       "name": "Lilac and lemon stripe",
       "hearts": 72,
       "added": "2026-11-06T00:25"
+    },
+    {"category": "jumper", "k": 165, "name": "Forest flannel check", "hearts": 48, "added": "2026-11-06T05:24"},
+    {"category": "jumper", "k": 166, "name": "Red and navy flannel check", "hearts": 48, "added": "2026-11-06T05:24"},
+    {"category": "jumper", "k": 167, "name": "Berry flannel check", "hearts": 48, "added": "2026-11-06T05:24"},
+    {"category": "jumper", "k": 168, "name": "Navy and sky flannel check", "hearts": 48, "added": "2026-11-06T05:24"},
+    {"category": "jumper", "k": 169, "name": "Mustard flannel check", "hearts": 48, "added": "2026-11-06T05:24"},
+    {
+      "category": "jumper",
+      "k": 170,
+      "name": "Lilac flannel check",
+      "hearts": 48,
+      "added": "2026-11-06T05:24"
     }
   ],
   "events": [
