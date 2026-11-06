@@ -1,6 +1,6 @@
 {
-  "version": 39,
-  "imageRev": 17,
+  "version": 40,
+  "imageRev": 18,
   "newItems": [
     {
       "category": "jumper",
@@ -945,6 +945,41 @@
         "stroke": "#FFFFFF",
         "strokeWidth": 0
       }
+    },
+    {
+      "category": "glasses",
+      "k": 15,
+      "name": "Bubblegum chunky sunglasses",
+      "hearts": 22,
+      "added": "2026-11-06T11:00"
+    },
+    {
+      "category": "glasses",
+      "k": 16,
+      "name": "Butter chunky sunglasses",
+      "hearts": 22,
+      "added": "2026-11-06T11:00"
+    },
+    {
+      "category": "glasses",
+      "k": 17,
+      "name": "Sage chunky sunglasses",
+      "hearts": 22,
+      "added": "2026-11-06T11:00"
+    },
+    {
+      "category": "glasses",
+      "k": 18,
+      "name": "Lilac chunky sunglasses",
+      "hearts": 22,
+      "added": "2026-11-06T11:00"
+    },
+    {
+      "category": "glasses",
+      "k": 19,
+      "name": "Cocoa chunky sunglasses",
+      "hearts": 22,
+      "added": "2026-11-06T11:00"
     }
   ],
   "events": [
