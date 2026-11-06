@@ -1,6 +1,6 @@
 {
-  "version": 34,
-  "imageRev": 14,
+  "version": 35,
+  "imageRev": 15,
   "newItems": [
     {
       "category": "jumper",
@@ -848,6 +848,13 @@
       "name": "Black wayfarers",
       "hearts": 30,
       "added": "2026-11-06T07:53"
+    },
+    {
+      "category": "glasses",
+      "k": 14,
+      "name": "Cherry cat-eye glasses",
+      "hearts": 25,
+      "added": "2026-11-06T07:57"
     }
   ],
   "events": [
