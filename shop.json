@@ -1,6 +1,6 @@
 {
-  "version": 20,
-  "imageRev": 4,
+  "version": 21,
+  "imageRev": 5,
   "newItems": [
     {
       "category": "jumper",
@@ -553,6 +553,12 @@
       "k": 129,
       "name": "Chocolate with chocolate fluff",
       "hearts": 112
+    },
+    {
+      "category": "jumper",
+      "k": 159,
+      "name": "Cocoa and denim stripe",
+      "hearts": 72
     }
   ],
   "events": [
