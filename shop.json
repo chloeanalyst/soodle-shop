@@ -1,6 +1,6 @@
 {
-  "version": 35,
-  "imageRev": 15,
+  "version": 36,
+  "imageRev": 16,
   "newItems": [
     {
       "category": "jumper",
@@ -855,6 +855,46 @@
       "name": "Cherry cat-eye glasses",
       "hearts": 25,
       "added": "2026-11-06T07:57"
+    },
+    {
+      "category": "necklace",
+      "k": 43,
+      "name": "Powder blue tulip ruffle collar",
+      "hearts": 75,
+      "added": "2026-11-06T08:00",
+      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
+    },
+    {
+      "category": "necklace",
+      "k": 44,
+      "name": "Blush tulip ruffle collar",
+      "hearts": 75,
+      "added": "2026-11-06T08:00",
+      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
+    },
+    {
+      "category": "necklace",
+      "k": 45,
+      "name": "Sage tulip ruffle collar",
+      "hearts": 75,
+      "added": "2026-11-06T08:00",
+      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
+    },
+    {
+      "category": "necklace",
+      "k": 46,
+      "name": "Lilac tulip ruffle collar",
+      "hearts": 75,
+      "added": "2026-11-06T08:00",
+      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
+    },
+    {
+      "category": "necklace",
+      "k": 47,
+      "name": "Butter tulip ruffle collar",
+      "hearts": 75,
+      "added": "2026-11-06T08:00",
+      "tag": { "x": 200, "y": 297, "size": 0.1, "spacing": 0, "serif": false, "upper": false, "fill": "#FFFFFF", "stroke": "#FFFFFF", "strokeWidth": 0 }
     }
   ],
   "events": [
