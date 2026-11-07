@@ -1,6 +1,6 @@
 {
-  "version": 50,
-  "imageRev": 22,
+  "version": 51,
+  "imageRev": 23,
   "newItems": [
     {
       "category": "jumper",
@@ -1064,6 +1064,48 @@
       "name": "Sky blue glitter scarf",
       "hearts": 30,
       "added": "2026-11-06T14:30"
+    },
+    {
+      "category": "jumper",
+      "k": 177,
+      "name": "Christmas tartan jumper",
+      "hearts": 32,
+      "added": "2026-11-07T19:59"
+    },
+    {
+      "category": "jumper",
+      "k": 178,
+      "name": "Pine tartan jumper",
+      "hearts": 32,
+      "added": "2026-11-07T19:59"
+    },
+    {
+      "category": "jumper",
+      "k": 179,
+      "name": "Midnight tartan jumper",
+      "hearts": 32,
+      "added": "2026-11-07T19:59"
+    },
+    {
+      "category": "jumper",
+      "k": 180,
+      "name": "Christmas trees jumper",
+      "hearts": 32,
+      "added": "2026-11-07T19:59"
+    },
+    {
+      "category": "jumper",
+      "k": 181,
+      "name": "Blush Christmas trees jumper",
+      "hearts": 32,
+      "added": "2026-11-07T19:59"
+    },
+    {
+      "category": "jumper",
+      "k": 182,
+      "name": "Midnight Christmas trees jumper",
+      "hearts": 32,
+      "added": "2026-11-07T19:59"
     }
   ],
   "events": [
