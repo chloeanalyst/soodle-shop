@@ -1,5 +1,5 @@
 {
-  "version": 51,
+  "version": 52,
   "imageRev": 23,
   "newItems": [
     {
@@ -1375,7 +1375,9 @@
     "bowl:14",
     "bowl:15",
     "bowl:16",
-    "bowl:17"
+    "bowl:17",
+    "bandana:28",
+    "bandana:29"
   ],
   "popularSearches": [
     "Jumpers",
