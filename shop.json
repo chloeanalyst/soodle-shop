@@ -1,5 +1,5 @@
 {
-  "version": 52,
+  "version": 53,
   "imageRev": 23,
   "newItems": [
     {
@@ -1547,5 +1547,10 @@
     "wall:22": "2026-11-07T16:21",
     "wall:23": "2026-11-07T16:21",
     "wall:24": "2026-11-07T16:21"
+  },
+  "itemOverrides": {
+    "bandana:28": {
+      "description": "Lightweight and breezy — this candyfloss fluffy scarf adds a splash of colour to any outfit."
+    }
   }
 }
