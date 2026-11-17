@@ -119,8 +119,10 @@ p{margin:0}
   .feature .stack{flex-basis:100%}
   .promo-inner{padding:64px 20px}
   .promo h2{font-size:38px}
-  .page-hero h1{font-size:44px}
-  .page-hero img{width:160px;flex-basis:160px}
+  .page-hero{padding-top:36px;padding-bottom:0;gap:8px}
+  .page-hero .stack{flex-basis:100%;padding-bottom:0}
+  .page-hero h1{font-size:38px;line-height:1.1}
+  .page-hero img{width:220px;flex:0 0 auto;margin:0 auto}
   .article,.contact{padding:48px 20px}
   .contact h2{font-size:32px}
   .btn{min-height:52px;font-size:18px;padding:0 26px}
