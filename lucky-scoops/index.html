@@ -731,7 +731,7 @@ body[data-stage="scoop"] header.top,body[data-stage="scoop"].hosttool header.top
   #shop .pkdc{max-width:540px}
 }
 /* tall landscape (tablets): jars stand in two columns so the mat gets the width */
-body.tl #scoopStage{--jcol:min(40%,520px)}
+body.tl #scoopStage{--jcol:50%}
 body.tl #scoopStage .jarshelves{gap:10px;padding-bottom:64px;justify-content:flex-start;padding-top:10px}
 body.tl #scoopStage .jtag{font-size:11px;padding:2px 7px 2px 3px}
 body.tl #scoopStage .jtag img{width:15px;height:15px}
@@ -785,6 +785,9 @@ body.tl #scoopStage .scoopbtns{bottom:auto;top:492px}
 .basket.locked .bk-name{opacity:.75}
 .bk-lock{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font-size:26px;filter:none}
 body.tl #shelfStage{grid-template-columns:minmax(0,1fr) 40%}
+body.tl #scoopStage .table .physwrap{border-left:0;box-shadow:none}
+body.tl #scoopStage::after{content:'';position:absolute;top:0;bottom:0;left:calc(var(--jcol) - 6px);width:12px;z-index:6;pointer-events:none;background:linear-gradient(90deg,#c98f5a,#e3b07a 45%,#c98f5a);box-shadow:-3px 0 8px rgba(70,40,20,.22),3px 0 8px rgba(70,40,20,.22)}
+body.tl #shelfStage #shelfTable{border-left:12px solid #d7a06a;box-shadow:-3px 0 8px rgba(70,40,20,.22),inset 3px 0 6px rgba(70,40,20,.15)}
 </style>
 </head>
 <body>
