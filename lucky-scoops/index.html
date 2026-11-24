@@ -2570,9 +2570,9 @@ const TYPES = {
   shades:   { name: 'Sunglasses',         w: 2, h: 1, color: '#ffe3ee', edge: '#e0558f', flat: false, art: 'shades' },
   frame:    { name: 'Photo frame',        w: 2, h: 2, color: '#f6efdc', edge: '#c9b98a', flat: true,  art: 'frame' },
   socks:    { name: 'Socks',              w: 2, h: 1, color: '#f4d6dc', edge: '#8a2f4b', flat: false, art: 'socks', mods: { fold: { w: 1, h: 1, art: 'sockball', verb: 'Roll up', back: 'Unroll', done: 'rolled into a ball' } } },
-  necklace: { name: 'Necklace',           w: 3, h: 2, color: '#ffe4ee', edge: '#c4688a', flat: false, art: 'necklace', mods: { bag: { w: 1, h: 2, art: 'dustbag', verb: 'Dust bag', back: 'Take out', done: 'is in its dust bag' } } },
-  collar:   { name: 'Collar',             w: 4, h: 1, color: '#fff3c4', edge: '#b88a1c', flat: false, art: 'collar' },
-  bandana:  { name: 'Bandana',            w: 3, h: 2, color: '#efe6ff', edge: '#9d84d6', flat: true,  art: 'bandana', mods: { fold: { w: 2, h: 1, art: 'bandana_fold', verb: 'Fold', back: 'Unfold', done: 'folded' } } },
+  necklace: { name: 'Necklace',           w: 2, h: 1, color: '#ffe4ee', edge: '#c4688a', flat: false, art: 'necklace', mods: { bag: { w: 1, h: 1, art: 'dustbag', verb: 'Dust bag', back: 'Take out', done: 'is in its dust bag' } } },
+  collar:   { name: 'Collar',             w: 3, h: 1, color: '#fff3c4', edge: '#b88a1c', flat: false, art: 'collar' },
+  bandana:  { name: 'Bandana',            w: 2, h: 2, color: '#efe6ff', edge: '#9d84d6', flat: true,  art: 'bandana', mods: { fold: { w: 2, h: 1, art: 'bandana_fold', verb: 'Fold', back: 'Unfold', done: 'folded' } } },
   hat:      { name: 'Hat',                w: 2, h: 2, color: '#f3dfc2', edge: '#7a4b22', flat: false, art: 'hat' },
   jumper:   { name: 'Jumper',             w: 3, h: 3, color: '#ffe9d4', edge: '#8a5230', flat: false, art: 'jumper', mods: { fold: { w: 2, h: 2, art: 'jumper_fold', verb: 'Fold', back: 'Unfold', done: 'folded' } } },
   bowl:     { name: 'Bowl',               w: 3, h: 2, color: '#f3d4da', edge: '#8c2f4a', flat: false, art: 'bowl' }
@@ -2848,7 +2848,7 @@ function econOf(list, o) {
   return { cost, spent, profit: spent - cost, ratio: spent ? cost / spent : 0 };
 }
 // Stars adjust what an order earns: a tip on profit for 3-5 stars (rounded up), a refund of what the customer paid for 1-2 stars or a squashed box (from month 3).
-const TIP_PCT = { 5: 0.4, 4: 0.2, 3: 0.05 }, REFUND_PCT = { 1: 0.5, 2: 0.25 }, REFUND_FROM_MONTH = 3;
+const TIP_PCT = { 5: 0.4, 4: 0.2, 3: 0.05 }, REFUND_PCT = { 1: 0.5, 2: 0.25 }, REFUND_FROM_MONTH = 1;
 function adjustOrder(stars, damaged, econ) {
   const tip = econ.profit > 0 && TIP_PCT[stars] && !damaged ? Math.ceil(econ.profit * TIP_PCT[stars]) : 0;
   const pct = damaged ? 0.5 : REFUND_PCT[stars] || 0, refund = run.month >= REFUND_FROM_MONTH && pct ? Math.round(econ.spent * pct) : 0;
@@ -4104,7 +4104,7 @@ const FAQ = [
   ['How do I get stars?', 'Your customer rates the box on neat packing (nothing squashed or tilting), getting what they asked for (the items they love, none they dislike, nothing missing or extra), presentation (a nice box, tissue and wrapped items) and good value.'],
   ['How do I make hearts?', 'Each customer pays a set amount per scoop. What is left after you pay for the items and the box is your profit. Great reviews add a tip, and the level\'s profit goes into your shop bank when the level ends.'],
   ['How do tips work?', 'A 5 star review tips 40% of your profit on that order, 4 stars tips 20% and 3 stars tips 5%. There is no tip if the box arrives squashed.'],
-  ['What is a refund?', 'Refunds start at level 3, so you will not see them before that. From then on, a 1 star review refunds half of what the customer paid, 2 stars refunds a quarter, and a squashed box refunds half. Refunds come out of your profit, and the shop bank never goes below zero.'],
+  ['What is a refund?', 'A 1 star review refunds half of what the customer paid, 2 stars refunds a quarter, and a squashed box refunds half. Refunds come out of your profit, and the shop bank never goes below zero.'],
   ['Why do customers pay more each level?', 'Orders get bigger and harder as the levels go on, so each scoop pays 10 more hearts every level. Some orders are quick: one scoop and only a few items.'],
   ['How do I get more looks?', 'Tap the shop icon at the top of any screen. Packs hold 3 looks each and are paid for from your shop bank. You start with keyrings, sunglasses, hats and socks, and every other item comes from the shop.'],
   ['Why can I only pick some items on the shelf?', 'You can only pack the items and looks you own. Buy a pack to add more. A new kind of item shows up in orders from your next order.'],
