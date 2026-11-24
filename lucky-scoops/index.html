@@ -797,6 +797,9 @@ body.tl #shelfStage .cork .ordtag{flex:1 1 0;min-width:0}
 body.tl #shelfStage #noteCard{margin-top:120px}
 body.tl #shelfStage .pickbasket{margin-top:290px}
 body.tl #shelfStage #shelfTable .scoopbtns .btn{font-size:14px;padding:4px 6px;min-height:44px}
+body.tl #scoopStage{width:100vw;max-width:none;margin-left:calc(50% - 50vw);margin-right:0}
+body.tl #scoopStage .jarshelves{padding-left:16px;padding-right:20px}
+body.tl #scoopStage .scoopbtns{left:16px;width:calc(var(--jcol) - 36px)}
 </style>
 </head>
 <body>
@@ -893,7 +896,7 @@ opts=opts||{};
 const {Engine,Bodies,Body,Composite,Events}=Matter;
 const W=390,H=620;
 // layout
-const BOWL={cx:195,cy:452,R:125};
+const BOWL={cx:195,cy:470,R:125};
 const MAT={x:20,y:12,w:350,h:262};
 const CUP_R=44,FINGER_OFF=90;
 const KINDS=['heart','star','donut','barrel','glass','pearl'];
@@ -917,7 +920,7 @@ function proj(wx,wy,h){const d=LAND?[(wy-LCX)*K-CAM.pos[0],(h||0)-CAM.pos[1],(wx
 function unproj(sx,sy,h){const nx=(sx-OFF)/VW*2-1,ny=1-(sy-OFFY)/VH*2;const dir=[0,1,2].map(i=>FWD[i]+nx*TF*ASP*RIGHT[i]+ny*TF*UPV[i]);const t=(h-CAM.pos[1])/dir[1];
   if(LAND)return{x:(CAM.pos[2]+t*dir[2]-ZL)/K+195,y:(CAM.pos[0]+t*dir[0])/K+LCX};
   return{x:(CAM.pos[0]+t*dir[0])/K+195,y:(CAM.pos[2]+t*dir[2]-ZTC)/K+143};}
-const BOWLZ=(452-143)*K+ZTC;
+const BOWLZ=(BOWL.cy-143)*K+ZTC;
 const INNER=[[0,.28],[1.2,.3],[2.1,.45],[2.7,.78],[3.1,1.35],[3.38,1.96],[3.5,2.04]];
 const BOWLKY=BOWLK*.6; // the picture's bowl is a little shallower than it is wide
 function bowlH(wx,wy){const r=Math.min(3.5,Math.hypot((wx-195)*K,(wy-143)*K+ZTC-BOWLZ)/BOWLK);for(let i=0;i<INNER.length-1;i++){const a=INNER[i],b=INNER[i+1];if(r<=b[0])return(a[1]+(b[1]-a[1])*(r-a[0])/(b[0]-a[0]))*BOWLKY;}return INNER[INNER.length-1][1]*BOWLKY;}
