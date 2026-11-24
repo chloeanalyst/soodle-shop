@@ -2606,7 +2606,7 @@ const CUSTOMERS = [{ name: 'Mia', emoji: '🧸' }, { name: 'Noah', emoji: '🎒'
    Lines are recorded clips (voice/voice.mp3 + voice.json), played back to back. Each line is a template like 'Pop the {item} in here.';
    the words between the {tokens} and every token value are separate clips. If the clips are not there, the phone's own voice reads the line instead. */
 const VO = (() => {
-  let on = true, voice = null, last = '', lastAt = 0;
+  let on = true, voice = null, last = '', lastAt = 0, endAt = 0;
   try { on = localStorage.getItem('luckyScoopsVoice') !== 'off'; } catch (_) {}
   const synth = window.speechSynthesis;
   const pickVoice = () => { if (!synth) return; const en = synth.getVoices().filter((v) => /^en/i.test(v.lang)); voice = null; let saved = ''; try { saved = localStorage.getItem('luckyScoopsVoiceName') || ''; } catch (_) {} voice = en.find((v) => v.name === saved) || null; if (!voice) for (const r of [/samantha/i, /karen/i, /serena/i, /google uk english female/i, /moira/i, /tessa/i, /fiona/i, /female/i]) { voice = en.find((v) => r.test(v.name)); if (voice) break; } voice = voice || en.find((v) => /^en-(GB|US)/i.test(v.lang)) || en[0] || null; };
@@ -2702,10 +2702,11 @@ const VO = (() => {
   loadClips();
   const wake = () => { try { if (AUD.ctx && AUD.ctx.state === 'suspended') AUD.ctx.resume(); } catch (_) {} };
   document.addEventListener('pointerdown', wake, true);
-  const stopAll = () => { AUD.nodes.forEach((n) => { try { n.stop(); } catch (_) {} }); AUD.nodes = []; if (synth) synth.cancel(); };
+  const stopAll = () => { AUD.nodes.forEach((n) => { try { n.stop(); } catch (_) {} }); AUD.nodes = []; endAt = 0; if (synth) synth.cancel(); };
+  const backlog = () => (AUD.ok && AUD.ctx ? Math.max(0, endAt - AUD.ctx.currentTime) : synth && (synth.speaking || synth.pending) ? 3 : 0);
   const playClips = (parts) => {
     if (!AUD.ok || !parts.every((p) => AUD.map[p])) return false;
-    try { wake(); let t = AUD.ctx.currentTime + 0.03; for (const p of parts) { const [o, d] = AUD.map[p], s = AUD.ctx.createBufferSource(); s.buffer = AUD.buf; s.connect(AUD.ctx.destination); s.start(t, o, d); AUD.nodes.push(s); t += d + (/[.!?]$/.test(p) ? 0.09 : -0.01); } return true; } catch (_) { return false; }
+    try { wake(); let t = Math.max(AUD.ctx.currentTime + 0.03, endAt > 0 ? endAt + 0.3 : 0); for (const p of parts) { const [o, d] = AUD.map[p], s = AUD.ctx.createBufferSource(); s.buffer = AUD.buf; s.connect(AUD.ctx.destination); s.start(t, o, d); AUD.nodes.push(s); t += d + (/[.!?]$/.test(p) ? 0.3 : /[,;:]$/.test(p) ? 0.16 : -0.01); } endAt = t; AUD.nodes = AUD.nodes.slice(-60); return true; } catch (_) { return false; }
   };
   const build = (spec, vars) => {
     const items = Array.isArray(spec) ? spec : [[spec, vars]], parts = [], text = [];
@@ -2715,12 +2716,12 @@ const VO = (() => {
   const say = (spec, vars) => {
     const b = build(spec, vars); last = b.text; lastAt = Date.now(); said.push(b.text); if (said.length > 10) said.shift();
     if (!on || navigator.webdriver && !AUD.ok) return;
-    stopAll();
-    if (playClips(b.parts)) return;
+    if (backlog() > 12) return;
+    if (playClips(b.parts)) { lastAt = Date.now() + backlog() * 1000; return; }
     if (!synth) return;
     try { const u = new SpeechSynthesisUtterance(b.text); if (voice) { u.voice = voice; u.lang = voice.lang; } u.pitch = 1.8; u.rate = 0.86; synth.speak(u); } catch (_) {}
   };
-  const chat = (spec, vars, p) => { if (Math.random() < (p == null ? 1 : p) && Date.now() - lastAt > 1200) say(spec, vars); };
+  const chat = (spec, vars, p) => { if (Math.random() < (p == null ? 1 : p) && backlog() < 4) say(spec, vars); };
   const orderLine = (o) => { const pos = Math.min(ORDERS_PER_MONTH, run.orders.filter((e) => e.n !== state.n).length + 1); return [pos === 1 ? ['openFirst', { n: Math.min(30, run.month) }] : ['openLater', { n: pos }], o.scoops === 1 ? ['scoops1'] : ['scoopsN', { n: o.scoops }], ['loves', { list: o.theme.loves.map((t) => plural(t, 2)) }], o.dislikes.length ? ['hates', { list: o.dislikes.map((t) => plural(t, 2)) }] : null, o.colour ? ['wantColour', { wcolour: o.colour.name.toLowerCase() }] : null, o.swap ? ['swapReq', { item: plural(o.swap.type, 1) }] : null, ['closer']]; };
   const resultLine = (r, adj) => [[r.damaged ? 'resSquashed' : 'res' + r.stars], adj && adj.tip ? ['tip'] : null, adj && adj.net < 0 ? ['loss'] : adj && adj.net > 0 && r.stars >= 4 ? ['gain'] : null];
   const ambient = () => { if (!on || (!synth && !AUD.ok) || (navigator.webdriver && !AUD.ok) || document.hidden) return; const st = document.getElementById('start'); if ((st && !st.hidden) || ['shop', 'how'].some((i) => { const e = document.getElementById(i); return e && !e.hidden; }) || Date.now() - lastAt < 9000) return; const key = { scoop: 'ambScoop', shelf: 'ambShelf', box: 'ambBox', pack: 'ambPack' }[state.phase]; if (key && !document.getElementById('modal')?.innerHTML) say(key); };
