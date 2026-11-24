@@ -2619,27 +2619,27 @@ const VO = (() => {
   // every line the packer can say, grouped by moment. {tokens}: item, items, n, list, wcolour, colour, size, pattern, tissue
   const LINES = {
     openFirst: ['Level {n}! Come pack orders with me!', 'Point of view, you run a tiny bead shop, and it is level {n}.', 'Level {n}, let us gooo!'],
-    openLater: ['Ooh, a new order!', 'Okay, order number {n}!', 'Yay, another order!', 'Come pack this one with me!', 'Packing orders, but make it cute!', 'Order number {n} of the day!'],
+    openLater: ['A new order.', 'Okay, order number {n}!', 'Yay, another order!', 'Come pack this one with me!', 'Packing orders, but make it cute!', 'Order number {n} of the day!'],
     scoops1: ['Just one scoop this time.'], scoopsN: ['{n} scoops this time.'],
     loves: ['They love {list}.'], hates: ['And please, no {list}.'], wantColour: ['They also want something {wcolour}.'], swapReq: ['And they want a different {item} this time.'],
     closer: ['Let us go!', 'This is going to be so satisfying.', 'Okay, scoop time!', 'Pack with me!'],
-    scoopStart: ['Time to scoop! Let us see what we get.', 'Okay, scooping time!', 'Ooh, so many pretty beads!'],
-    scoopUsed: ['Ooh, nice scoop!', 'Look at all these beads!', 'Yum, so many beads!', 'Okay, let us see what we got!'],
-    countFirst: ['Ooh, a {item}!', 'Found a {item}!', 'Look, a {item}!', 'Oh, a {item}!'],
+    scoopStart: ['Time to scoop! Let us see what we get.', 'Okay, scooping time!', 'So many pretty beads.'],
+    scoopUsed: ['Nice scoop.', 'Look at all these beads!', 'Yum, so many beads!', 'Okay, let us see what we got!'],
+    countFirst: ['A {item}.', 'Found a {item}!', 'Look, a {item}!', 'Another {item}.'],
     countNext: ['{n} {items}.', 'Okay, {n} {items}!', '{n} so far!', 'That makes {n}.'],
     putBack: ['Oops, putting that one back.', 'Changed my mind, back it goes.'],
     clear: ['Clearing the mat!', 'Sweeping those away!'],
     shelfIntro: ['Okay, now let us pick everything from the shelf.', 'Now to the shelf, so many cute things!'],
-    basket: ['Let us see which {item} to pick.', 'Ooh, so many {items}!', 'Which {item} is the cutest?', 'I think they would love a {item}.', 'A {item} is always a good choice.', 'Hmm, which {item} suits this customer?'],
-    praise: ['So pretty!', 'Cute!', 'Ooh, perfect!', 'They are going to love this one.', 'This one just feels right.', 'Such a good pick.', 'I think this matches their taste.', 'That one is so pretty.', 'Good choice, they will like it.'],
+    basket: ['Let us see which {item} to pick.', 'So many {items}.', 'Which {item} is the cutest?', 'I think they would love a {item}.', 'A {item} is always a good choice.', 'Hmm, which {item} suits this customer?'],
+    praise: ['So pretty!', 'Cute!', 'Perfect.', 'They are going to love this one.', 'This one just feels right.', 'Such a good pick.', 'I think this matches their taste.', 'That one is so pretty.', 'Good choice, they will like it.'],
     boxIntro: ['Now let us pick a cute box.', 'Time to choose a pretty box!'],
-    boxSize: ['Oh, a {size} box!', 'Going with {size}.'],
-    boxColour: ['What a {colour} box, so cute!', 'Ooh, {colour} is such a pretty colour.'],
+    boxSize: ['A {size} box.', 'Going with {size}.'],
+    boxColour: ['What a {colour} box, so cute!', 'That {colour} is such a pretty colour.'],
     boxPattern: ['{pattern}, love it!'], boxTissue: ['{tissue} tissue, so pretty!'], boxNoTissue: ['No lining for this one.'],
     packIntro: ['Okay, the fun part! Let us pack it all in.', 'Now to fit everything in nicely.'],
     placed: ['That fits perfectly.', 'Snug as a bug.', 'Tuck it right in there.', 'That looks so neat.', 'Okay, that is so satisfying.', 'Pop the {item} in here.', 'The customer is going to love this {item}.', 'That {item} looks so good in there.', 'I bet they will smile when they see the {item}.', 'Such a pretty {item}.', 'This is such a thoughtful little gift.', 'It all looks so cosy together.', 'Every little detail matters.', 'They will open this and feel so special.'],
     allIn: ['Everything is in! Now a little tissue, or seal it up.', 'That is everything in the box! Looking good.'],
-    picked: ['Ooh, the {item}.', 'Okay, this one next.', 'Where should the {item} go?', 'This {item} is so cute.', 'I think they will love this {item}.', 'Hmm, where does the {item} fit best?', 'The {item} next, I think.', 'Let us see if the {item} fits here.'],
+    picked: ['Okay, the {item}.', 'Okay, this one next.', 'Where should the {item} go?', 'This {item} is so cute.', 'I think they will love this {item}.', 'Hmm, where does the {item} fit best?', 'The {item} next, I think.', 'Let us see if the {item} fits here.'],
     turn: ['Let us turn it the other way.', 'A quick flip.', 'Rotating it a little.'],
     twist: ['Just a little twist.', 'Spin it round a bit.'],
     undo: ['Oops, let us try that again!', 'Undo, undo!'],
@@ -2653,12 +2653,12 @@ const VO = (() => {
     res2: ['Two stars. Oh no, they want a refund. Next time!'], res1: ['One star. Oh no. That is a refund.'], resSquashed: ['Oh no, the box got squashed! That is a refund.'],
     tip: ['And they left a tip!'], loss: ['Ouch, no profit on that one.'], gain: ['Lovely profit too!', 'And a nice profit, yay!'],
     levelDone: ['Level complete! Let us see how the shop did.', 'That is a wrap on this level! Thanks for packing with me!', 'Level done! Come see how we did.'],
-    bought: ['Yay, new looks!', 'Ooh, new things for the shelf!', 'Bought! So cute.'],
-    shopOpen: ['Ooh, shopping time!', 'So many cute looks!'],
+    bought: ['Yay, new looks!', 'New things for the shelf.', 'Bought! So cute.'],
+    shopOpen: ['Shopping time.', 'So many cute looks!'],
     hi: ['Hi! Let us pack some orders!'], hiVoice: ['Hi! Do you like my voice? Let us pack some orders!'],
     ambScoop: ['Mmm, the sound of these beads is so satisfying.', 'Which beads should we scoop next?', 'I could do this all day. So relaxing!', 'Okay, tap the beads to count them.', 'Pastel beads are my favourite.'],
-    ambShelf: ['Ooh, which ones do we pick?', 'The shelf is so cute today.', 'Pick the cutest ones for this customer.', 'So many pretty things.', 'I wonder what they would like most.', 'Think about what they love.', 'Everything here is so cosy.', 'Take your time, there is no rush.'],
-    ambBox: ['This is the best part, choosing the box.', 'Ooh, what colour should it be?', 'Tissue paper makes everything better.'],
+    ambShelf: ['Which ones do we pick?', 'The shelf is so cute today.', 'Pick the cutest ones for this customer.', 'So many pretty things.', 'I wonder what they would like most.', 'Think about what they love.', 'Everything here is so cosy.', 'Take your time, there is no rush.'],
+    ambBox: ['This is the best part, choosing the box.', 'What colour should it be?', 'Tissue paper makes everything better.'],
     ambPack: ['Okay, tiny puzzle time.', 'Fit it all in, nice and neat.', 'The packing is so satisfying.', 'Tap an item to turn it.', 'Try wrapping something with a bow.', 'Not too high, or the lid will not close.', 'They are going to be so happy with this.', 'A neat box makes a happy customer.', 'Little things, big smiles.', 'I love how cosy this looks.']
   };
   const dom = () => { const l = (o, f) => Object.keys(o).map((k) => f(o[k]).toLowerCase()); return { item: Object.keys(TYPES).map((t) => plural(t, 1)), items: Object.keys(TYPES).map((t) => plural(t, 2)), n: Array.from({ length: 30 }, (_, i) => String(i + 1)), wcolour: COLOURS.map((c) => c.name.toLowerCase()), colour: l(BOX_COLOURS, (x) => x[0]), size: l(BOX_SIZES, (x) => x.name), pattern: l(BOX_PATTERNS, (x) => x[0]), tissue: Object.keys(TISSUES).filter((k) => TISSUES[k][1]).map((k) => TISSUES[k][0].toLowerCase()) }; };
@@ -2709,12 +2709,12 @@ const VO = (() => {
     const C = window.AudioContext || window.webkitAudioContext;
     try {
       if (!AUD.ctx) { try { AUD.ctx = new C({ sampleRate: 22050 }); } catch (_) { AUD.ctx = new C(); } }
-      fetch('voice/voice.json?v=10').then((r) => { if (!r.ok) throw 0; return r.json(); }).then((j) => {
+      fetch('voice/voice.json?v=11').then((r) => { if (!r.ok) throw 0; return r.json(); }).then((j) => {
         AUD.map = j; const n = j.__chunks || 1; let k = 0;
         const next = () => {
           if (k >= n) { AUD.state = 'ok'; refreshLabels(); return null; }
           if (AUD.bufs[k]) { k++; return next(); }
-          return fetch('voice/v' + k + '.mp3?v=10').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); }).then((b) => AUD.ctx.decodeAudioData(b)).then((buf) => { AUD.bufs[k] = buf; AUD.ok = true; k++; return next(); });
+          return fetch('voice/v' + k + '.mp3?v=11').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); }).then((b) => AUD.ctx.decodeAudioData(b)).then((buf) => { AUD.bufs[k] = buf; AUD.ok = true; k++; return next(); });
         };
         return next();
       }).catch(fail);
