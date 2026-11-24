@@ -2679,19 +2679,25 @@ const VO = (() => {
     return out;
   };
   const fill = (tpl, v) => tpl.replace(/\{(\w+)\}/g, (_, k) => (Array.isArray(v[k]) ? v[k].length < 2 ? v[k].join('') : v[k].slice(0, -1).join(', ') + ' and ' + v[k][v[k].length - 1] : v[k]));
-  const clipSet = () => {
-    const D = dom(), set = new Set(), first = { list: [D.items[0]] }; Object.keys(D).forEach((k) => { first[k] = D[k][0]; });
-    const add = (t, v) => segs(t, v).forEach((x) => set.add(x));
+  // whole-sentence clips: every line the game can say is recorded as one take (so it keeps one natural tone);
+  // only lines with two variable bits (like '{n} {items}.') are stitched from smaller pieces.
+  const rng = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => String(a + i));
+  const nDom = (key) => (key === 'openFirst' ? rng(1, 30) : key === 'openLater' ? rng(2, 5) : key === 'scoopsN' ? rng(2, 5) : rng(2, 18));
+  const listDom = (key) => { const it = dom().items; if (key === 'loves') return THEMES.map((t) => t.loves.map((x) => plural(x, 2))); const out = it.map((x) => [x]); it.forEach((a) => it.forEach((b) => { if (a !== b) out.push([a, b]); })); return out; };
+  let cache = null;
+  const sets = () => {
+    if (cache) return cache;
+    const D = dom(), whole = new Set(), stitch = new Set(), first = { list: [D.items[0]] }; Object.keys(D).forEach((k) => { first[k] = D[k][0]; });
     Object.keys(LINES).forEach((key) => LINES[key].forEach((t) => {
       const toks = Array.from(new Set(Array.from(t.matchAll(/\{(\w+)\}/g)).map((x) => x[1])));
-      if (!toks.length) { add(t, first); return; }
-      toks.forEach((k) => (k === 'list' ? D.items : D[k]).forEach((val) => {
-        if (k === 'list') [[val, D.items[1]], [D.items[1], val], [val]].forEach((l) => add(t, Object.assign({}, first, { list: l })));
-        else add(t, Object.assign({}, first, { [k]: val }));
-      }));
+      if (!toks.length) { whole.add(t); return; }
+      if (toks.length === 1) { const k = toks[0]; (k === 'list' ? listDom(key) : k === 'n' ? nDom(key) : D[k]).forEach((val) => whole.add(fill(t, { [k]: val }))); return; }
+      toks.forEach((k) => (k === 'n' ? nDom(key) : D[k]).forEach((val) => segs(t, Object.assign({}, first, { [k]: val })).forEach((x) => stitch.add(x))));
     }));
-    return Array.from(set);
+    cache = { whole, stitch }; return cache;
   };
+  const unitsOf = (tpl, v) => { const w = fill(tpl, v); return sets().whole.has(w) ? [w] : segs(tpl, v); };
+  const clipSet = () => { const c = sets(); return Array.from(new Set([...c.whole, ...c.stitch])); };
 
   // playback: recorded clips through Web Audio, with the phone's voice as a back-up
   const AUD = { ctx: null, buf: null, map: null, ok: false, nodes: [], state: 'loading', tries: 0 };
@@ -2700,7 +2706,7 @@ const VO = (() => {
     if (navigator.webdriver && !/voicetest/.test(location.search)) return;
     AUD.tries++;
     const fail = () => { if (AUD.tries < 4) setTimeout(loadClips, 2500 * AUD.tries); else { AUD.state = 'failed'; refreshLabels(); } };
-    try { Promise.all([fetch('voice/voice.json?v=5').then((r) => { if (!r.ok) throw 0; return r.json(); }), fetch('voice/voice.mp3?v=5').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); })]).then(([j, b]) => { const C = window.AudioContext || window.webkitAudioContext; if (!AUD.ctx) AUD.ctx = new C(); return AUD.ctx.decodeAudioData(b).then((buf) => { AUD.buf = buf; AUD.map = j; AUD.ok = true; AUD.state = 'ok'; refreshLabels(); }); }).catch(fail); } catch (_) { fail(); }
+    try { Promise.all([fetch('voice/voice.json?v=6').then((r) => { if (!r.ok) throw 0; return r.json(); }), fetch('voice/voice.mp3?v=6').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); })]).then(([j, b]) => { const C = window.AudioContext || window.webkitAudioContext; if (!AUD.ctx) AUD.ctx = new C(); return AUD.ctx.decodeAudioData(b).then((buf) => { AUD.buf = buf; AUD.map = j; AUD.ok = true; AUD.state = 'ok'; refreshLabels(); }); }).catch(fail); } catch (_) { fail(); }
   };
   loadClips();
   const wake = () => { try { if (AUD.ctx && AUD.ctx.state === 'suspended') AUD.ctx.resume(); } catch (_) {} };
@@ -2709,11 +2715,11 @@ const VO = (() => {
   const backlog = () => (AUD.ok && AUD.ctx ? Math.max(0, endAt - AUD.ctx.currentTime) : synth && (synth.speaking || synth.pending) ? 3 : 0);
   const playClips = (parts) => {
     if (!AUD.ok || !parts.every((p) => AUD.map[p])) return false;
-    try { wake(); let t = Math.max(AUD.ctx.currentTime + 0.03, endAt > 0 ? endAt + 0.3 : 0); for (const p of parts) { const [o, d] = AUD.map[p], s = AUD.ctx.createBufferSource(); s.buffer = AUD.buf; s.connect(AUD.ctx.destination); s.start(t, o, d); AUD.nodes.push(s); t += d + (/[.!?]$/.test(p) ? 0.3 : /[,;:]$/.test(p) ? 0.16 : -0.01); } endAt = t; AUD.nodes = AUD.nodes.slice(-60); return true; } catch (_) { return false; }
+    try { wake(); let t = Math.max(AUD.ctx.currentTime + 0.03, endAt > 0 ? endAt + 0.3 : 0); for (const p of parts) { const [o, d] = AUD.map[p], s = AUD.ctx.createBufferSource(); s.buffer = AUD.buf; s.connect(AUD.ctx.destination); s.start(t, o, d); AUD.nodes.push(s); t += d + (/[.!?]$/.test(p) ? 0.22 : /[,;:]$/.test(p) ? 0.16 : -0.01); } endAt = t; AUD.nodes = AUD.nodes.slice(-60); return true; } catch (_) { return false; }
   };
   const build = (spec, vars) => {
     const items = Array.isArray(spec) ? spec : [[spec, vars]], parts = [], text = [];
-    items.forEach((it) => { if (!it) return; const key = it[0], v = it[1] || {}, tpl = LINES[key] ? rnd(LINES[key]) : key; segs(tpl, v).forEach((x) => parts.push(x)); text.push(fill(tpl, v)); });
+    items.forEach((it) => { if (!it) return; const key = it[0], v = it[1] || {}, tpl = LINES[key] ? rnd(LINES[key]) : key; unitsOf(tpl, v).forEach((x) => parts.push(x)); text.push(fill(tpl, v)); });
     return { parts, text: text.join(' ') };
   };
   const say = (spec, vars) => {
