@@ -769,6 +769,17 @@ body.tl #shelfStage .ordtag .ot-till{display:none}
 body.tl #shelfStage .nt{font-size:15px}
 body.tl #shelfStage .pickbasket{margin-top:290px;width:62%;align-self:center;max-height:170px}
 body.tl #shelfStage #shmsg{display:none}
+/* tall landscape order screen: the portrait layout, stretched wide (design on the canvas) */
+body.tl #orderStage{display:flex;flex-direction:column;justify-content:center;gap:16px;width:min(100%,920px);margin:0 auto;padding:60px 0 14px;overflow:auto}
+body.tl #orderStage #orderTalk,body.tl #orderStage #orderCard,body.tl #orderStage #btnBegin{zoom:1;width:100%;grid-column:auto;grid-row:auto;align-self:stretch;max-height:none;margin:0}
+body.tl #orderStage #orderCard{border-radius:22px 22px 0 0}
+/* tall landscape scoop: the table runs from the very top to the very bottom; title sits over the jar column */
+body.tl[data-stage=scoop] header.top{position:absolute;top:0;left:0;z-index:30;width:240px;padding:10px 12px 0}
+body.tl[data-stage=scoop] header.top #packed{display:none}
+body.tl[data-stage=scoop] header.top>div:first-child{display:block}
+body.tl[data-stage=scoop] header.top .title{font-size:24px}
+body.tl[data-stage=scoop] #scoopStage .jarshelves{padding-top:62px}
+body.tl[data-stage=scoop] #topbtns{z-index:8}
 </style>
 </head>
 <body>
@@ -3244,6 +3255,7 @@ function neighbourIndex(dir) { // index in the stack of the next item that overl
 function render() {
   if (state.phase === 'scoop') { renderScoop(); return; }
   if (state.phase === 'shelf') { renderShelf(); return; }
+  if (state.phase === 'order') { renderOrderCard(); return; }
   const total = realItems().length, placed = realItems().filter((i) => i.placed).length;
   el.title.textContent = 'Order #' + state.n;
   el.packed.textContent = placed + ' / ' + total + ' packed';
