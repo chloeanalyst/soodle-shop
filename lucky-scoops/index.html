@@ -756,6 +756,19 @@ body.tl #shelfStage #noteCard{zoom:1.3}
 body.tl #shelfStage #shelf .srow{zoom:1.3}
 body.tl #orderStage #orderCard{zoom:1.25}
 body.tl #orderStage #orderTalk{zoom:1.2}
+/* tall landscape shelf: baskets fill the left, cork board + basket on the right (design B) */
+body.tl #shelfStage{grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:auto 1fr;padding:0 0 0 12px;column-gap:0}
+body.tl #shelfStage #shelf{grid-column:1;grid-row:1/3;align-self:stretch;justify-content:center;padding-top:44px}
+body.tl #shelfStage #shelf .srow{grid-template-columns:repeat(5,minmax(0,1fr))}
+body.tl #shelfStage #shelfTable{grid-column:2;grid-row:1/3;align-self:stretch;justify-content:flex-start;padding:0 0 calc(8px + env(safe-area-inset-bottom));box-shadow:-5px 0 10px rgba(70,40,20,.18)}
+body.tl #shelfStage #noteCard{grid-column:2;grid-row:1;z-index:7;align-self:start;margin:62px 12px 0;zoom:1;width:auto}
+body.tl #shelfStage .cork{flex-direction:column;align-items:stretch;padding:8px 10px}
+body.tl #shelfStage .cork .ordtag{flex:none;width:auto;padding:10px 12px 6px}
+body.tl #shelfStage .ordtag .pchips{flex-direction:row;flex-wrap:wrap}
+body.tl #shelfStage .ordtag .ot-till{display:none}
+body.tl #shelfStage .nt{font-size:15px}
+body.tl #shelfStage .pickbasket{margin-top:290px;width:62%;align-self:center;max-height:170px}
+body.tl #shelfStage #shmsg{display:none}
 </style>
 </head>
 <body>
