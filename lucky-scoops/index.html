@@ -2608,7 +2608,7 @@ const CUSTOMERS = [{ name: 'Mia', emoji: '🧸' }, { name: 'Noah', emoji: '🎒'
 const VO = (() => {
   let on = true, voice = null, last = '', lastAt = 0, endAt = 0;
   try { on = localStorage.getItem('luckyScoopsVoice') !== 'off'; } catch (_) {}
-  const synth = window.speechSynthesis;
+  const synth = null;   // the phone's own voice is never used: only the recorded voice speaks
   const pickVoice = () => { if (!synth) return; const en = synth.getVoices().filter((v) => /^en/i.test(v.lang)); voice = null; let saved = ''; try { saved = localStorage.getItem('luckyScoopsVoiceName') || ''; } catch (_) {} voice = en.find((v) => v.name === saved) || null; if (!voice) for (const r of [/samantha/i, /karen/i, /serena/i, /google uk english female/i, /moira/i, /tessa/i, /fiona/i, /female/i]) { voice = en.find((v) => r.test(v.name)); if (voice) break; } voice = voice || en.find((v) => /^en-(GB|US)/i.test(v.lang)) || en[0] || null; };
   if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
   const recent = [], said = []; // what was picked and spoken lately, so the same thing is not said again close by
@@ -2700,13 +2700,25 @@ const VO = (() => {
   const clipSet = () => { const c = sets(); return Array.from(new Set([...c.whole, ...c.stitch])); };
 
   // playback: recorded clips through Web Audio, with the phone's voice as a back-up
-  const AUD = { ctx: null, buf: null, map: null, ok: false, nodes: [], state: 'loading', tries: 0 };
+  const AUD = { ctx: null, buf: null, map: null, ok: false, nodes: [], bufs: [], state: 'loading', tries: 0 };
   const refreshLabels = () => { try { document.querySelectorAll('.vbtn').forEach((x) => { if (x.id !== 'howVoice2' && typeof voiceLabel === 'function') x.textContent = voiceLabel(); }); } catch (_) {} };
   const loadClips = () => {
     if (navigator.webdriver && !/voicetest/.test(location.search)) return;
     AUD.tries++;
     const fail = () => { if (AUD.tries < 4) setTimeout(loadClips, 2500 * AUD.tries); else { AUD.state = 'failed'; refreshLabels(); } };
-    try { Promise.all([fetch('voice/voice.json?v=8').then((r) => { if (!r.ok) throw 0; return r.json(); }), fetch('voice/voice.mp3?v=8').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); })]).then(([j, b]) => { const C = window.AudioContext || window.webkitAudioContext; if (!AUD.ctx) AUD.ctx = new C(); return AUD.ctx.decodeAudioData(b).then((buf) => { AUD.buf = buf; AUD.map = j; AUD.ok = true; AUD.state = 'ok'; refreshLabels(); }); }).catch(fail); } catch (_) { fail(); }
+    const C = window.AudioContext || window.webkitAudioContext;
+    try {
+      if (!AUD.ctx) { try { AUD.ctx = new C({ sampleRate: 22050 }); } catch (_) { AUD.ctx = new C(); } }
+      fetch('voice/voice.json?v=9').then((r) => { if (!r.ok) throw 0; return r.json(); }).then((j) => {
+        AUD.map = j; const n = j.__chunks || 1; let k = 0;
+        const next = () => {
+          if (k >= n) { AUD.state = 'ok'; refreshLabels(); return null; }
+          if (AUD.bufs[k]) { k++; return next(); }
+          return fetch('voice/v' + k + '.mp3?v=9').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); }).then((b) => AUD.ctx.decodeAudioData(b)).then((buf) => { AUD.bufs[k] = buf; AUD.ok = true; k++; return next(); });
+        };
+        return next();
+      }).catch(fail);
+    } catch (_) { fail(); }
   };
   loadClips();
   const wake = () => { try { if (AUD.ctx && AUD.ctx.state === 'suspended') AUD.ctx.resume(); } catch (_) {} };
@@ -2714,8 +2726,8 @@ const VO = (() => {
   const stopAll = () => { AUD.nodes.forEach((n) => { try { n.stop(); } catch (_) {} }); AUD.nodes = []; endAt = 0; if (synth) synth.cancel(); };
   const backlog = () => (AUD.ok && AUD.ctx ? Math.max(0, endAt - AUD.ctx.currentTime) : synth && (synth.speaking || synth.pending) ? 3 : 0);
   const playClips = (parts) => {
-    if (!AUD.ok || !parts.every((p) => AUD.map[p])) return false;
-    try { wake(); let t = Math.max(AUD.ctx.currentTime + 0.03, endAt > 0 ? endAt + 0.3 : 0); for (const p of parts) { const [o, d] = AUD.map[p], s = AUD.ctx.createBufferSource(); s.buffer = AUD.buf; s.connect(AUD.ctx.destination); s.start(t, o, d); AUD.nodes.push(s); t += d + (/[.!?]$/.test(p) ? 0.22 : /[,;:]$/.test(p) ? 0.16 : -0.01); } endAt = t; AUD.nodes = AUD.nodes.slice(-60); return true; } catch (_) { return false; }
+    if (!AUD.ok || !parts.every((p) => AUD.map[p] && AUD.bufs[AUD.map[p][2]])) return false;
+    const made = []; try { wake(); let t = Math.max(AUD.ctx.currentTime + 0.03, endAt > 0 ? endAt + 0.3 : 0); for (const p of parts) { const [o, d, k] = AUD.map[p], s = AUD.ctx.createBufferSource(); s.buffer = AUD.bufs[k]; s.connect(AUD.ctx.destination); s.start(t, o, d); AUD.nodes.push(s); made.push(s); t += d + (/[.!?]$/.test(p) ? 0.22 : /[,;:]$/.test(p) ? 0.16 : -0.01); } endAt = t; AUD.nodes = AUD.nodes.slice(-60); return true; } catch (_) { made.forEach((n) => { try { n.stop(); } catch (_e) { /* not started */ } }); return false; }
   };
   const build = (spec, vars) => {
     const items = Array.isArray(spec) ? spec : [[spec, vars]], parts = [], text = [];
@@ -2727,14 +2739,13 @@ const VO = (() => {
     if (!on || navigator.webdriver && !AUD.ok) return;
     if (!AUD.ok && AUD.state === 'loading' && !(navigator.webdriver)) return;
     if (backlog() > 12) return;
-    if (playClips(b.parts)) { lastAt = Date.now() + backlog() * 1000; return; }
-    if (!synth) return;
-    try { const u = new SpeechSynthesisUtterance(b.text); if (voice) { u.voice = voice; u.lang = voice.lang; } u.pitch = 1.8; u.rate = 0.86; synth.speak(u); } catch (_) {}
+    if (playClips(b.parts)) lastAt = Date.now() + backlog() * 1000;
+    return;
   };
   const chat = (spec, vars, p) => { if (Math.random() < (p == null ? 1 : p) && backlog() < 4) say(spec, vars); };
   const orderLine = (o) => { const pos = Math.min(ORDERS_PER_MONTH, run.orders.filter((e) => e.n !== state.n).length + 1); return [pos === 1 ? ['openFirst', { n: Math.min(30, run.month) }] : ['openLater', { n: pos }], o.scoops === 1 ? ['scoops1'] : ['scoopsN', { n: o.scoops }], ['loves', { list: o.theme.loves.map((t) => plural(t, 2)) }], o.dislikes.length ? ['hates', { list: o.dislikes.map((t) => plural(t, 2)) }] : null, o.colour ? ['wantColour', { wcolour: o.colour.name.toLowerCase() }] : null, o.swap ? ['swapReq', { item: plural(o.swap.type, 1) }] : null, ['closer']]; };
   const resultLine = (r, adj) => [[r.damaged ? 'resSquashed' : 'res' + r.stars], adj && adj.tip ? ['tip'] : null, adj && adj.net < 0 ? ['loss'] : adj && adj.net > 0 && r.stars >= 4 ? ['gain'] : null];
-  const ambient = () => { if (!on || (!synth && !AUD.ok) || (navigator.webdriver && !AUD.ok) || document.hidden) return; const st = document.getElementById('start'); if ((st && !st.hidden) || ['shop', 'how'].some((i) => { const e = document.getElementById(i); return e && !e.hidden; }) || Date.now() - lastAt < 9000) return; const key = { scoop: 'ambScoop', shelf: 'ambShelf', box: 'ambBox', pack: 'ambPack' }[state.phase]; if (key && !document.getElementById('modal')?.innerHTML) say(key); };
+  const ambient = () => { if (!on || !AUD.ok || (navigator.webdriver && !AUD.ok) || document.hidden) return; const st = document.getElementById('start'); if ((st && !st.hidden) || ['shop', 'how'].some((i) => { const e = document.getElementById(i); return e && !e.hidden; }) || Date.now() - lastAt < 9000) return; const key = { scoop: 'ambScoop', shelf: 'ambShelf', box: 'ambBox', pack: 'ambPack' }[state.phase]; if (key && !document.getElementById('modal')?.innerHTML) say(key); };
   if (!navigator.webdriver || /voicetest/.test(location.search)) setInterval(ambient, 3000);
   return { say, chat, rnd, nextVoice, plural, orderLine, resultLine, LINES, clipSet, segs, parts: (spec, vars) => build(spec, vars).parts, get ready() { return AUD.ok; }, get state() { return AUD.state; }, get on() { return on; }, set(v) { on = !!v; try { localStorage.setItem('luckyScoopsVoice', on ? 'on' : 'off'); } catch (_) {} if (!on) stopAll(); }, get last() { return last; } };
 })();
@@ -4242,10 +4253,10 @@ function showHowTo(first) {
   const S = [['🧾', 'Read the order', 'Each customer sends a note: how many scoops they want, what they love, and what they would rather not get.'], ['🥣', 'Scoop &amp; count', 'Scoop beads onto the mat and tap each one to count it. Each colour and shape means a different item.'], ['🛒', 'Pick from the shelf', "Pick the items you counted and choose a look for each from the ones you own. Every look costs hearts, and what is left of the customer's payment is your profit. Find more looks in the shop."], ['🎀', 'Dress the box', 'Pick a size, colour, pattern and tissue lining. Prettier boxes make happier customers.'], ['📦', 'Pack it', 'Drag items into the box, tap to turn them, fold them to make them smaller, and wrap them to improve presentation.'], ['📮', 'Seal &amp; ship', 'Close the lid and send it off. Your customer leaves a star review for neat packing, loved items and your profit. Great reviews earn tips, but low ones mean a refund. Finish 5 orders to end the level, then spend your hearts in the shop.'], ['📈', 'Level up', 'Ship 5 orders to finish a level and move up to the next one, all the way to level 30. Each level customers pay more per scoop, but orders get bigger and trickier, with colour requests from level 4 and swaps from level 8. Your shop score and star rating show how you are doing.'], ['🩷', 'Earn &amp; spend hearts', 'You earn hearts from each order: what the customer pays, minus the cost of the items and box, plus tips for great reviews. You lose hearts when you pick pricey looks, and when a low review means a refund. At the end of the level your profit goes into the shop bank, and you spend it on new packs of looks in the shop.']];
   const h = $('#how');
   h.innerHTML = '<div class="hh"><button class="hb" id="howBack" type="button" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg></button><div><h1>How to play</h1><div class="hs">Your first shift at Lucky Scoops</div></div></div>' +
-    '<div class="hbody"><div class="paper">' + S.map((x, k) => '<div class="st"><div class="ic">' + x[0] + '</div><div><b><i>' + (k + 1) + '.</i> ' + x[1] + '</b><span>' + x[2] + '</span></div></div>').join('') + '</div><div class="tip">Tip: the ? button opens this again any time.</div><button class="btn vbtn" id="howVoice" type="button">' + voiceLabel() + '</button><button class="btn vbtn" id="howVoice2" type="button">🎀 Try a different voice</button></div>' +
+    '<div class="hbody"><div class="paper">' + S.map((x, k) => '<div class="st"><div class="ic">' + x[0] + '</div><div><b><i>' + (k + 1) + '.</i> ' + x[1] + '</b><span>' + x[2] + '</span></div></div>').join('') + '</div><div class="tip">Tip: the ? button opens this again any time.</div><button class="btn vbtn" id="howVoice" type="button">' + voiceLabel() + '</button></div>' +
     '<div class="hf"><button class="btn" id="howFaq" type="button">FAQs</button><button class="btn primary" id="howOk" type="button">' + (first ? 'Start my first order' : 'Got it') + '</button></div>';
   h.hidden = false;
-  $('#howFaq').addEventListener('click', () => showFaq(first)); bindVoice('#howVoice'); $('#howVoice2').addEventListener('click', () => { VO.set(true); VO.nextVoice(); document.querySelectorAll('.vbtn').forEach((x) => { if (x.id !== 'howVoice2') x.textContent = voiceLabel(); }); VO.say('hiVoice'); });
+  $('#howFaq').addEventListener('click', () => showFaq(first)); bindVoice('#howVoice'); 
   const close = () => { try { localStorage.setItem('luckyScoopsHow', '1'); } catch (_) {} h.hidden = true; h.innerHTML = ''; if (first && state.phase === 'order' && state.order) VO.say(VO.orderLine(state.order)); };
   $('#howOk').addEventListener('click', close); $('#howBack').addEventListener('click', close);
 }
@@ -4325,7 +4336,7 @@ function progressHTML() {
     '<div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + Math.max(3, pct) + '%"></span></div>' +
     '<div class="pr2"><div><b>' + (shown === null ? '–' : shown) + '</b><small>shop score' + (score === null && last ? ' (last level)' : '') + '</small></div><div><b>' + (avg === null ? (last ? last.stars.toFixed(1) : '–') : avg.toFixed(1)) + '<em>★</em></b><small>avg rating</small></div><div><b>' + (shown === null ? 'New shop' : rankOf(shown)) + '</b><small>shop rank</small></div></div></div>';
 }
-const voiceLabel = () => (VO.on ? '🔊 Voice on' + (VO.state === 'ok' ? ' 🩷' : VO.state === 'failed' ? ' (phone backup)' : ' (loading…)') : '🔇 Voice off');
+const voiceLabel = () => (VO.on ? '🔊 Voice on' + (VO.state === 'ok' ? ' 🩷' : VO.state === 'failed' ? ' (could not load)' : ' (loading…)') : '🔇 Voice off');
 function bindVoice(id) { const b = $(id); if (!b) return; b.addEventListener('click', () => { VO.set(!VO.on); document.querySelectorAll('.vbtn').forEach((x) => { x.textContent = voiceLabel(); }); if (VO.on) VO.say('hi'); }); }
 function showStart() {
   const st = $('#start');
