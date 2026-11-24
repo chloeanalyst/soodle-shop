@@ -788,6 +788,15 @@ body.tl #shelfStage{grid-template-columns:minmax(0,1fr) 40%}
 body.tl #scoopStage .table .physwrap{border-left:0;box-shadow:none}
 body.tl #scoopStage::after{content:'';position:absolute;top:0;bottom:0;left:calc(var(--jcol) - 6px);width:12px;z-index:6;pointer-events:none;background:linear-gradient(90deg,#c98f5a,#e3b07a 45%,#c98f5a);box-shadow:-3px 0 8px rgba(70,40,20,.22),3px 0 8px rgba(70,40,20,.22)}
 body.tl #shelfStage #shelfTable{border-left:12px solid #d7a06a;box-shadow:-3px 0 8px rgba(70,40,20,.22),inset 3px 0 6px rgba(70,40,20,.15)}
+body.tl #shelfStage #shelf .srow{grid-template-columns:repeat(4,minmax(0,1fr));zoom:1.12;padding:6px 0 2px}
+body.tl #shelfStage #shelf{padding-top:2px;justify-content:flex-start}
+body.tl #shelfStage #shelfTable{margin-top:-58px}
+body.tl #shelfStage #shelfTable .scoopbtns{position:absolute;top:58px;left:10px;right:10px;margin:0;z-index:8}
+body.tl #shelfStage .cork{flex-direction:row;align-items:flex-start;gap:8px}
+body.tl #shelfStage .cork .ordtag{flex:1 1 0;min-width:0}
+body.tl #shelfStage #noteCard{margin-top:120px}
+body.tl #shelfStage .pickbasket{margin-top:290px}
+body.tl #shelfStage #shelfTable .scoopbtns .btn{font-size:14px;padding:4px 6px;min-height:44px}
 </style>
 </head>
 <body>
@@ -3861,7 +3870,8 @@ function renderShelf() {
   };
   const lockedCell = (t, k) => '<button type="button" class="basket locked tub' + (k % 6) + '" data-shop="' + t + '" aria-label="' + TYPES[t].name + ' is locked. Open the shop"><span class="bk-front"><span class="bk-lock" aria-hidden="true">🔒</span></span><span class="bk-name">' + (TYPES[t].short || TYPES[t].name) + '</span></button>';
   const allKeys = document.body.classList.contains('tl') ? keys.concat(Object.keys(TYPES).filter((t) => !keys.includes(t))) : keys;
-  let rows = ''; for (let r = 0; r < allKeys.length; r += 5) rows += '<div class="srow">' + allKeys.slice(r, r + 5).map((t, i) => (keys.includes(t) ? cell(t, r + i) : lockedCell(t, r + i))).join('') + '</div><div class="plank"></div>';
+  let rows = ''; const PER = document.body.classList.contains('tl') ? 4 : 5;
+  for (let r = 0; r < allKeys.length; r += PER) rows += '<div class="srow">' + allKeys.slice(r, r + PER).map((t, i) => (keys.includes(t) ? cell(t, r + i) : lockedCell(t, r + i))).join('') + '</div><div class="plank"></div>';
   el.shelf.innerHTML = rows;
   const pw = el.pickBasket.clientWidth || 360, sk = pw / 360, cw = pw * 0.5, COLS = 4, pcell = cw / COLS, rowStep = 15 * sk;
   const pile = sc.picked.map((it, i) => {
