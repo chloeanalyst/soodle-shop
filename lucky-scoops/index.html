@@ -2694,10 +2694,13 @@ const VO = (() => {
   };
 
   // playback: recorded clips through Web Audio, with the phone's voice as a back-up
-  const AUD = { ctx: null, buf: null, map: null, ok: false, nodes: [] };
+  const AUD = { ctx: null, buf: null, map: null, ok: false, nodes: [], state: 'loading', tries: 0 };
+  const refreshLabels = () => { try { document.querySelectorAll('.vbtn').forEach((x) => { if (x.id !== 'howVoice2' && typeof voiceLabel === 'function') x.textContent = voiceLabel(); }); } catch (_) {} };
   const loadClips = () => {
     if (navigator.webdriver && !/voicetest/.test(location.search)) return;
-    try { Promise.all([fetch('voice/voice.json').then((r) => r.json()), fetch('voice/voice.mp3').then((r) => r.arrayBuffer())]).then(([j, b]) => { const C = window.AudioContext || window.webkitAudioContext; AUD.ctx = new C(); return AUD.ctx.decodeAudioData(b).then((buf) => { AUD.buf = buf; AUD.map = j; AUD.ok = true; }); }).catch(() => {}); } catch (_) {}
+    AUD.tries++;
+    const fail = () => { if (AUD.tries < 4) setTimeout(loadClips, 2500 * AUD.tries); else { AUD.state = 'failed'; refreshLabels(); } };
+    try { Promise.all([fetch('voice/voice.json?v=5').then((r) => { if (!r.ok) throw 0; return r.json(); }), fetch('voice/voice.mp3?v=5').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); })]).then(([j, b]) => { const C = window.AudioContext || window.webkitAudioContext; if (!AUD.ctx) AUD.ctx = new C(); return AUD.ctx.decodeAudioData(b).then((buf) => { AUD.buf = buf; AUD.map = j; AUD.ok = true; AUD.state = 'ok'; refreshLabels(); }); }).catch(fail); } catch (_) { fail(); }
   };
   loadClips();
   const wake = () => { try { if (AUD.ctx && AUD.ctx.state === 'suspended') AUD.ctx.resume(); } catch (_) {} };
@@ -2716,6 +2719,7 @@ const VO = (() => {
   const say = (spec, vars) => {
     const b = build(spec, vars); last = b.text; lastAt = Date.now(); said.push(b.text); if (said.length > 10) said.shift();
     if (!on || navigator.webdriver && !AUD.ok) return;
+    if (!AUD.ok && AUD.state === 'loading' && !(navigator.webdriver)) return;
     if (backlog() > 12) return;
     if (playClips(b.parts)) { lastAt = Date.now() + backlog() * 1000; return; }
     if (!synth) return;
@@ -2726,7 +2730,7 @@ const VO = (() => {
   const resultLine = (r, adj) => [[r.damaged ? 'resSquashed' : 'res' + r.stars], adj && adj.tip ? ['tip'] : null, adj && adj.net < 0 ? ['loss'] : adj && adj.net > 0 && r.stars >= 4 ? ['gain'] : null];
   const ambient = () => { if (!on || (!synth && !AUD.ok) || (navigator.webdriver && !AUD.ok) || document.hidden) return; const st = document.getElementById('start'); if ((st && !st.hidden) || ['shop', 'how'].some((i) => { const e = document.getElementById(i); return e && !e.hidden; }) || Date.now() - lastAt < 9000) return; const key = { scoop: 'ambScoop', shelf: 'ambShelf', box: 'ambBox', pack: 'ambPack' }[state.phase]; if (key && !document.getElementById('modal')?.innerHTML) say(key); };
   if (!navigator.webdriver || /voicetest/.test(location.search)) setInterval(ambient, 3000);
-  return { say, chat, rnd, nextVoice, plural, orderLine, resultLine, LINES, clipSet, segs, parts: (spec, vars) => build(spec, vars).parts, get ready() { return AUD.ok; }, get on() { return on; }, set(v) { on = !!v; try { localStorage.setItem('luckyScoopsVoice', on ? 'on' : 'off'); } catch (_) {} if (!on) stopAll(); }, get last() { return last; } };
+  return { say, chat, rnd, nextVoice, plural, orderLine, resultLine, LINES, clipSet, segs, parts: (spec, vars) => build(spec, vars).parts, get ready() { return AUD.ok; }, get state() { return AUD.state; }, get on() { return on; }, set(v) { on = !!v; try { localStorage.setItem('luckyScoopsVoice', on ? 'on' : 'off'); } catch (_) {} if (!on) stopAll(); }, get last() { return last; } };
 })();
 // ---- the 30 months: each month sets how much to pack, how many scoops, what a scoop pays and how many dislikes a customer has
 const MAX_MONTH = 30;
@@ -4315,7 +4319,7 @@ function progressHTML() {
     '<div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + Math.max(3, pct) + '%"></span></div>' +
     '<div class="pr2"><div><b>' + (shown === null ? '–' : shown) + '</b><small>shop score' + (score === null && last ? ' (last level)' : '') + '</small></div><div><b>' + (avg === null ? (last ? last.stars.toFixed(1) : '–') : avg.toFixed(1)) + '<em>★</em></b><small>avg rating</small></div><div><b>' + (shown === null ? 'New shop' : rankOf(shown)) + '</b><small>shop rank</small></div></div></div>';
 }
-const voiceLabel = () => (VO.on ? '🔊 Voice on' : '🔇 Voice off');
+const voiceLabel = () => (VO.on ? '🔊 Voice on' + (VO.state === 'ok' ? ' 🩷' : VO.state === 'failed' ? ' (phone backup)' : ' (loading…)') : '🔇 Voice off');
 function bindVoice(id) { const b = $(id); if (!b) return; b.addEventListener('click', () => { VO.set(!VO.on); document.querySelectorAll('.vbtn').forEach((x) => { x.textContent = voiceLabel(); }); if (VO.on) VO.say('hi'); }); }
 function showStart() {
   const st = $('#start');
