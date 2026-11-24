@@ -800,6 +800,15 @@ body.tl #shelfStage #shelfTable .scoopbtns .btn{font-size:14px;padding:4px 6px;m
 body.tl #scoopStage{width:100vw;max-width:none;margin-left:calc(50% - 50vw);margin-right:0}
 body.tl #scoopStage .jarshelves{padding-left:16px;padding-right:20px}
 body.tl #scoopStage .scoopbtns{left:16px;width:calc(var(--jcol) - 36px)}
+/* tablet landscape shelf v86: cloth to the top, ctas under the shelves, basket at the bottom */
+body.tl #shelfStage{margin-top:-58px;padding-top:58px;box-sizing:border-box}
+body.tl #shelfStage #shelfTable{margin-top:-58px}
+body.tl #shelfStage #shelf{margin-top:-58px;padding-top:8px;display:flex;flex-direction:column;justify-content:space-evenly;height:calc(100% + 58px - 74px);align-self:start;grid-row:1/3}
+body.tl #shelfStage #shelf .srow{width:min(100%,calc((100vh - 96px) / 3 / 1.2 * 4));margin-left:auto;margin-right:auto;zoom:1;padding:6px 0 2px}
+body.tl #shelfStage #shelfTable .scoopbtns{position:fixed;top:auto;bottom:10px;left:16px;right:auto;width:calc((100vw - 12px) * .6 - 36px);display:flex;gap:10px;z-index:9}
+body.tl #shelfStage #shelfTable .scoopbtns .btn{flex:1;min-height:50px;font-size:16px}
+body.tl #shelfStage #noteCard{margin-top:64px}
+body.tl #shelfStage .pickbasket{margin-top:auto;margin-bottom:16px;align-self:center;max-height:190px}
 </style>
 </head>
 <body>
