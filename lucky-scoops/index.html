@@ -3,6 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<script>
+/* Tablets in portrait: lay the game out as a wider phone (about 580px) and let the browser scale it up, so it fills the screen width */
+(function () {
+  var base = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
+  function set() {
+    try {
+      var m = document.querySelector('meta[name=viewport]'), sw = screen.width, sh = screen.height, small = Math.min(sw, sh);
+      var portrait = window.matchMedia('(orientation: portrait)').matches;
+      m.setAttribute('content', small >= 600 && portrait ? 'width=580, viewport-fit=cover' : base);
+    } catch (e) {}
+  }
+  set();
+  window.addEventListener('orientationchange', function () { setTimeout(set, 60); });
+})();
+</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#f6efe4">
 <title>Lucky Scoops · a cosy dog-themed bead-packing game | Soodle</title>
@@ -709,6 +724,12 @@ body[data-stage="scoop"] header.top,body[data-stage="scoop"].hosttool header.top
 .rev .rh{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px}.rev .rs{color:#ffb62e;font-size:12px;letter-spacing:1px}.rev .rs .off{color:#e8dbe0}.rev .rp{margin-left:auto}.rev .pos{color:#1f8a56}.rev .neg{color:#c0233f}
 .cork{padding:12px 8px 8px}.cork .ordtag{padding:12px 8px 7px;flex-basis:108px}.ordtag .ot-k{padding-bottom:2px;margin-bottom:3px}.ordtag .pchips{gap:2px;margin-bottom:2px}.ordtag .pchip{font-size:10.5px;padding:0 6px;line-height:18px}.ordtag .ot-s{margin-top:4px}.ordtag .ot-till{margin-top:4px;padding-top:4px;gap:1px}.ot-till .tl-face{font-size:20px}.ot-till .tl-txt{font-size:10.5px}.ot-till .tl-row{font-size:10.5px}.ot-till .tl-row b{font-size:12px}.cork .paper .nt{line-height:1.15}
 .vbtn{margin-top:10px;width:100%;min-height:44px}#start .vbtn{min-height:44px;font-size:15px;margin-top:8px}
+@media (min-width:540px) and (orientation:portrait){
+  #start .sbot{max-width:520px}
+  .card.slip{width:min(440px,100%)}.card.shopf{width:min(440px,100%)}
+  #how .paper,#how .tip{max-width:540px}#how .hf{max-width:560px}
+  #shop .pkdc{max-width:540px}
+}
 </style>
 </head>
 <body>
