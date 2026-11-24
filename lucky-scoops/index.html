@@ -731,14 +731,14 @@ body[data-stage="scoop"] header.top,body[data-stage="scoop"].hosttool header.top
   #shop .pkdc{max-width:540px}
 }
 /* tall landscape (tablets): jars stand in two columns so the mat gets the width */
-body.tl #scoopStage{--jcol:min(25%,250px)}
+body.tl #scoopStage{--jcol:min(40%,520px)}
 body.tl #scoopStage .jarshelves{gap:10px;padding-bottom:64px;justify-content:flex-start;padding-top:10px}
 body.tl #scoopStage .jtag{font-size:11px;padding:2px 7px 2px 3px}
 body.tl #scoopStage .jtag img{width:15px;height:15px}
-body.tl #scoopStage .jar .glass{width:58px;height:54px}
-body.tl #scoopStage .jar .lid{width:40px}
-body.tl #scoopStage .jar .glass img{width:20px;height:20px}
-body.tl #scoopStage .scoopbtns .btn{font-size:13px;padding:4px 2px}
+body.tl #scoopStage .jar .glass{width:66px;height:58px}
+body.tl #scoopStage .jar .lid{width:46px}
+body.tl #scoopStage .jar .glass img{width:22px;height:22px}
+body.tl #scoopStage .scoopbtns .btn{font-size:15px;padding:4px 6px;min-height:46px}
 body.tl #shelfStage .notecard .cork{height:auto;align-items:flex-start}
 body.tl #shelfStage .nt{font-size:17px}
 body.tl #shelfStage .paper .ptitle{font-size:13px}
@@ -3735,7 +3735,7 @@ function beadLegend(withCounts) {
 // Scoop screen: a glass jar per item on one or two wall shelves; the label on the shelf front shows the bead and the item name.
 const JAR_POS = [[6, 1, -20], [22, 1, 15], [12, 11, 8], [28, 11, -12], [16, 21, 20], [4, 21, -8], [30, 21, 14]];
 function jarShelves() {
-  const all = Object.keys(TYPES), tl = document.body.classList.contains('tl'), per = tl ? 2 : Math.ceil(all.length / 2);
+  const all = Object.keys(TYPES), tl = document.body.classList.contains('tl'), per = tl ? 3 : Math.ceil(all.length / 2);
   const rows = []; for (let i = 0; i < all.length; i += per) rows.push(all.slice(i, i + per));
   return rows.map((row) => {
     let jars = '', tags = '';
