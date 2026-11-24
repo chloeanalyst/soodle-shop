@@ -2602,7 +2602,9 @@ const lookOf = (type, v) => { const l = variantsOf(type); return l.length ? l[(v
 const COLOUR_FROM_MONTH = 4, SWAP_FROM_MONTH = 8; // from month 8 a customer may bring back an old item and ask for a different look of it
 const CUSTOMERS = [{ name: 'Mia', emoji: '🧸' }, { name: 'Noah', emoji: '🎒' }, { name: 'Ava', emoji: '🌸' }, { name: 'Leo', emoji: '🚀' }, { name: 'Zoe', emoji: '🍓' }, { name: 'Sam', emoji: '🐱' }];
 
-/* ---------- voice over: a cute packer talking through the order, like a packing video ---------- */
+/* ---------- voice over: a cute packer talking through the order, like a packing video ----------
+   Lines are recorded clips (voice/voice.mp3 + voice.json), played back to back. Each line is a template like 'Pop the {item} in here.';
+   the words between the {tokens} and every token value are separate clips. If the clips are not there, the phone's own voice reads the line instead. */
 const VO = (() => {
   let on = true, voice = null, last = '', lastAt = 0;
   try { on = localStorage.getItem('luckyScoopsVoice') !== 'off'; } catch (_) {}
@@ -2612,17 +2614,118 @@ const VO = (() => {
   const recent = [], said = []; // what was picked and spoken lately, so the same thing is not said again close by
   const rnd = (a) => { let c = a.filter((x) => !recent.includes(x)); if (!c.length) c = a.filter((x) => x !== recent[recent.length - 1]); if (!c.length) c = a; const x = c[Math.floor(Math.random() * c.length)]; recent.push(x); if (recent.length > 30) recent.shift(); return x; };
   const nextVoice = () => { if (!synth) return ''; const en = synth.getVoices().filter((v) => /^en/i.test(v.lang)); if (!en.length) return ''; voice = en[(en.indexOf(voice) + 1) % en.length]; try { localStorage.setItem('luckyScoopsVoiceName', voice.name); } catch (_) {} return voice.name; };
-  const say = (text) => { last = text; lastAt = Date.now(); said.push(text); if (said.length > 10) said.shift(); if (!on || !synth || navigator.webdriver) return; try { synth.cancel(); const u = new SpeechSynthesisUtterance(text); if (voice) { u.voice = voice; u.lang = voice.lang; } u.pitch = 1.8; u.rate = 0.86; synth.speak(u); } catch (_) {} };
-  const chat = (text, p) => { if (said.includes(text)) return; if (Math.random() < (p == null ? 1 : p) && Date.now() - lastAt > 1200) say(text); }; // extra chatter: skipped sometimes, and never talks over the last line
   const plural = (n, c) => { const w = TYPES[n] ? TYPES[n].name.toLowerCase() : n; return c === 1 || /s$/.test(w) ? w : w + 's'; };
-  const list = (a) => (a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
-  const orderLine = (o) => { const pos = Math.min(ORDERS_PER_MONTH, run.orders.filter((e) => e.n !== state.n).length + 1); return (pos === 1 ? rnd(['Level ' + run.month + '! Come pack orders with me!', 'POV: you run a tiny bead shop, and it is level ' + run.month + '.', 'Level ' + run.month + ', let us gooo!']) : rnd(['Ooh, a new order!', 'Okay, order number ' + pos + '!', 'Yay, another order!', 'Come pack this one with me!', 'Packing orders, but make it cute!', 'Order number ' + pos + ' of the day!'])) + ' ' +  (o.scoops === 1 ? 'Just one scoop' : o.scoops + ' scoops') + ' this time. They love ' + list(o.theme.loves.map((t) => plural(t, 2))) + '.' + (o.dislikes.length ? ' And please, no ' + list(o.dislikes.map((t) => plural(t, 2))) + '.' : '') + (o.colour ? ' They also want something ' + o.colour.name.toLowerCase() + '.' : '') + (o.swap ? ' And they want a different ' + TYPES[o.swap.type].name.toLowerCase() + ' this time.' : '') + ' ' + rnd(["Let's go!", 'This is going to be so satisfying.', 'Okay, scoop time!', 'Pack with me!']); };
-  const resultLine = (r, adj) => (r.damaged ? 'Oh no, the box got squashed! That is a refund.' : r.stars === 5 ? rnd(['Five stars! They loved it!', 'Five stars, yay! So happy!']) : r.stars === 4 ? 'Four stars, yay! So close to perfect!' : r.stars === 3 ? 'Three stars. Not bad! We can do better.' : r.stars === 2 ? 'Two stars. Oh no, they want a refund. Next time!' : 'One star. Oh no. That is a refund.') + (adj && adj.tip ? ' And they left a tip!' : '') + (adj && adj.net < 0 ? ' Ouch, no profit on that one.' : adj && adj.net > 0 && r.stars >= 4 ? rnd([' Lovely profit too!', ' And a nice profit, yay!']) : '');
 
-  const AMBIENT = { scoop: ['Mmm, the sound of these beads is so satisfying.', 'Which beads should we scoop next?', 'I could do this all day. So relaxing!', 'Okay, tap the beads to count them.', 'Pastel beads are my favourite.'], shelf: ['Ooh, which ones do we pick?', 'The shelf is so cute today.', 'Pick the cutest ones for this customer.', 'So many pretty things!'], box: ['This is the best part, choosing the box.', 'Ooh, what colour should it be?', 'Tissue paper makes everything better.'], pack: ['Okay, tiny puzzle time.', 'Fit it all in, nice and neat.', 'The packing is so satisfying.', 'Tap an item to turn it.', 'Try wrapping something with a bow!', 'Not too high, or the lid will not close.'] };
-  const ambient = () => { if (!on || !synth || navigator.webdriver || document.hidden) return; const st = document.getElementById('start'); if ((st && !st.hidden) || ['shop', 'how'].some((i) => { const e = document.getElementById(i); return e && !e.hidden; }) || Date.now() - lastAt < 9000) return; const pool = AMBIENT[state.phase]; if (pool && !document.getElementById('modal')?.innerHTML) say(rnd(pool)); };
-  if (synth && !navigator.webdriver) setInterval(ambient, 3000);
-  return { say, chat, rnd, nextVoice, plural, orderLine, resultLine, get on() { return on; }, set(v) { on = !!v; try { localStorage.setItem('luckyScoopsVoice', on ? 'on' : 'off'); } catch (_) {} if (!on && synth) synth.cancel(); }, get last() { return last; } };
+  // every line the packer can say, grouped by moment. {tokens}: item, items, n, list, wcolour, colour, size, pattern, tissue
+  const LINES = {
+    openFirst: ['Level {n}! Come pack orders with me!', 'Point of view, you run a tiny bead shop, and it is level {n}.', 'Level {n}, let us gooo!'],
+    openLater: ['Ooh, a new order!', 'Okay, order number {n}!', 'Yay, another order!', 'Come pack this one with me!', 'Packing orders, but make it cute!', 'Order number {n} of the day!'],
+    scoops1: ['Just one scoop this time.'], scoopsN: ['{n} scoops this time.'],
+    loves: ['They love {list}.'], hates: ['And please, no {list}.'], wantColour: ['They also want something {wcolour}.'], swapReq: ['And they want a different {item} this time.'],
+    closer: ['Let us go!', 'This is going to be so satisfying.', 'Okay, scoop time!', 'Pack with me!'],
+    scoopStart: ['Time to scoop! Let us see what we get.', 'Okay, scooping time!', 'Ooh, so many pretty beads!'],
+    scoopUsed: ['Ooh, nice scoop!', 'Look at all these beads!', 'Yum, so many beads!', 'Okay, let us see what we got!'],
+    countFirst: ['Ooh, a {item}!', 'Found a {item}!', 'Look, a {item}!', 'Oh, a {item}!'],
+    countNext: ['{n} {items}.', 'Okay, {n} {items}!', '{n} so far!', 'That makes {n}.'],
+    putBack: ['Oops, putting that one back.', 'Changed my mind, back it goes.'],
+    clear: ['Clearing the mat!', 'Sweeping those away!'],
+    shelfIntro: ['Okay, now let us pick everything from the shelf.', 'Now to the shelf, so many cute things!'],
+    basket: ['Let us see which {item} to pick.', 'Ooh, so many {items}!', 'Which {item} is the cutest?'],
+    praise: ['So pretty!', 'Cute!', 'Love this one!', 'Ooh, perfect!'],
+    boxIntro: ['Now let us pick a cute box.', 'Time to choose a pretty box!'],
+    boxSize: ['Oh, a {size} box!', 'Going with {size}.'],
+    boxColour: ['What a {colour} box, so cute!', 'Ooh, {colour} is such a pretty colour.'],
+    boxPattern: ['{pattern}, love it!'], boxTissue: ['{tissue} tissue, so pretty!'], boxNoTissue: ['No lining for this one.'],
+    packIntro: ['Okay, the fun part! Let us pack it all in.', 'Now to fit everything in nicely.'],
+    placed: ['Ooh, that fits perfectly!', 'Snug as a bug!', 'Tuck it right in there.', 'Nice, one more in!', 'Pop the {item} in here.', 'That looks so neat.', 'Obsessed with how this is coming together.', 'Not me loving this so much.', 'Okay, that is so satisfying.', 'Chef kiss!'],
+    allIn: ['Everything is in! Now a little tissue, or seal it up.', 'That is everything in the box! Looking good.'],
+    picked: ['Ooh, the {item}!', 'Okay, this one next.', 'Where should the {item} go?'],
+    turn: ['Let us turn it the other way.', 'A quick flip.', 'Rotating it a little.'],
+    twist: ['Just a little twist.', 'Spin it round a bit.'],
+    undo: ['Oops, let us try that again!', 'Undo, undo!'],
+    reset: ['Okay, fresh start! Everything back out.', 'Let us start over, tipping it all out.'],
+    tissue: ['A little tissue to keep it all cosy.', 'Tissue paper makes it so pretty.', 'Tucking in some tissue!'],
+    fold: ['Folding it up nice and small!', 'Fold, fold, tiny!', 'Folding this so it fits.'],
+    wrap: ['Wrapping it up with a bow!', 'Paper, ribbon, bow, done!', 'A little gift wrap, so fancy.'],
+    seal: ['Lid on, tape tape tape, and off it goes!', 'Closing it up, and sealing it with tape!', 'Sealed with love. Off it goes!'],
+    blocked: ['Oh no, the lid will not close! It is piled up too high.', 'Hmm, the lid will not shut. Too much stacked up!'],
+    res5: ['Five stars! They loved it!', 'Five stars, yay! So happy!'], res4: ['Four stars, yay! So close to perfect!'], res3: ['Three stars. Not bad! We can do better.'],
+    res2: ['Two stars. Oh no, they want a refund. Next time!'], res1: ['One star. Oh no. That is a refund.'], resSquashed: ['Oh no, the box got squashed! That is a refund.'],
+    tip: ['And they left a tip!'], loss: ['Ouch, no profit on that one.'], gain: ['Lovely profit too!', 'And a nice profit, yay!'],
+    levelDone: ['Level complete! Let us see how the shop did.', 'That is a wrap on this level! Thanks for packing with me!', 'Level done! Come see how we did.'],
+    bought: ['Yay, new looks!', 'Ooh, new things for the shelf!', 'Bought! So cute.'],
+    shopOpen: ['Ooh, shopping time!', 'So many cute looks!'],
+    hi: ['Hi! Let us pack some orders!'], hiVoice: ['Hi! Do you like my voice? Let us pack some orders!'],
+    ambScoop: ['Mmm, the sound of these beads is so satisfying.', 'Which beads should we scoop next?', 'I could do this all day. So relaxing!', 'Okay, tap the beads to count them.', 'Pastel beads are my favourite.'],
+    ambShelf: ['Ooh, which ones do we pick?', 'The shelf is so cute today.', 'Pick the cutest ones for this customer.', 'So many pretty things!'],
+    ambBox: ['This is the best part, choosing the box.', 'Ooh, what colour should it be?', 'Tissue paper makes everything better.'],
+    ambPack: ['Okay, tiny puzzle time.', 'Fit it all in, nice and neat.', 'The packing is so satisfying.', 'Tap an item to turn it.', 'Try wrapping something with a bow!', 'Not too high, or the lid will not close.']
+  };
+  const dom = () => { const l = (o, f) => Object.keys(o).map((k) => f(o[k]).toLowerCase()); return { item: Object.keys(TYPES).map((t) => plural(t, 1)), items: Object.keys(TYPES).map((t) => plural(t, 2)), n: Array.from({ length: 30 }, (_, i) => String(i + 1)), wcolour: COLOURS.map((c) => c.name.toLowerCase()), colour: l(BOX_COLOURS, (x) => x[0]), size: l(BOX_SIZES, (x) => x.name), pattern: l(BOX_PATTERNS, (x) => x[0]), tissue: Object.keys(TISSUES).filter((k) => TISSUES[k][1]).map((k) => TISSUES[k][0].toLowerCase()) }; };
+  // split a template into clips: the words between tokens, and each token value (a punctuation mark after a token sticks to it)
+  const segs = (tpl, vars) => {
+    const atoms = [], re = /\{(\w+)\}/g; let at = 0, m;
+    const txt = (s) => { if (s) atoms.push({ t: 0, v: s }); };
+    while ((m = re.exec(tpl))) { txt(tpl.slice(at, m.index)); const v = vars[m[1]]; const vs = Array.isArray(v) ? v : [v]; vs.forEach((x, i) => { if (i && i === vs.length - 1) atoms.push({ t: 1, v: 'and' }); atoms.push({ t: 1, v: String(x) }); }); at = re.lastIndex; }
+    txt(tpl.slice(at));
+    const out = [];
+    for (let i = 0; i < atoms.length; i++) {
+      const a = atoms[i];
+      if (a.t) { out.push(a.v); continue; }
+      let s = a.v; const p = i > 0 && atoms[i - 1].t ? /^\s*([,.!?]+)/.exec(s) : null;
+      if (p) { out[out.length - 1] += p[1]; s = s.slice(p[0].length); }
+      (s.match(/[^.!?]+[.!?]*/g) || []).forEach((x) => { x = x.trim(); if (x && /\w/.test(x)) out.push(x); });
+    }
+    return out;
+  };
+  const fill = (tpl, v) => tpl.replace(/\{(\w+)\}/g, (_, k) => (Array.isArray(v[k]) ? v[k].length < 2 ? v[k].join('') : v[k].slice(0, -1).join(', ') + ' and ' + v[k][v[k].length - 1] : v[k]));
+  const clipSet = () => {
+    const D = dom(), set = new Set(), first = { list: [D.items[0]] }; Object.keys(D).forEach((k) => { first[k] = D[k][0]; });
+    const add = (t, v) => segs(t, v).forEach((x) => set.add(x));
+    Object.keys(LINES).forEach((key) => LINES[key].forEach((t) => {
+      const toks = Array.from(new Set(Array.from(t.matchAll(/\{(\w+)\}/g)).map((x) => x[1])));
+      if (!toks.length) { add(t, first); return; }
+      toks.forEach((k) => (k === 'list' ? D.items : D[k]).forEach((val) => {
+        if (k === 'list') [[val, D.items[1]], [D.items[1], val], [val]].forEach((l) => add(t, Object.assign({}, first, { list: l })));
+        else add(t, Object.assign({}, first, { [k]: val }));
+      }));
+    }));
+    return Array.from(set);
+  };
+
+  // playback: recorded clips through Web Audio, with the phone's voice as a back-up
+  const AUD = { ctx: null, buf: null, map: null, ok: false, nodes: [] };
+  const loadClips = () => {
+    if (navigator.webdriver && !/voicetest/.test(location.search)) return;
+    try { Promise.all([fetch('voice/voice.json').then((r) => r.json()), fetch('voice/voice.mp3').then((r) => r.arrayBuffer())]).then(([j, b]) => { const C = window.AudioContext || window.webkitAudioContext; AUD.ctx = new C(); return AUD.ctx.decodeAudioData(b).then((buf) => { AUD.buf = buf; AUD.map = j; AUD.ok = true; }); }).catch(() => {}); } catch (_) {}
+  };
+  loadClips();
+  const wake = () => { try { if (AUD.ctx && AUD.ctx.state === 'suspended') AUD.ctx.resume(); } catch (_) {} };
+  document.addEventListener('pointerdown', wake, true);
+  const stopAll = () => { AUD.nodes.forEach((n) => { try { n.stop(); } catch (_) {} }); AUD.nodes = []; if (synth) synth.cancel(); };
+  const playClips = (parts) => {
+    if (!AUD.ok || !parts.every((p) => AUD.map[p])) return false;
+    try { wake(); let t = AUD.ctx.currentTime + 0.03; for (const p of parts) { const [o, d] = AUD.map[p], s = AUD.ctx.createBufferSource(); s.buffer = AUD.buf; s.connect(AUD.ctx.destination); s.start(t, o, d); AUD.nodes.push(s); t += d + (/[.!?]$/.test(p) ? 0.09 : -0.01); } return true; } catch (_) { return false; }
+  };
+  const build = (spec, vars) => {
+    const items = Array.isArray(spec) ? spec : [[spec, vars]], parts = [], text = [];
+    items.forEach((it) => { if (!it) return; const key = it[0], v = it[1] || {}, tpl = LINES[key] ? rnd(LINES[key]) : key; segs(tpl, v).forEach((x) => parts.push(x)); text.push(fill(tpl, v)); });
+    return { parts, text: text.join(' ') };
+  };
+  const say = (spec, vars) => {
+    const b = build(spec, vars); last = b.text; lastAt = Date.now(); said.push(b.text); if (said.length > 10) said.shift();
+    if (!on || navigator.webdriver && !AUD.ok) return;
+    stopAll();
+    if (playClips(b.parts)) return;
+    if (!synth) return;
+    try { const u = new SpeechSynthesisUtterance(b.text); if (voice) { u.voice = voice; u.lang = voice.lang; } u.pitch = 1.8; u.rate = 0.86; synth.speak(u); } catch (_) {}
+  };
+  const chat = (spec, vars, p) => { if (Math.random() < (p == null ? 1 : p) && Date.now() - lastAt > 1200) say(spec, vars); };
+  const orderLine = (o) => { const pos = Math.min(ORDERS_PER_MONTH, run.orders.filter((e) => e.n !== state.n).length + 1); return [pos === 1 ? ['openFirst', { n: Math.min(30, run.month) }] : ['openLater', { n: pos }], o.scoops === 1 ? ['scoops1'] : ['scoopsN', { n: o.scoops }], ['loves', { list: o.theme.loves.map((t) => plural(t, 2)) }], o.dislikes.length ? ['hates', { list: o.dislikes.map((t) => plural(t, 2)) }] : null, o.colour ? ['wantColour', { wcolour: o.colour.name.toLowerCase() }] : null, o.swap ? ['swapReq', { item: plural(o.swap.type, 1) }] : null, ['closer']]; };
+  const resultLine = (r, adj) => [[r.damaged ? 'resSquashed' : 'res' + r.stars], adj && adj.tip ? ['tip'] : null, adj && adj.net < 0 ? ['loss'] : adj && adj.net > 0 && r.stars >= 4 ? ['gain'] : null];
+  const ambient = () => { if (!on || (!synth && !AUD.ok) || (navigator.webdriver && !AUD.ok) || document.hidden) return; const st = document.getElementById('start'); if ((st && !st.hidden) || ['shop', 'how'].some((i) => { const e = document.getElementById(i); return e && !e.hidden; }) || Date.now() - lastAt < 9000) return; const key = { scoop: 'ambScoop', shelf: 'ambShelf', box: 'ambBox', pack: 'ambPack' }[state.phase]; if (key && !document.getElementById('modal')?.innerHTML) say(key); };
+  if (!navigator.webdriver || /voicetest/.test(location.search)) setInterval(ambient, 3000);
+  return { say, chat, rnd, nextVoice, plural, orderLine, resultLine, LINES, clipSet, segs, parts: (spec, vars) => build(spec, vars).parts, get ready() { return AUD.ok; }, get on() { return on; }, set(v) { on = !!v; try { localStorage.setItem('luckyScoopsVoice', on ? 'on' : 'off'); } catch (_) {} if (!on) stopAll(); }, get last() { return last; } };
 })();
 // ---- the 30 months: each month sets how much to pack, how many scoops, what a scoop pays and how many dislikes a customer has
 const MAX_MONTH = 30;
@@ -3119,7 +3222,7 @@ function render() {
 let tissueN = 0;
 function addTissue(kind) { // a ball of tissue paper arrives in the tray: drop it into a gap so nothing rattles about
   if (state.phase !== 'pack') return;
-  VO.chat(VO.rnd(['A little tissue to keep it all cosy.', 'Tissue paper makes it so pretty.', 'Tucking in some tissue!']), 0.9);
+  VO.chat('tissue', null, 0.9);
   const id = 'tis' + (++tissueN);
   state.items.push({ id, type: kind === 'cover' ? 'tissuecover' : kind === 'sheet' ? 'tissuesheet' : 'tissue', v: 0, rot: 0, ang: 0, placed: null });
   state.sel = id; render();
@@ -3185,13 +3288,13 @@ function toggleMod() {
   if (state.phase !== 'pack') return;
   const it = state.sel && byId(state.sel), mods = it && TYPES[it.type].mods; if (!mods) return;
   const key = Object.keys(mods)[0], on = !it.mod;
-  reshape(it, (o) => { o.mod = on ? key : null; }, on ? (VO.say(VO.rnd(['Folding it up nice and small!', 'Fold, fold, tiny!', 'Folding this so it fits.'])), TYPES[it.type].name + ' ' + mods[key].done + '. Much smaller!') : TYPES[it.type].name + ' back to full size.');
+  reshape(it, (o) => { o.mod = on ? key : null; }, on ? (VO.say('fold'), TYPES[it.type].name + ' ' + mods[key].done + '. Much smaller!') : TYPES[it.type].name + ' back to full size.');
 }
 function toggleWrap() {
   if (state.phase !== 'pack') return;
   const it = state.sel && byId(state.sel); if (!it) return;
   const on = !it.wrap;
-  reshape(it, (o) => { o.wrap = on; }, on ? (VO.say(VO.rnd(['Wrapping it up with a bow!', 'Paper, ribbon, bow, done!', 'A little gift wrap, so fancy.'])), 'Wrapped in paper with a ribbon. It looks lovely!') : 'Unwrapped.');
+  reshape(it, (o) => { o.wrap = on; }, on ? (VO.say('wrap'), 'Wrapped in paper with a ribbon. It looks lovely!') : 'Unwrapped.');
 }
 
 function turnSelected() {
@@ -3235,12 +3338,12 @@ function moveLayer(dir) {
 }
 
 function undo() {
-  VO.chat(VO.rnd(['Oops, let us try that again!', 'Undo, undo!']), 0.8);
+  VO.chat('undo', null, 0.8);
   if (state.phase !== 'pack' || !state.history.length) return;
   restoreSnap(state.history.pop()); state.sel = null; render(); setMsg(defaultMsg());
 }
 function resetBox() {
-  VO.say(VO.rnd(['Okay, fresh start! Everything back out.', 'Let us start over, tipping it all out.']));
+  VO.say('reset');
   if (state.phase !== 'pack') return;
   for (const it of state.items) { it.placed = null; it.ang = 0; }
   state.stack = []; state.history = []; state.sel = null; render(); setMsg(defaultMsg());
@@ -3472,7 +3575,7 @@ function updateBoxStep() {
   el.boxStage.querySelectorAll('.bx-tab').forEach((x) => { const on = x.dataset.tab === state.boxTab; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); });
 }
 el.boxStage.addEventListener('click', (e) => {
-  const x = e.target.closest('.bx-o'); if (x) { state.boxSel[x.dataset.g] = x.dataset.id; { const g = x.dataset.g, id = x.dataset.id; try { VO.say(g === 'size' ? VO.rnd(['A ' + BOX_SIZES[id].name.toLowerCase() + ' box!', BOX_SIZES[id].name + ' it is.']) : g === 'colour' ? VO.rnd(['A ' + BOX_COLOURS[id][0].toLowerCase() + ' box, so cute!', BOX_COLOURS[id][0] + ' is such a pretty colour.']) : g === 'pattern' ? BOX_PATTERNS[id][0] + ', love it!' : TISSUES[id][1] ? TISSUES[id][0] + ' tissue, so pretty!' : 'No lining for this one.'); } catch (_) {} } updateBoxStep(); if (x.dataset.g === 'colour') document.querySelectorAll('.bx-o[data-g="pattern"]').forEach(() => {}); return; }
+  const x = e.target.closest('.bx-o'); if (x) { state.boxSel[x.dataset.g] = x.dataset.id; { const g = x.dataset.g, id = x.dataset.id; try { if (g === 'size') VO.say('boxSize', { size: BOX_SIZES[id].name.toLowerCase() }); else if (g === 'colour') VO.say('boxColour', { colour: BOX_COLOURS[id][0].toLowerCase() }); else if (g === 'pattern') VO.say('boxPattern', { pattern: BOX_PATTERNS[id][0].toLowerCase() }); else if (TISSUES[id][1]) VO.say('boxTissue', { tissue: TISSUES[id][0].toLowerCase() }); else VO.say('boxNoTissue'); } catch (_) {} } updateBoxStep(); if (x.dataset.g === 'colour') document.querySelectorAll('.bx-o[data-g="pattern"]').forEach(() => {}); return; }
   const tb = e.target.closest('.bx-tab'); if (tb) { state.boxTab = tb.dataset.tab; fillBoxRow(); updateBoxStep(); return; }
   if (e.target.closest('#btnBoxBack')) backToShelf(); else if (e.target.closest('#btnBoxGo')) confirmBox();
 });
@@ -3491,7 +3594,7 @@ function startPacking() {
   state.items = list.map((i) => ({ id: i.id, type: i.type, v: i.v || 0, rot: i.rot, ang: 0, placed: null }));
   state.stack = []; state.history = []; state.sel = null; state.phase = 'pack'; state.result = null;
   el.board.classList.remove('sealing'); el.board.dataset.lid = 'open'; el.lidsheet.hidden = true; el.lidsheet.innerHTML = ''; state.fill = 0; state.shipped = null; el.modal.hidden = true; el.modal.innerHTML = '';
-  showStage('pack'); render(); VO.say(VO.rnd(['Okay, the fun part! Let us pack it all in.', 'Now to fit everything in nicely.']));
+  showStage('pack'); render(); VO.say('packIntro');
   const counts = {}; for (const i of list) counts[i.type] = (counts[i.type] || 0) + 1;
   setMsg('You found: ' + Object.keys(TYPES).filter((t) => counts[t]).map((t) => counts[t] + ' × ' + TYPES[t].name).join(', ') + '.');
 }
@@ -3554,7 +3657,7 @@ function renderScoop() {
 }
 // Un-count a bead you tapped by mistake: it goes back on the mat.
 function uncount(type) {
-  VO.chat(VO.rnd(['Oops, putting that one back.', 'Changed my mind, back it goes.']), 1);
+  VO.chat('putBack', null, 1);
   const c = state.order.counted;
   if (state.phase !== 'scoop' || !c[type]) return false;
   c[type]--; phys.putBack(state.order.beads[type]); renderScoop(); scoopMsg(TYPES[type].name + ' put back on the mat.'); return true;
@@ -3669,7 +3772,7 @@ function renderLedger() {
 function addItem(type, v = 0) {
   const sc = state.scoop;
   if (state.phase !== 'shelf' || !TYPES[type]) return false;
-  sc.picked.push({ id: 'p' + (sc.picked.length + 1) + '_' + type, type, v, rot: 0 }); if (Math.random() < 0.4) VO.say(VO.rnd(['So pretty!', 'Cute!', 'Love this one!', 'Ooh, perfect!']));
+  sc.picked.push({ id: 'p' + (sc.picked.length + 1) + '_' + type, type, v, rot: 0 }); if (Math.random() < 0.4) VO.say('praise');
   renderShelf(); if (state.openBasket) renderSheet();
   const b = el.shelf.querySelector('.basket[data-type="' + type + '"]'); if (b) { b.classList.add('bump'); setTimeout(() => b.classList.remove('bump'), 400); }
   const o = state.order, need = (o.counted || {})[type] || 0, vn = (variantsOf(type)[v] || {}).name;
@@ -3693,7 +3796,7 @@ function removeItem(type, v = null) {
 }
 // Tap a basket and it opens, showing every look of that item to choose from.
 function openBasket(type) {
-  VO.chat(VO.rnd(['Let us see which ' + VO.plural(type, 1) + ' to pick.', 'Ooh, so many ' + VO.plural(type, 2) + '!', 'Which ' + VO.plural(type, 1) + ' is the cutest?']), 0.7);
+  VO.chat('basket', { item: VO.plural(type, 1), items: VO.plural(type, 2) }, 0.7);
   if (state.phase !== 'shelf') return;
   if (ownedIdx(type).length <= 1) { addItem(type, ownedIdx(type)[0] || 0); return; }
   state.openBasket = type; state.vq = ''; renderShelf(); renderSheet();
@@ -3723,7 +3826,7 @@ el.shelf.addEventListener('click', (e) => {
   const b = e.target.closest('.basket'); if (b) openBasket(b.dataset.type);
 });
 function goToShelf() {
-  VO.say(VO.rnd(['Okay, now let us pick everything from the shelf.', 'Now to the shelf, so many cute things!']));
+  VO.say('shelfIntro');
   if (state.phase !== 'scoop' || countedTotal() === 0) return;
   state.phase = 'shelf'; state.openBasket = null;
   showStage('shelf'); renderShelf(); shelfMsg('');
@@ -3775,7 +3878,7 @@ function startScooping() {
   state.phase = 'scoop';
   showStage('scoop');
   if (state.scoopLive) { renderScoop(); scoopMsg('Scoop from the bowl, tip onto the mat, then tap each bead to count it.'); return; } // coming back from the order slip: keep the beads as they were
-  state.scoopLive = true; VO.say(VO.rnd(['Time to scoop! Let us see what we get.', 'Okay, scooping time!', 'Ooh, so many pretty beads!']));
+  state.scoopLive = true; VO.say('scoopStart');
   phys.start(Object.fromEntries(ownedTypes().map((ty) => [state.order.beads[ty], 1]))); // a bead for every item you own; locked jars have no beads
   renderScoop();
   scoopMsg('Scoop from the bowl, tip onto the mat, then tap each bead to count it.');
@@ -3784,7 +3887,7 @@ function startScooping() {
 function onScoopUsed() {
   const sc = state.scoop;
   if (state.phase !== 'scoop' || sc.left <= 0) return;
-  sc.left--; VO.say(VO.rnd(['Ooh, nice scoop!', 'Look at all these beads!', 'Yum, so many beads!', 'Okay, let us see what we got!']));
+  sc.left--; VO.say('scoopUsed');
   renderScoop();
   if (sc.left === 0) { phys.lock(true); scoopMsg('Tap the beads to count them, then go to the shelf.'); }
   else scoopMsg('Tap beads to count them, or scoop again.');
@@ -3793,7 +3896,7 @@ function onPick(kind) { // tapping a bead on the mat counts it (you decide when 
   if (state.phase !== 'scoop') return 'Not now.';
   const type = Object.keys(TYPES).find((x) => state.order.beads[x] === kind);
   if (!type) return "That bead isn't on the list.";
-  const c = state.order.counted; c[type] = (c[type] || 0) + 1; VO.say(c[type] === 1 ? VO.rnd(['Ooh, a ', 'Found a ', 'A ', 'Look, a ']) + VO.plural(type, 1) + '!' : VO.rnd([c[type] + ' ' + VO.plural(type, c[type]) + '.', 'Okay, ' + c[type] + ' ' + VO.plural(type, c[type]) + '!', c[type] + ' so far!', 'That makes ' + c[type] + '.']));
+  const c = state.order.counted; c[type] = (c[type] || 0) + 1; VO.say(c[type] === 1 ? 'countFirst' : 'countNext', { item: VO.plural(type, 1), items: VO.plural(type, c[type]), n: Math.min(30, c[type]) });
   renderScoop();
   const row = el.legend.querySelector('.jar[data-type="' + type + '"]'); if (row) { row.classList.add('bump'); setTimeout(() => row.classList.remove('bump'), 400); }
   scoopMsg('');
@@ -3806,7 +3909,7 @@ function startFromShelf() {
   const need = Object.assign({}, state.order.counted), mc = matCounts(); // beads you never tapped still count as asked for
   for (const t of Object.keys(mc)) need[t] = (need[t] || 0) + mc[t];
   state.order.needed = need; state.order.picked = sc.picked.slice();
-  state.phase = 'box'; showStage('box'); renderBoxStep(); VO.say(VO.rnd(['Now let us pick a cute box.', 'Time to choose a pretty box!']));
+  state.phase = 'box'; showStage('box'); renderBoxStep(); VO.say('boxIntro');
 }
 // Quietly give one more scoop when you ran out with nothing on your list and no beads left to pick, so you are never stuck.
 function checkStuck() {
@@ -3823,11 +3926,11 @@ function seal() {
   if (analyse(placedRects()).maxDepth > DEPTH) { showBlocked(); return; } // piled too high: the lid will not shut
   state.phase = 'sealing'; state.sel = null; render();
   const r = scoreOrder(); state.result = r;
-  el.board.classList.add('sealing'); VO.say(VO.rnd(['Lid on, tape tape tape, and off it goes!', 'Closing it up, and sealing it with tape!', 'Sealed with love. Off it goes!']));
+  el.board.classList.add('sealing'); VO.say('seal');
   setTimeout(() => showResult(r), 1500);
 }
 function showBlocked() {
-  VO.say(VO.rnd(['Oh no, the lid will not close! It is piled up too high.', 'Hmm, the lid will not shut. Too much stacked up!']));
+  VO.say('blocked');
   state.phase = 'blocked'; state.sel = null; el.board.dataset.lid = 'blocked'; render();
   el.lidsheet.innerHTML = '<div class="vcard" role="dialog" aria-label="The lid will not close"><div style="font-size:34px">⚠️</div><h3>The lid won&rsquo;t close</h3>' +
     '<p>Something is bulging out of the top. You can rearrange the box, or ship it as it is and hope for the best.</p>' +
@@ -3893,7 +3996,7 @@ function showResult(r) {
 // End of the month: every review, the profit, and how the shop did.
 const rankOf = (score) => (score >= 85 ? 'Star shop' : score >= 70 ? 'Cosy favourite' : score >= 50 ? 'Getting there' : 'Needs some love');
 function showMonth() {
-  VO.say(VO.rnd(['Level complete! Let us see how the shop did.', 'That is a wrap on this level! Thanks for packing with me!', 'Level done! Come see how we did.']));
+  VO.say('levelDone');
   const L = run.orders, sum = (f) => L.reduce((a, e) => a + f(e), 0), n = Math.max(1, L.length);
   const avgStars = sum((e) => e.stars) / n, profit = sum((e) => e.profit), tips = sum((e) => e.tip || 0), refunds = sum((e) => e.refund || 0), spent = sum((e) => e.spent), cost = sum((e) => e.cost), score = Math.round(sum((e) => e.overall) / n);
   const rank = rankOf(score);
@@ -4017,12 +4120,12 @@ function onUp(e) {
   if (!drag || e.pointerId !== drag.pointerId) return;
   const it = byId(drag.id);
   if (drag.mode === 'spin') { // finished spinning: keep it if it moved
-    if (drag.moved) { pushHistory(drag.hist); VO.chat(VO.rnd(['Just a little twist.', 'Spin it round a bit.']), 0.4); }
+    if (drag.moved) { pushHistory(drag.hist); VO.chat('twist', null, 0.4); }
     endDrag(); render(); return;
   }
   if (!drag.moved) { // a tap: first tap selects, tapping the selected item again turns it
-    if (state.sel !== it.id) { state.sel = it.id; VO.chat(VO.rnd(['Ooh, the ' + TYPES[it.type].name.toLowerCase() + '!', 'Okay, this one next.', 'Where should the ' + TYPES[it.type].name.toLowerCase() + ' go?']), 0.6); }
-    else if (drag.from === 'tray') { it.rot ^= 1; VO.chat(VO.rnd(['Let us turn it the other way.', 'A quick flip.', 'Rotating it a little.']), 0.5); }
+    if (state.sel !== it.id) { state.sel = it.id; VO.chat('picked', { item: VO.plural(it.type, 1) }, 0.6); }
+    else if (drag.from === 'tray') { it.rot ^= 1; VO.chat('turn', null, 0.5); }
     else turnInPlace(it);
     endDrag(); render(); return;
   }
@@ -4032,7 +4135,7 @@ function onUp(e) {
   if (pv && pv.ok) {
     pushHistory(drag.hist);
     place(it, pv.x, pv.y); state.sel = it.id;
-    if (realItems().every((i) => i.placed)) VO.say(VO.rnd(['Everything is in! Now a little tissue, or seal it up.', 'That is everything in the box! Looking good.'])); else VO.chat(VO.rnd(['Ooh, that fits perfectly!', 'Snug as a bug!', 'Tuck it right in there.', 'Nice, one more in!', 'Pop the ' + TYPES[it.type].name.toLowerCase() + ' in here.', 'That looks so neat.', 'Obsessed with how this is coming together.', 'Not me loving this so much.', 'Okay, that is so satisfying.', 'Chef kiss!']), 0.85);
+    if (realItems().every((i) => i.placed)) VO.say('allIn'); else VO.chat('placed', { item: VO.plural(it.type, 1) }, 0.85);
     if (navigator.vibrate) navigator.vibrate(8);
     if (pv.wob) setMsg('It will tilt: part of it is over the floor and part over another item.', 'tilt'); else setMsg(defaultMsg());
   } else if (drag.from === 'board') {
@@ -4060,7 +4163,7 @@ window.addEventListener('pointerup', (e) => { if (drag && e.pointerId === drag.p
 window.addEventListener('blur', abortDrag);
 document.addEventListener('visibilitychange', () => { if (document.hidden) abortDrag(); });
 el.app.addEventListener('contextmenu', (e) => e.preventDefault());
-el.clearMat.addEventListener('click', () => { if (phys) phys.clearMat(); VO.chat(VO.rnd(['Clearing the mat!', 'Sweeping those away!']), 1); });
+el.clearMat.addEventListener('click', () => { if (phys) phys.clearMat(); VO.chat('clear', null, 1); });
 el.start.addEventListener('click', goToShelf);
 el.shelfBack.addEventListener('click', backToBowl);
 document.addEventListener('click', (e) => { const j = e.target.closest && e.target.closest('[data-shop]'); if (j && state.phase === 'scoop') showShop(() => { if (state.phase === 'scoop') renderScoop(); }, j.dataset.shop); });
@@ -4131,7 +4234,7 @@ function showHowTo(first) {
     '<div class="hbody"><div class="paper">' + S.map((x, k) => '<div class="st"><div class="ic">' + x[0] + '</div><div><b><i>' + (k + 1) + '.</i> ' + x[1] + '</b><span>' + x[2] + '</span></div></div>').join('') + '</div><div class="tip">Tip: the ? button opens this again any time.</div><button class="btn vbtn" id="howVoice" type="button">' + voiceLabel() + '</button><button class="btn vbtn" id="howVoice2" type="button">🎀 Try a different voice</button></div>' +
     '<div class="hf"><button class="btn" id="howFaq" type="button">FAQs</button><button class="btn primary" id="howOk" type="button">' + (first ? 'Start my first order' : 'Got it') + '</button></div>';
   h.hidden = false;
-  $('#howFaq').addEventListener('click', () => showFaq(first)); bindVoice('#howVoice'); $('#howVoice2').addEventListener('click', () => { VO.set(true); VO.nextVoice(); document.querySelectorAll('.vbtn').forEach((x) => { if (x.id !== 'howVoice2') x.textContent = voiceLabel(); }); VO.say('Hi! Do you like my voice? Let us pack some orders!'); });
+  $('#howFaq').addEventListener('click', () => showFaq(first)); bindVoice('#howVoice'); $('#howVoice2').addEventListener('click', () => { VO.set(true); VO.nextVoice(); document.querySelectorAll('.vbtn').forEach((x) => { if (x.id !== 'howVoice2') x.textContent = voiceLabel(); }); VO.say('hiVoice'); });
   const close = () => { try { localStorage.setItem('luckyScoopsHow', '1'); } catch (_) {} h.hidden = true; h.innerHTML = ''; if (first && state.phase === 'order' && state.order) VO.say(VO.orderLine(state.order)); };
   $('#howOk').addEventListener('click', close); $('#howBack').addEventListener('click', close);
 }
@@ -4171,12 +4274,12 @@ const packOwned = (p) => p.keys.every((k) => isOwned(packTypeOf(p, k), k));
 function buyPack(id) {
   const p = PACK_DATA.packs.find((x) => x.id === id);
   if (!p || !run.owned || packOwned(p) || run.bank < p.price) return false;
-  VO.say(VO.rnd(['Yay, new looks!', 'Ooh, new things for the shelf!', 'Bought! So cute.'])); run.bank -= p.price; p.keys.forEach((k) => { const ty = packTypeOf(p, k); run.owned[ty] = Array.from(new Set((run.owned[ty] || []).concat([k]))); }); saveRun();
+  VO.say('bought'); run.bank -= p.price; p.keys.forEach((k) => { const ty = packTypeOf(p, k); run.owned[ty] = Array.from(new Set((run.owned[ty] || []).concat([k]))); }); saveRun();
   return true;
 }
 const lookName = (type, key) => { const e = variantsOf(type).find((v) => v.key === key); return e ? e.name : key; };
 function showShop(onClose, startType) {
-  VO.say(VO.rnd(['Ooh, shopping time!', 'So many cute looks!']));
+  VO.say('shopOpen');
   let box = document.getElementById('shop');
   if (!box) { box = document.createElement('div'); box.id = 'shop'; document.body.appendChild(box); }
   const S = { type: startType && (TYPES[startType] || startType === 'mix') ? startType : 'all', open: null, bought: null };
@@ -4212,7 +4315,7 @@ function progressHTML() {
     '<div class="pr2"><div><b>' + (shown === null ? '–' : shown) + '</b><small>shop score' + (score === null && last ? ' (last level)' : '') + '</small></div><div><b>' + (avg === null ? (last ? last.stars.toFixed(1) : '–') : avg.toFixed(1)) + '<em>★</em></b><small>avg rating</small></div><div><b>' + (shown === null ? 'New shop' : rankOf(shown)) + '</b><small>shop rank</small></div></div></div>';
 }
 const voiceLabel = () => (VO.on ? '🔊 Voice on' : '🔇 Voice off');
-function bindVoice(id) { const b = $(id); if (!b) return; b.addEventListener('click', () => { VO.set(!VO.on); document.querySelectorAll('.vbtn').forEach((x) => { x.textContent = voiceLabel(); }); if (VO.on) VO.say('Hi! Let us pack some orders!'); }); }
+function bindVoice(id) { const b = $(id); if (!b) return; b.addEventListener('click', () => { VO.set(!VO.on); document.querySelectorAll('.vbtn').forEach((x) => { x.textContent = voiceLabel(); }); if (VO.on) VO.say('hi'); }); }
 function showStart() {
   const st = $('#start');
   if (run.v !== 2) { Object.assign(run, { v: 2, month: 1, orders: [], bank: 0, settled: false, owned: JSON.parse(JSON.stringify(PACK_DATA.starter)) }); saveRun(); } // a brand new shop starts with the starter kit
