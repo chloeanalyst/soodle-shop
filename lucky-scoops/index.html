@@ -2611,11 +2611,15 @@ const VO = (() => {
   if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
   const rnd = (a) => a[Math.floor(Math.random() * a.length)];
   const say = (text) => { last = text; lastAt = Date.now(); if (!on || !synth || navigator.webdriver) return; try { synth.cancel(); const u = new SpeechSynthesisUtterance(text); if (voice) { u.voice = voice; u.lang = voice.lang; } u.pitch = 2; u.rate = 1.08; synth.speak(u); } catch (_) {} };
-  const chat = (text, p) => { if (Math.random() < (p == null ? 1 : p) && Date.now() - lastAt > 1800) say(text); }; // extra chatter: skipped sometimes, and never talks over the last line
+  const chat = (text, p) => { if (Math.random() < (p == null ? 1 : p) && Date.now() - lastAt > 1200) say(text); }; // extra chatter: skipped sometimes, and never talks over the last line
   const plural = (n, c) => { const w = TYPES[n] ? TYPES[n].name.toLowerCase() : n; return c === 1 || /s$/.test(w) ? w : w + 's'; };
   const list = (a) => (a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
-  const orderLine = (o) => rnd(['Ooh, a new order!', 'Okay, new order!', 'Yay, another order!']) + ' ' + (o.scoops === 1 ? 'Just one scoop' : o.scoops + ' scoops') + ' this time. They love ' + list(o.theme.loves.map((t) => plural(t, 2))) + '.' + (o.dislikes.length ? ' And please, no ' + list(o.dislikes.map((t) => plural(t, 2))) + '.' : '') + (o.colour ? ' They also want something ' + o.colour.name.toLowerCase() + '.' : '') + (o.swap ? ' And they want a different ' + TYPES[o.swap.type].name.toLowerCase() + ' this time.' : '') + " Let's go!";
+  const orderLine = (o) => { const pos = Math.min(ORDERS_PER_MONTH, run.orders.filter((e) => e.n !== state.n).length + 1); return (pos === 1 ? rnd(['Level ' + run.month + '! Come pack orders with me!', 'POV: you run a tiny bead shop, and it is level ' + run.month + '.', 'Level ' + run.month + ', let us gooo!']) : rnd(['Ooh, a new order!', 'Okay, order number ' + pos + '!', 'Yay, another order!', 'Come pack this one with me!', 'Packing orders, but make it cute!', 'Order number ' + pos + ' of the day!'])) + ' ' +  (o.scoops === 1 ? 'Just one scoop' : o.scoops + ' scoops') + ' this time. They love ' + list(o.theme.loves.map((t) => plural(t, 2))) + '.' + (o.dislikes.length ? ' And please, no ' + list(o.dislikes.map((t) => plural(t, 2))) + '.' : '') + (o.colour ? ' They also want something ' + o.colour.name.toLowerCase() + '.' : '') + (o.swap ? ' And they want a different ' + TYPES[o.swap.type].name.toLowerCase() + ' this time.' : '') + ' ' + rnd(["Let's go!", 'This is going to be so satisfying.', 'Okay, scoop time!', 'Pack with me!']); };
   const resultLine = (r, adj) => (r.damaged ? 'Oh no, the box got squashed! That is a refund.' : r.stars === 5 ? rnd(['Five stars! They loved it!', 'Five stars, yay! So happy!']) : r.stars === 4 ? 'Four stars, yay! So close to perfect!' : r.stars === 3 ? 'Three stars. Not bad! We can do better.' : r.stars === 2 ? 'Two stars. Oh no, they want a refund. Next time!' : 'One star. Oh no. That is a refund.') + (adj && adj.tip ? ' And they left a tip!' : '') + (adj && adj.net < 0 ? ' Ouch, no profit on that one.' : adj && adj.net > 0 && r.stars >= 4 ? rnd([' Lovely profit too!', ' And a nice profit, yay!']) : '');
+
+  const AMBIENT = { scoop: ['Mmm, the sound of these beads is so satisfying.', 'Which beads should we scoop next?', 'I could do this all day. So relaxing!', 'Okay, tap the beads to count them.', 'Pastel beads are my favourite.'], shelf: ['Ooh, which ones do we pick?', 'The shelf is so cute today.', 'Pick the cutest ones for this customer.', 'So many pretty things!'], box: ['This is the best part, choosing the box.', 'Ooh, what colour should it be?', 'Tissue paper makes everything better.'], pack: ['Okay, tiny puzzle time.', 'Fit it all in, nice and neat.', 'The packing is so satisfying.', 'Tap an item to turn it.', 'Try wrapping something with a bow!', 'Not too high, or the lid will not close.'] };
+  const ambient = () => { if (!on || !synth || navigator.webdriver || document.hidden) return; const st = document.getElementById('start'); if ((st && !st.hidden) || ['shop', 'how'].some((i) => { const e = document.getElementById(i); return e && !e.hidden; }) || Date.now() - lastAt < 9000) return; const pool = AMBIENT[state.phase]; if (pool && !document.getElementById('modal')?.innerHTML) say(rnd(pool)); };
+  if (synth && !navigator.webdriver) setInterval(ambient, 3000);
   return { say, chat, rnd, plural, orderLine, resultLine, get on() { return on; }, set(v) { on = !!v; try { localStorage.setItem('luckyScoopsVoice', on ? 'on' : 'off'); } catch (_) {} if (!on && synth) synth.cancel(); }, get last() { return last; } };
 })();
 // ---- the 30 months: each month sets how much to pack, how many scoops, what a scoop pays and how many dislikes a customer has
@@ -3887,7 +3891,7 @@ function showResult(r) {
 // End of the month: every review, the profit, and how the shop did.
 const rankOf = (score) => (score >= 85 ? 'Star shop' : score >= 70 ? 'Cosy favourite' : score >= 50 ? 'Getting there' : 'Needs some love');
 function showMonth() {
-  VO.say('Level complete! Let us see how the shop did.');
+  VO.say(VO.rnd(['Level complete! Let us see how the shop did.', 'That is a wrap on this level! Thanks for packing with me!', 'Level done! Come see how we did.']));
   const L = run.orders, sum = (f) => L.reduce((a, e) => a + f(e), 0), n = Math.max(1, L.length);
   const avgStars = sum((e) => e.stars) / n, profit = sum((e) => e.profit), tips = sum((e) => e.tip || 0), refunds = sum((e) => e.refund || 0), spent = sum((e) => e.spent), cost = sum((e) => e.cost), score = Math.round(sum((e) => e.overall) / n);
   const rank = rankOf(score);
@@ -4015,7 +4019,7 @@ function onUp(e) {
     endDrag(); render(); return;
   }
   if (!drag.moved) { // a tap: first tap selects, tapping the selected item again turns it
-    if (state.sel !== it.id) state.sel = it.id;
+    if (state.sel !== it.id) { state.sel = it.id; VO.chat(VO.rnd(['Ooh, the ' + TYPES[it.type].name.toLowerCase() + '!', 'Okay, this one next.', 'Where should the ' + TYPES[it.type].name.toLowerCase() + ' go?']), 0.6); }
     else if (drag.from === 'tray') { it.rot ^= 1; VO.chat('Let us turn it the other way.', 0.5); }
     else turnInPlace(it);
     endDrag(); render(); return;
@@ -4026,7 +4030,7 @@ function onUp(e) {
   if (pv && pv.ok) {
     pushHistory(drag.hist);
     place(it, pv.x, pv.y); state.sel = it.id;
-    if (realItems().every((i) => i.placed)) VO.say(VO.rnd(['Everything is in! Now a little tissue, or seal it up.', 'That is everything in the box! Looking good.'])); else VO.chat(VO.rnd(['Ooh, that fits perfectly!', 'Snug as a bug!', 'Tuck it right in there.', 'Nice, one more in!', 'Pop the ' + TYPES[it.type].name.toLowerCase() + ' in here.', 'That looks so neat.']), 0.6);
+    if (realItems().every((i) => i.placed)) VO.say(VO.rnd(['Everything is in! Now a little tissue, or seal it up.', 'That is everything in the box! Looking good.'])); else VO.chat(VO.rnd(['Ooh, that fits perfectly!', 'Snug as a bug!', 'Tuck it right in there.', 'Nice, one more in!', 'Pop the ' + TYPES[it.type].name.toLowerCase() + ' in here.', 'That looks so neat.', 'Obsessed with how this is coming together.', 'Not me loving this so much.', 'Okay, that is so satisfying.', 'Chef kiss!']), 0.85);
     if (navigator.vibrate) navigator.vibrate(8);
     if (pv.wob) setMsg('It will tilt: part of it is over the floor and part over another item.', 'tilt'); else setMsg(defaultMsg());
   } else if (drag.from === 'board') {
