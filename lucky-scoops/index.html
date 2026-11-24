@@ -2630,16 +2630,16 @@ const VO = (() => {
     putBack: ['Oops, putting that one back.', 'Changed my mind, back it goes.'],
     clear: ['Clearing the mat!', 'Sweeping those away!'],
     shelfIntro: ['Okay, now let us pick everything from the shelf.', 'Now to the shelf, so many cute things!'],
-    basket: ['Let us see which {item} to pick.', 'Ooh, so many {items}!', 'Which {item} is the cutest?'],
-    praise: ['So pretty!', 'Cute!', 'Love this one!', 'Ooh, perfect!'],
+    basket: ['Let us see which {item} to pick.', 'Ooh, so many {items}!', 'Which {item} is the cutest?', 'I think they would love a {item}.', 'A {item} is always a good choice.', 'Hmm, which {item} suits this customer?'],
+    praise: ['So pretty!', 'Cute!', 'Ooh, perfect!', 'They are going to love this one.', 'This one just feels right.', 'Such a good pick.', 'I think this matches their taste.', 'That one is so pretty.', 'Good choice, they will like it.'],
     boxIntro: ['Now let us pick a cute box.', 'Time to choose a pretty box!'],
     boxSize: ['Oh, a {size} box!', 'Going with {size}.'],
     boxColour: ['What a {colour} box, so cute!', 'Ooh, {colour} is such a pretty colour.'],
     boxPattern: ['{pattern}, love it!'], boxTissue: ['{tissue} tissue, so pretty!'], boxNoTissue: ['No lining for this one.'],
     packIntro: ['Okay, the fun part! Let us pack it all in.', 'Now to fit everything in nicely.'],
-    placed: ['Ooh, that fits perfectly!', 'Snug as a bug!', 'Tuck it right in there.', 'Nice, one more in!', 'Pop the {item} in here.', 'That looks so neat.', 'Obsessed with how this is coming together.', 'Not me loving this so much.', 'Okay, that is so satisfying.', 'Chef kiss!'],
+    placed: ['That fits perfectly.', 'Snug as a bug.', 'Tuck it right in there.', 'That looks so neat.', 'Okay, that is so satisfying.', 'Pop the {item} in here.', 'The customer is going to love this {item}.', 'That {item} looks so good in there.', 'I bet they will smile when they see the {item}.', 'Such a pretty {item}.', 'This is such a thoughtful little gift.', 'It all looks so cosy together.', 'Every little detail matters.', 'They will open this and feel so special.'],
     allIn: ['Everything is in! Now a little tissue, or seal it up.', 'That is everything in the box! Looking good.'],
-    picked: ['Ooh, the {item}!', 'Okay, this one next.', 'Where should the {item} go?'],
+    picked: ['Ooh, the {item}.', 'Okay, this one next.', 'Where should the {item} go?', 'This {item} is so cute.', 'I think they will love this {item}.', 'Hmm, where does the {item} fit best?', 'The {item} next, I think.', 'Let us see if the {item} fits here.'],
     turn: ['Let us turn it the other way.', 'A quick flip.', 'Rotating it a little.'],
     twist: ['Just a little twist.', 'Spin it round a bit.'],
     undo: ['Oops, let us try that again!', 'Undo, undo!'],
@@ -2657,9 +2657,9 @@ const VO = (() => {
     shopOpen: ['Ooh, shopping time!', 'So many cute looks!'],
     hi: ['Hi! Let us pack some orders!'], hiVoice: ['Hi! Do you like my voice? Let us pack some orders!'],
     ambScoop: ['Mmm, the sound of these beads is so satisfying.', 'Which beads should we scoop next?', 'I could do this all day. So relaxing!', 'Okay, tap the beads to count them.', 'Pastel beads are my favourite.'],
-    ambShelf: ['Ooh, which ones do we pick?', 'The shelf is so cute today.', 'Pick the cutest ones for this customer.', 'So many pretty things!'],
+    ambShelf: ['Ooh, which ones do we pick?', 'The shelf is so cute today.', 'Pick the cutest ones for this customer.', 'So many pretty things.', 'I wonder what they would like most.', 'Think about what they love.', 'Everything here is so cosy.', 'Take your time, there is no rush.'],
     ambBox: ['This is the best part, choosing the box.', 'Ooh, what colour should it be?', 'Tissue paper makes everything better.'],
-    ambPack: ['Okay, tiny puzzle time.', 'Fit it all in, nice and neat.', 'The packing is so satisfying.', 'Tap an item to turn it.', 'Try wrapping something with a bow!', 'Not too high, or the lid will not close.']
+    ambPack: ['Okay, tiny puzzle time.', 'Fit it all in, nice and neat.', 'The packing is so satisfying.', 'Tap an item to turn it.', 'Try wrapping something with a bow.', 'Not too high, or the lid will not close.', 'They are going to be so happy with this.', 'A neat box makes a happy customer.', 'Little things, big smiles.', 'I love how cosy this looks.']
   };
   const dom = () => { const l = (o, f) => Object.keys(o).map((k) => f(o[k]).toLowerCase()); return { item: Object.keys(TYPES).map((t) => plural(t, 1)), items: Object.keys(TYPES).map((t) => plural(t, 2)), n: Array.from({ length: 30 }, (_, i) => String(i + 1)), wcolour: COLOURS.map((c) => c.name.toLowerCase()), colour: l(BOX_COLOURS, (x) => x[0]), size: l(BOX_SIZES, (x) => x.name), pattern: l(BOX_PATTERNS, (x) => x[0]), tissue: Object.keys(TISSUES).filter((k) => TISSUES[k][1]).map((k) => TISSUES[k][0].toLowerCase()) }; };
   // split a template into clips: the words between tokens, and each token value (a punctuation mark after a token sticks to it)
@@ -2709,12 +2709,12 @@ const VO = (() => {
     const C = window.AudioContext || window.webkitAudioContext;
     try {
       if (!AUD.ctx) { try { AUD.ctx = new C({ sampleRate: 22050 }); } catch (_) { AUD.ctx = new C(); } }
-      fetch('voice/voice.json?v=9').then((r) => { if (!r.ok) throw 0; return r.json(); }).then((j) => {
+      fetch('voice/voice.json?v=10').then((r) => { if (!r.ok) throw 0; return r.json(); }).then((j) => {
         AUD.map = j; const n = j.__chunks || 1; let k = 0;
         const next = () => {
           if (k >= n) { AUD.state = 'ok'; refreshLabels(); return null; }
           if (AUD.bufs[k]) { k++; return next(); }
-          return fetch('voice/v' + k + '.mp3?v=9').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); }).then((b) => AUD.ctx.decodeAudioData(b)).then((buf) => { AUD.bufs[k] = buf; AUD.ok = true; k++; return next(); });
+          return fetch('voice/v' + k + '.mp3?v=10').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); }).then((b) => AUD.ctx.decodeAudioData(b)).then((buf) => { AUD.bufs[k] = buf; AUD.ok = true; k++; return next(); });
         };
         return next();
       }).catch(fail);
@@ -3794,7 +3794,7 @@ function renderLedger() {
 function addItem(type, v = 0) {
   const sc = state.scoop;
   if (state.phase !== 'shelf' || !TYPES[type]) return false;
-  sc.picked.push({ id: 'p' + (sc.picked.length + 1) + '_' + type, type, v, rot: 0 }); if (Math.random() < 0.4) VO.say('praise');
+  sc.picked.push({ id: 'p' + (sc.picked.length + 1) + '_' + type, type, v, rot: 0 }); if (Math.random() < 0.2) VO.say('praise');
   renderShelf(); if (state.openBasket) renderSheet();
   const b = el.shelf.querySelector('.basket[data-type="' + type + '"]'); if (b) { b.classList.add('bump'); setTimeout(() => b.classList.remove('bump'), 400); }
   const o = state.order, need = (o.counted || {})[type] || 0, vn = (variantsOf(type)[v] || {}).name;
@@ -3818,7 +3818,7 @@ function removeItem(type, v = null) {
 }
 // Tap a basket and it opens, showing every look of that item to choose from.
 function openBasket(type) {
-  VO.chat('basket', { item: VO.plural(type, 1), items: VO.plural(type, 2) }, 0.7);
+  VO.chat('basket', { item: VO.plural(type, 1), items: VO.plural(type, 2) }, 0.35);
   if (state.phase !== 'shelf') return;
   if (ownedIdx(type).length <= 1) { addItem(type, ownedIdx(type)[0] || 0); return; }
   state.openBasket = type; state.vq = ''; renderShelf(); renderSheet();
@@ -4146,7 +4146,7 @@ function onUp(e) {
     endDrag(); render(); return;
   }
   if (!drag.moved) { // a tap: first tap selects, tapping the selected item again turns it
-    if (state.sel !== it.id) { state.sel = it.id; VO.chat('picked', { item: VO.plural(it.type, 1) }, 0.6); }
+    if (state.sel !== it.id) { state.sel = it.id; VO.chat('picked', { item: VO.plural(it.type, 1) }, 0.3); }
     else if (drag.from === 'tray') { it.rot ^= 1; VO.chat('turn', null, 0.5); }
     else turnInPlace(it);
     endDrag(); render(); return;
@@ -4157,7 +4157,7 @@ function onUp(e) {
   if (pv && pv.ok) {
     pushHistory(drag.hist);
     place(it, pv.x, pv.y); state.sel = it.id;
-    if (realItems().every((i) => i.placed)) VO.say('allIn'); else VO.chat('placed', { item: VO.plural(it.type, 1) }, 0.85);
+    if (realItems().every((i) => i.placed)) VO.say('allIn'); else VO.chat('placed', { item: VO.plural(it.type, 1) }, 0.4);
     if (navigator.vibrate) navigator.vibrate(8);
     if (pv.wob) setMsg('It will tilt: part of it is over the floor and part over another item.', 'tilt'); else setMsg(defaultMsg());
   } else if (drag.from === 'board') {
