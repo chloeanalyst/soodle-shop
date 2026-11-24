@@ -707,6 +707,7 @@ body[data-stage="scoop"] header.top,body[data-stage="scoop"].hosttool header.top
 .reviews{display:flex;flex-direction:column;gap:6px;margin:8px 0;text-align:left}
 .rev{background:#fbf4ee;border-radius:12px;padding:6px 10px}.rev p{margin:2px 0 0;font-size:12.5px;font-style:italic;color:#4a3350}
 .rev .rh{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px}.rev .rs{color:#ffb62e;font-size:12px;letter-spacing:1px}.rev .rs .off{color:#e8dbe0}.rev .rp{margin-left:auto}.rev .pos{color:#1f8a56}.rev .neg{color:#c0233f}
+.cork{padding:12px 8px 8px}.cork .ordtag{padding:12px 8px 7px;flex-basis:108px}.ordtag .ot-k{padding-bottom:2px;margin-bottom:3px}.ordtag .pchips{gap:2px;margin-bottom:2px}.ordtag .pchip{font-size:10.5px;padding:0 6px;line-height:18px}.ordtag .ot-s{margin-top:4px}.ordtag .ot-till{margin-top:4px;padding-top:4px;gap:1px}.ot-till .tl-face{font-size:20px}.ot-till .tl-txt{font-size:10.5px}.ot-till .tl-row{font-size:10.5px}.ot-till .tl-row b{font-size:12px}.cork .paper .nt{line-height:1.15}
 </style>
 </head>
 <body>
@@ -3601,10 +3602,10 @@ function renderShelf() {
     : '<div class="nempty">You have not counted any beads yet. Go back to the mat and tap the beads to count them.</div>';
   el.noteCard.innerHTML = '<div class="cork"><span class="pin r"></span><span class="pin b"></span><div class="paper"><div class="ptitle">Shopping list</div>' + list + '</div>' +
     '<div class="ordtag"><span class="ot-tape"></span><div class="ot-k">Order #' + state.n + '</div>' +
-    '<div class="ot-r">Loves</div><div class="pchips">' + T.loves.map((x) => '<span class="pchip love">' + TYPES[x].name + '</span>').join('') + '</div>' +
-    (o.colour ? '<div class="ot-r">Wants</div><div class="pchips"><span class="pchip love">🎨 ' + o.colour.name + ' ×' + o.colour.want + '</span></div>' : '') +
-    (o.swap ? '<div class="ot-r">Swap</div><div class="pchips"><span class="pchip love">🔄 Not ' + o.swap.name + '</span></div>' : '') +
-    '<div class="ot-r">Dislikes</div><div class="pchips">' + (o.dislikes.length ? o.dislikes.map((x) => '<span class="pchip no">' + TYPES[x].name + '</span>').join('') : '<span class="pchip none">Nothing</span>') + '</div>' +
+    '<div class="pchips">' + T.loves.map((x) => '<span class="pchip love">💖 ' + TYPES[x].name + '</span>').join('') + '</div>' +
+    (o.colour ? '<div class="pchips"><span class="pchip love">🎨 ' + o.colour.name + ' ×' + o.colour.want + '</span></div>' : '') +
+    (o.swap ? '<div class="pchips"><span class="pchip love">🔄 Not ' + o.swap.name + '</span></div>' : '') +
+    '<div class="pchips">' + (o.dislikes.length ? o.dislikes.map((x) => '<span class="pchip no">🚫 ' + TYPES[x].name + '</span>').join('') : '<span class="pchip none">🚫 Nothing</span>') + '</div>' +
     '<div class="ot-s ' + (usedScoops === sc.total ? 'good' : 'warn') + '"><b>' + (usedScoops === sc.total ? '✓' : '!!') + '</b>' + (usedScoops === sc.total ? sc.total + (sc.total === 1 ? ' scoop' : ' scoops') : usedScoops + ' of ' + sc.total + (sc.total === 1 ? ' scoop' : ' scoops')) + '</div><div class="ot-till" id="ledger" aria-live="polite"></div></div></div>';
   const keys = ownedTypes();
   const cell = (t, k) => {
@@ -3711,7 +3712,7 @@ function monthTrack(cur) {
 }
 function renderOrderCard() {
   const o = state.order, T = o.theme, pos = Math.min(ORDERS_PER_MONTH, run.orders.filter((e) => e.n !== state.n).length + 1);
-  el.title.textContent = 'Month ' + run.month;
+  el.title.textContent = 'Level ' + run.month;
   el.packed.innerHTML = heart(run.bank);
   document.getElementById('orderTalk').innerHTML = monthTrack(pos - 1);
   el.orderCard.innerHTML = slipHTML(o);
@@ -3865,14 +3866,14 @@ function showMonth() {
   const stars = (c) => '★'.repeat(c) + '<span class="off">' + '★'.repeat(5 - c) + '</span>';
   const bank = run.settled ? run.bank : Math.max(0, run.bank + profit);
   const awn = (() => { let st = '', sc = ''; for (let i = 0; i < 10; i++) { const c = i % 2 ? '#fff6ec' : '#ff8fb5'; st += '<rect x="' + i * 39 + '" y="0" width="39" height="60" fill="' + c + '"/>'; sc += '<path d="M' + i * 39 + ' 60q19.500 28 39 0z" fill="' + c + '"/>'; } return '<svg class="awn" viewBox="0 0 390 90" aria-hidden="true">' + st + sc + '</svg>'; })();
-  el.modal.innerHTML = '<div class="card shopf" role="dialog" aria-label="Month summary">' + awn +
-    '<div class="plate"><small>LUCKY SCOOPS · END OF</small><b>Month ' + run.month + '</b></div>' +
+  el.modal.innerHTML = '<div class="card shopf" role="dialog" aria-label="Level summary">' + awn +
+    '<div class="plate"><small>LUCKY SCOOPS · END OF</small><b>Level ' + run.month + '</b></div>' +
     '<div class="stars" aria-label="' + avgStars.toFixed(1) + ' out of 5 stars">' + stars(Math.round(avgStars)) + '</div><div class="rank">' + rank + ' · shop score ' + score + ' / 100</div>' +
     '<div class="tiles"><div><b>' + L.length + '</b>orders shipped</div><div><b>' + avgStars.toFixed(1) + '</b>average rating</div></div>' +
     '<div class="sbook"><div class="lr"><span>Customers paid</span><span>' + heart(spent) + '</span></div><div class="lr mute"><span>Items &amp; boxes</span><span>−' + heart(cost) + '</span></div>' + (refunds ? '<div class="lr neg"><span>Refunds</span><span>−' + heart(refunds) + '</span></div>' : '') + (tips ? '<div class="lr"><span>Tips</span><span>+' + heart(tips) + '</span></div>' : '') + '<div class="lr ' + (profit < 0 ? 'neg' : '') + '"><span>Profit</span><span>' + (profit < 0 ? '−' : '+') + heart(Math.abs(profit)) + '</span></div></div>' +
     '<div class="reviews">' + L.map((e) => '<div class="rev"><div class="rh"><span>Order #' + e.n + '</span><span class="rs">' + stars(e.stars) + '</span><span class="rp ' + (e.profit < 0 ? 'neg' : 'pos') + '">' + (e.profit < 0 ? '−' : '+') + heart(Math.abs(e.profit)) + '</span></div><p>“' + e.comment + '”</p></div>').join('') + '</div>' +
     '<p class="note">In the shop bank: ' + heart(bank) + '</p>' +
-    '<div class="actions"><button class="btn" id="monthShop" type="button">🩷 Visit the shop</button><button class="btn primary" id="nextMonth" type="button">Start month ' + (run.month + 1) + '</button></div></div>';
+    '<div class="actions"><button class="btn" id="monthShop" type="button">🩷 Visit the shop</button><button class="btn primary" id="nextMonth" type="button">Start level ' + (run.month + 1) + '</button></div></div>';
   el.modal.hidden = false;
   const settle = () => { if (!run.settled) { run.bank = bank; run.settled = true; (run.hist = run.hist || []).push({ month: run.month, score, stars: +avgStars.toFixed(1), profit }); saveRun(); } };
   $('#monthShop').addEventListener('click', () => { settle(); showShop(() => showMonth()); });
@@ -4088,7 +4089,7 @@ function debugSkip() {
 }
 // How to play: a one-page checklist, shown on the very first launch and from the ? button.
 function showHowTo(first) {
-  const S = [['🧾', 'Read the order', 'Each customer sends a note: how many scoops they want, what they love, and what they would rather not get.'], ['🥣', 'Scoop &amp; count', 'Scoop beads onto the mat and tap each one to count it. Each colour and shape means a different item.'], ['🛒', 'Pick from the shelf', "Pick the items you counted and choose a look for each from the ones you own. Every look costs hearts, and what is left of the customer's payment is your profit. Find more looks in the shop."], ['🎀', 'Dress the box', 'Pick a size, colour, pattern and tissue lining. Prettier boxes make happier customers.'], ['📦', 'Pack it', 'Drag items into the box, tap to turn them, fold them to make them smaller, and wrap them to improve presentation.'], ['📮', 'Seal &amp; ship', 'Close the lid and send it off. Your customer leaves a star review for neat packing, loved items and your profit. Great reviews earn tips, but low ones mean a refund. Finish 5 orders to end the month, then spend your hearts in the shop.'], ['📈', 'Level up', 'Every month is a level. Ship 5 orders to finish the month and move up to the next one, up to month 30. Each month customers pay more per scoop, but orders get bigger and trickier, with colour requests from month 4 and swaps from month 8. Your shop score and star rating show how you are doing.'], ['🩷', 'Earn &amp; spend hearts', 'You earn hearts from each order: what the customer pays, minus the cost of the items and box, plus tips for great reviews. You lose hearts when you pick pricey looks, and when a low review means a refund. At the end of the month your profit goes into the shop bank, and you spend it on new packs of looks in the shop.']];
+  const S = [['🧾', 'Read the order', 'Each customer sends a note: how many scoops they want, what they love, and what they would rather not get.'], ['🥣', 'Scoop &amp; count', 'Scoop beads onto the mat and tap each one to count it. Each colour and shape means a different item.'], ['🛒', 'Pick from the shelf', "Pick the items you counted and choose a look for each from the ones you own. Every look costs hearts, and what is left of the customer's payment is your profit. Find more looks in the shop."], ['🎀', 'Dress the box', 'Pick a size, colour, pattern and tissue lining. Prettier boxes make happier customers.'], ['📦', 'Pack it', 'Drag items into the box, tap to turn them, fold them to make them smaller, and wrap them to improve presentation.'], ['📮', 'Seal &amp; ship', 'Close the lid and send it off. Your customer leaves a star review for neat packing, loved items and your profit. Great reviews earn tips, but low ones mean a refund. Finish 5 orders to end the level, then spend your hearts in the shop.'], ['📈', 'Level up', 'Ship 5 orders to finish a level and move up to the next one, all the way to level 30. Each level customers pay more per scoop, but orders get bigger and trickier, with colour requests from level 4 and swaps from level 8. Your shop score and star rating show how you are doing.'], ['🩷', 'Earn &amp; spend hearts', 'You earn hearts from each order: what the customer pays, minus the cost of the items and box, plus tips for great reviews. You lose hearts when you pick pricey looks, and when a low review means a refund. At the end of the level your profit goes into the shop bank, and you spend it on new packs of looks in the shop.']];
   const h = $('#how');
   h.innerHTML = '<div class="hh"><button class="hb" id="howBack" type="button" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg></button><div><h1>How to play</h1><div class="hs">Your first shift at Lucky Scoops</div></div></div>' +
     '<div class="hbody"><div class="paper">' + S.map((x, k) => '<div class="st"><div class="ic">' + x[0] + '</div><div><b><i>' + (k + 1) + '.</i> ' + x[1] + '</b><span>' + x[2] + '</span></div></div>').join('') + '</div><div class="tip">Tip: the ? button opens this again any time.</div></div>' +
@@ -4101,17 +4102,17 @@ function showHowTo(first) {
 // FAQs: short answers to the things players wonder about
 const FAQ = [
   ['How do I get stars?', 'Your customer rates the box on neat packing (nothing squashed or tilting), getting what they asked for (the items they love, none they dislike, nothing missing or extra), presentation (a nice box, tissue and wrapped items) and good value.'],
-  ['How do I make hearts?', 'Each customer pays a set amount per scoop. What is left after you pay for the items and the box is your profit. Great reviews add a tip, and the month\'s profit goes into your shop bank when the month ends.'],
+  ['How do I make hearts?', 'Each customer pays a set amount per scoop. What is left after you pay for the items and the box is your profit. Great reviews add a tip, and the level\'s profit goes into your shop bank when the level ends.'],
   ['How do tips work?', 'A 5 star review tips 40% of your profit on that order, 4 stars tips 20% and 3 stars tips 5%. There is no tip if the box arrives squashed.'],
-  ['What is a refund?', 'From month 3, a 1 star review refunds half of what the customer paid, 2 stars refunds a quarter, and a squashed box refunds half. Refunds come out of your profit, and the shop bank never goes below zero.'],
-  ['Why do customers pay more each month?', 'Orders get bigger and harder as the months go on, so each scoop pays 10 more hearts every month. Some orders are quick: one scoop and only a few items.'],
+  ['What is a refund?', 'Refunds start at level 3, so you will not see them before that. From then on, a 1 star review refunds half of what the customer paid, 2 stars refunds a quarter, and a squashed box refunds half. Refunds come out of your profit, and the shop bank never goes below zero.'],
+  ['Why do customers pay more each level?', 'Orders get bigger and harder as the levels go on, so each scoop pays 10 more hearts every level. Some orders are quick: one scoop and only a few items.'],
   ['How do I get more looks?', 'Tap the shop icon at the top of any screen. Packs hold 3 looks each and are paid for from your shop bank. You start with keyrings, sunglasses, hats and socks, and every other item comes from the shop.'],
   ['Why can I only pick some items on the shelf?', 'You can only pack the items and looks you own. Buy a pack to add more. A new kind of item shows up in orders from your next order.'],
-  ['What is a colour request?', 'From month 4 a customer may want a colour. Pack at least 2 items that colour (3 from month 12) for a bonus. Skip it and you lose a few points.'],
-  ['What is a swap?', 'From month 8 a customer may bring back an old look of one of their items and want a different look of it. Pack a different look of that item to make them happy.'],
-  ['How do I level up?', 'Ship 5 orders to finish a month and move up a level. There are 30 months. Your home screen shows which month you are on, how many orders are done and your shop score.'],
-  ['How do hearts get spent?', 'Looks and boxes cost hearts on every order, and refunds take hearts back. Your profit goes into the shop bank each month and you spend it on packs in the shop.'],
-  ['What is the order score?', 'It is 60% how happy the customer is and 40% how good your profit is. The month summary shows the average.'],
+  ['What is a colour request?', 'From level 4 a customer may want a colour. Pack at least 2 items that colour (3 from level 12) for a bonus. Skip it and you lose a few points.'],
+  ['What is a swap?', 'From level 8 a customer may bring back an old look of one of their items and want a different look of it. Pack a different look of that item to make them happy.'],
+  ['How do I level up?', 'Ship 5 orders to finish a level and move up to the next. There are 30 levels. Your home screen shows which level you are on, how many orders are done and your shop score.'],
+  ['How do hearts get spent?', 'Looks and boxes cost hearts on every order, and refunds take hearts back. Your profit goes into the shop bank each level and you spend it on packs in the shop.'],
+  ['What is the order score?', 'It is 60% how happy the customer is and 40% how good your profit is. The level summary shows the average.'],
   ['Which box should I pick?', 'Medium fits every order. Small is only big enough for the quick orders. Large gives you the most room for the biggest orders, but costs more hearts.'],
   ['Can I try an order again?', 'Yes. After you ship, tap "Repack this order" to have another go with the same items.']
 ];
@@ -4169,9 +4170,9 @@ function progressHTML() {
   const score = n ? Math.round(L.reduce((a, e) => a + e.overall, 0) / n) : null, avg = n ? L.reduce((a, e) => a + e.stars, 0) / n : null;
   const pct = Math.min(100, Math.round(((run.month - 1) + done / ORDERS_PER_MONTH) / MAX_MONTH * 100));
   const shown = score !== null ? score : last ? last.score : null;
-  return '<div class="prog" aria-label="Your progress"><div class="pr1"><b>Month ' + run.month + '</b><span>of ' + MAX_MONTH + '</span><i>' + done + ' / ' + ORDERS_PER_MONTH + ' orders</i></div>' +
+  return '<div class="prog" aria-label="Your progress"><div class="pr1"><b>Level ' + run.month + '</b><span>of ' + MAX_MONTH + '</span><i>' + done + ' / ' + ORDERS_PER_MONTH + ' orders</i></div>' +
     '<div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + Math.max(3, pct) + '%"></span></div>' +
-    '<div class="pr2"><div><b>' + (shown === null ? '–' : shown) + '</b><small>shop score' + (score === null && last ? ' (last month)' : '') + '</small></div><div><b>' + (avg === null ? (last ? last.stars.toFixed(1) : '–') : avg.toFixed(1)) + '<em>★</em></b><small>avg rating</small></div><div><b>' + (shown === null ? 'New shop' : rankOf(shown)) + '</b><small>shop rank</small></div></div></div>';
+    '<div class="pr2"><div><b>' + (shown === null ? '–' : shown) + '</b><small>shop score' + (score === null && last ? ' (last level)' : '') + '</small></div><div><b>' + (avg === null ? (last ? last.stars.toFixed(1) : '–') : avg.toFixed(1)) + '<em>★</em></b><small>avg rating</small></div><div><b>' + (shown === null ? 'New shop' : rankOf(shown)) + '</b><small>shop rank</small></div></div></div>';
 }
 function showStart() {
   const st = $('#start');
