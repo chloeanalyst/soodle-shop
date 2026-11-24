@@ -373,10 +373,9 @@ html,body{background:#f6efe4}
 .jtag.hate{border-color:var(--bad);background:#fdecee}
 .table{position:relative;isolation:isolate;flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:12px}
 .table::before{content:'';position:absolute;z-index:-1;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);border-top:5px solid #f3b3bd;box-shadow:0 -6px 10px rgba(70,40,20,.15);background:repeating-linear-gradient(90deg,rgba(240,150,165,.45) 0 24px,transparent 24px 48px),repeating-linear-gradient(0deg,rgba(240,150,165,.45) 0 24px,transparent 24px 48px),#fff7f6}
-body[data-stage="shelf"] header.top{position:absolute;top:calc(max(env(safe-area-inset-top),var(--inset,0px)) + 2px);right:4px;padding:0;z-index:30}body[data-stage="shelf"] header.top>div,body[data-stage="shelf"] #packed,body[data-stage="shelf"] #btnHow{display:none}
-body[data-stage="shelf"] #app{padding-top:calc(max(env(safe-area-inset-top),var(--inset,0px)) + 6px)}
+body[data-stage="shelf"] header.top{display:none}
+body[data-stage="shelf"] #app{padding-top:calc(max(env(safe-area-inset-top),var(--inset,0px)) + 58px)}
 body[data-stage="scoop"] header.top{justify-content:center}
-body[data-stage="scoop"] #btnShop{margin-left:10px}
 body[data-stage="scoop"] header.top>div:first-child{display:none}
 body[data-stage="scoop"].hosttool header.top{position:absolute;top:calc(var(--inset) - 46px);left:64px;right:auto;padding:0;z-index:6}
 body[data-stage="scoop"].hosttool #packed{font-size:14px;padding:6px 14px}
@@ -614,10 +613,15 @@ body.landscape #shelfStage .cork .ordtag{flex:0 0 124px}
 .shopf .sbook{display:block;margin:10px 16px 0;background:#fbf4ee;border-radius:18px;padding:4px 14px;text-align:left}
 .shopf .sbook .lr{display:flex;justify-content:space-between;padding:7px 0;font-weight:800;font-size:14.5px;border-bottom:2px dotted #e3d9c6;color:#176c69}.shopf .sbook .lr:last-child{border:0;font-family:var(--frog);font-weight:800;font-size:20px;color:#1f8a56}.shopf .sbook .lr.neg:last-child{color:#c0233f}.shopf .sbook .lr.mute{color:#6b7a79}
 .shopf .reviews{margin:10px 16px 0}.shopf .note{margin:10px 16px 0}.shopf .actions{margin:12px 16px 0}
-#btnShop{flex:none;width:36px;height:36px;margin-left:8px;border-radius:50%;border:0;background:#fcfaf6;box-shadow:0 2px 6px rgba(23,108,105,.28);padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
-#btnShop svg{width:22px;height:22px}
-#btnHow{flex:none;width:36px;height:36px;margin-left:8px;border-radius:50%;border:3px solid #176c69;background:#fff;color:#176c69;font-family:var(--frog);font-weight:800;font-size:20px;line-height:1;padding:0;cursor:pointer}
-body[data-stage="scoop"] #btnHow{position:absolute;right:8px;top:calc(var(--inset) - 46px)}
+#topbtns{position:fixed;z-index:130;right:max(12px,env(safe-area-inset-right));top:calc(max(env(safe-area-inset-top),var(--inset,0px)) + 8px);display:flex;gap:10px}
+#btnShop,#btnHow{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:#fcfaf6;box-shadow:0 3px 8px rgba(23,108,105,.25);padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#176c69}
+#btnShop svg{width:26px;height:26px}
+#btnHow{font-family:var(--frog);font-weight:800;font-size:22px;line-height:1;margin:0}
+header.top{padding-right:106px}
+body[data-stage="scoop"] #packed{display:none}
+body[data-stage="scoop"] header.top,body[data-stage="scoop"].hosttool header.top{position:static;min-height:52px;padding:0}
+.jar.locked{opacity:.75;cursor:pointer}.jar.locked .glass{background:linear-gradient(90deg,rgba(210,205,215,.8),rgba(190,185,200,.5) 40%,rgba(210,205,215,.7));display:flex;align-items:center;justify-content:center}.jar .lockic{font-size:20px}.jtag.locked{opacity:.7;padding-left:8px;cursor:pointer}
+.ordtag .ot-r{font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#75607a;margin:5px 0 1px}.pchip.love{background:#e1f4e6;border-color:#a8d6b4;color:#236b3d}.pchip.none{background:#f3efe8;border-color:#ded5c4;color:#7d7566}
 /* start screen */
 #start{position:fixed;inset:0;z-index:250;display:flex;flex-direction:column;align-items:center;background:linear-gradient(#bfe6ff 0,#e9f7ff 45%,#fff1f6 100%);color:#176c69;padding:env(safe-area-inset-top) 0 0;overflow:hidden}
 #start[hidden]{display:none}
@@ -704,11 +708,11 @@ body[data-stage="scoop"] #btnHow{position:absolute;right:8px;top:calc(var(--inse
 <div id="app">
   <div id="how" hidden></div>
   <div id="start" hidden></div>
+  <div id="topbtns"><button id="btnShop" type="button" aria-label="Open the heart shop"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M9 10h46l5 15H4z" fill="#2f6b6b"/><path d="M4 25c0 4 3.200 6 6.600 6S17 29 17 25c0 4 3.200 6 7.500 6S32 29 32 25c0 4 3.200 6 7.500 6S47 29 47 25c0 4 3.200 6 6.600 6S60 29 60 25z" fill="#2f6b6b"/><path d="M11 35v19h42V35" fill="none" stroke="#2f6b6b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><rect x="18" y="39" width="12" height="15" rx="2" fill="#2f6b6b"/><rect x="36" y="39" width="11" height="8" rx="1.500" fill="#2f6b6b"/></svg></button><button id="btnHow" type="button" aria-label="How to play">?</button></div>
   <header class="top">
     <div><div id="orderTitle" class="title">Order</div><div class="sub" id="orderSub">Medium box · fits a stack 3 items high</div></div>
     <div id="packed">0 / 0 packed</div>
-    <button id="btnShop" type="button" aria-label="Open the heart shop"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M9 10h46l5 15H4z" fill="#2f6b6b"/><path d="M4 25c0 4 3.200 6 6.600 6S17 29 17 25c0 4 3.200 6 7.500 6S32 29 32 25c0 4 3.200 6 7.500 6S47 29 47 25c0 4 3.200 6 6.600 6S60 29 60 25z" fill="#2f6b6b"/><path d="M11 35v19h42V35" fill="none" stroke="#2f6b6b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><rect x="18" y="39" width="12" height="15" rx="2" fill="#2f6b6b"/><rect x="36" y="39" width="11" height="8" rx="1.500" fill="#2f6b6b"/></svg></button>
-    <button id="btnHow" type="button" aria-label="How to play">?</button>
+    
   </header>
   <main id="scoopStage" hidden>
     <div class="jarshelves" id="legend" aria-label="Bead jars"></div>
@@ -3490,8 +3494,9 @@ function jarShelves() {
   return rows.map((row) => {
     let jars = '', tags = '';
     row.forEach((t) => {
-      const T = TYPES[t], f = (state.order.counted || {})[t] || 0, kind = state.order.beads[t], src = phys.spriteURL(kind), hate = state.order.dislikes.includes(t);
+      const T = TYPES[t], f = (state.order.counted || {})[t] || 0, kind = state.order.beads[t], src = phys.spriteURL(kind), hate = state.order.dislikes.includes(t), locked = !ownedTypes().includes(t);
       const heap = JAR_POS.slice(0, Math.min(JAR_POS.length, f)).map((p) => '<img alt="" src="' + src + '" style="left:' + p[0] + 'px;bottom:' + p[1] + 'px;transform:rotate(' + p[2] + 'deg)">').join('');
+      if (locked) { jars += '<div class="jslot" data-shop="' + t + '"><div class="jar locked" data-type="' + t + '" role="button" aria-label="' + T.name + ' is locked. Open the shop"><div class="lid"></div><div class="glass"><span class="lockic">🔒</span></div></div></div>'; tags += '<div class="jslot" data-shop="' + t + '"><span class="jtag locked">🔒 ' + T.name + '</span></div>'; return; }
       jars += '<div class="jslot"><div class="jar' + (f ? ' full' : '') + '" data-type="' + t + '" title="' + KIND_NAMES[kind] + ' = ' + T.name + '">' +
         (f ? '<span class="cnt">×' + f + '</span>' : '') + (f && state.phase === 'scoop' ? '<button class="putback" type="button" aria-label="Uncount one ' + T.name + '" data-back="' + t + '">−</button>' : '') +
         '<div class="lid"></div><div class="glass">' + heap + '</div></div></div>';
@@ -3586,7 +3591,12 @@ function renderShelf() {
     ? '<ul>' + needed.map((t) => { const n = need[t], m = mine(t); return '<li class="nt' + (m === n ? ' ok' : m > n ? ' over' : '') + '" data-type="' + t + '"><span class="chk"></span><span class="qty">' + n + ' ×</span><span class="nm">' + TYPES[t].name + '</span><small>' + m + '/' + n + '</small></li>'; }).join('') + '</ul>'
     : '<div class="nempty">You have not counted any beads yet. Go back to the mat and tap the beads to count them.</div>';
   el.noteCard.innerHTML = '<div class="cork"><span class="pin r"></span><span class="pin b"></span><div class="paper"><div class="ptitle">Shopping list</div>' + list + '</div>' +
-    '<div class="ordtag"><span class="ot-tape"></span><div class="ot-k">Order #' + state.n + '</div><div class="pchips"><span class="pchip">' + T.name + '</span>' + (o.swap ? '<span class="pchip">🔄 Not ' + o.swap.name + '</span>' : '') + (o.colour ? '<span class="pchip">🎨 ' + o.colour.name + ' ×' + o.colour.want + '</span>' : '') + (o.dislikes.length ? '<span class="pchip no">No ' + listNames(o.dislikes) + '</span>' : '') + '</div><div class="ot-s"><b>' + sc.total + '</b>' + (sc.total === 1 ? ' scoop' : ' scoops') + '</div><div class="ot-till" id="ledger" aria-live="polite"></div></div></div>';
+    '<div class="ordtag"><span class="ot-tape"></span><div class="ot-k">Order #' + state.n + '</div>' +
+    '<div class="ot-r">Loves</div><div class="pchips">' + T.loves.map((x) => '<span class="pchip love">' + TYPES[x].name + '</span>').join('') + '</div>' +
+    (o.colour ? '<div class="ot-r">Wants</div><div class="pchips"><span class="pchip love">🎨 ' + o.colour.name + ' ×' + o.colour.want + '</span></div>' : '') +
+    (o.swap ? '<div class="ot-r">Swap</div><div class="pchips"><span class="pchip love">🔄 Not ' + o.swap.name + '</span></div>' : '') +
+    '<div class="ot-r">Dislikes</div><div class="pchips">' + (o.dislikes.length ? o.dislikes.map((x) => '<span class="pchip no">' + TYPES[x].name + '</span>').join('') : '<span class="pchip none">Nothing</span>') + '</div>' +
+    '<div class="ot-s"><b>' + sc.total + '</b>' + (sc.total === 1 ? ' scoop' : ' scoops') + '</div><div class="ot-till" id="ledger" aria-live="polite"></div></div></div>';
   const keys = ownedTypes();
   const cell = (t, k) => {
     const [c1, c2] = BASKET_COLOURS[k % BASKET_COLOURS.length], m = mine(t), nd = need[t] || 0;
@@ -3725,7 +3735,7 @@ function startScooping() {
   showStage('scoop');
   if (state.scoopLive) { renderScoop(); scoopMsg('Scoop from the bowl, tip onto the mat, then tap each bead to count it.'); return; } // coming back from the order slip: keep the beads as they were
   state.scoopLive = true;
-  phys.start(Object.fromEntries(Object.values(state.order.beads).map((id) => [id, 1]))); // every bead is an item
+  phys.start(Object.fromEntries(ownedTypes().map((ty) => [state.order.beads[ty], 1]))); // a bead for every item you own; locked jars have no beads
   renderScoop();
   scoopMsg('Scoop from the bowl, tip onto the mat, then tap each bead to count it.');
 }
@@ -4007,6 +4017,7 @@ el.app.addEventListener('contextmenu', (e) => e.preventDefault());
 el.clearMat.addEventListener('click', () => { if (phys) phys.clearMat(); });
 el.start.addEventListener('click', goToShelf);
 el.shelfBack.addEventListener('click', backToBowl);
+document.addEventListener('click', (e) => { const j = e.target.closest && e.target.closest('[data-shop]'); if (j && state.phase === 'scoop') showShop(() => { if (state.phase === 'scoop') renderScoop(); }, j.dataset.shop); });
 // the shop is always one tap away (not on the start screen); the scoop screen can go back to the order slip or peek at it
 $('#btnShop').addEventListener('click', () => { closeBasket(); showShop(() => { if (state.phase === 'shelf') renderShelf(); else if (state.phase === 'order') renderOrderCard(); }); });
 $('#btnScoopBack').addEventListener('click', () => { if (state.phase !== 'scoop') return; state.phase = 'order'; showStage('order'); renderOrderCard(); $('#btnBegin').textContent = 'Back to scooping'; });
@@ -4115,10 +4126,10 @@ function buyPack(id) {
   return true;
 }
 const lookName = (type, key) => { const e = variantsOf(type).find((v) => v.key === key); return e ? e.name : key; };
-function showShop(onClose) {
+function showShop(onClose, startType) {
   let box = document.getElementById('shop');
   if (!box) { box = document.createElement('div'); box.id = 'shop'; document.body.appendChild(box); }
-  const S = { type: 'all', open: null, bought: null };
+  const S = { type: startType && (TYPES[startType] || startType === 'mix') ? startType : 'all', open: null, bought: null };
   const draw = () => {
     const packs = PACK_DATA.packs.filter((p) => S.type === 'all' || p.type === S.type).slice().sort((a, b) => packOwned(a) - packOwned(b) || a.price - b.price);
     const chips = ['all'].concat(Object.keys(TYPES), ['mix']).map((t) => '<button type="button" class="sc' + (S.type === t ? ' on' : '') + '" data-t="' + t + '">' + (t === 'all' ? 'All' : SHOP_TITLE[t]) + '</button>').join('');
