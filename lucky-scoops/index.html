@@ -781,6 +781,10 @@ body.tl[data-stage=scoop] header.top .title{font-size:24px}
 body.tl[data-stage=scoop] #scoopStage .jarshelves{padding-top:62px}
 body.tl[data-stage=scoop] #topbtns{z-index:8}
 body.tl #scoopStage .scoopbtns{bottom:auto;top:492px}
+.basket.locked .bk-front{filter:grayscale(1) brightness(1.05);opacity:.5;cursor:pointer}
+.basket.locked .bk-name{opacity:.75}
+.bk-lock{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font-size:26px;filter:none}
+body.tl #shelfStage{grid-template-columns:minmax(0,1fr) 40%}
 </style>
 </head>
 <body>
@@ -3175,6 +3179,7 @@ function layout() {
   document.body.classList.toggle('landscape', landscape);
   document.body.classList.toggle('tl', tl);
   if (tl !== tlWas && el.legend && state && state.order && state.phase === 'scoop') el.legend.innerHTML = jarShelves();
+  if (tl !== tlWas && state && state.order && state.phase === 'shelf') renderShelf();
   buildView(Math.max(220, Math.floor(bw)));
   cell = Math.max(26, Math.round(VIEW.bw / 7));
   const tw = landscape ? Math.max(200, vw - VIEW.bw - 60) : vw - 24;
@@ -3851,7 +3856,9 @@ function renderShelf() {
     return '<button type="button" class="basket tub' + (k % 6) + (nd > 0 ? ' lit' : ' dim') + (state.openBasket === t ? ' open' : '') + '" data-type="' + t + '" style="--c1:' + c1 + ';--c2:' + c2 + '" aria-label="' + TYPES[t].name + (nd ? ', need ' + nd : '') + (m ? ', ' + m + ' picked' : '') + '">' +
       '<span class="bk-front"><span class="bk-stack" aria-hidden="true">' + stackArt(t) + '</span><span class="bk-lip"></span></span><span class="bk-name">' + (TYPES[t].short || TYPES[t].name) + '</span></button>';
   };
-  let rows = ''; for (let r = 0; r < keys.length; r += 5) rows += '<div class="srow">' + keys.slice(r, r + 5).map((t, i) => cell(t, r + i)).join('') + '</div><div class="plank"></div>';
+  const lockedCell = (t, k) => '<button type="button" class="basket locked tub' + (k % 6) + '" data-shop="' + t + '" aria-label="' + TYPES[t].name + ' is locked. Open the shop"><span class="bk-front"><span class="bk-lock" aria-hidden="true">🔒</span></span><span class="bk-name">' + (TYPES[t].short || TYPES[t].name) + '</span></button>';
+  const allKeys = document.body.classList.contains('tl') ? keys.concat(Object.keys(TYPES).filter((t) => !keys.includes(t))) : keys;
+  let rows = ''; for (let r = 0; r < allKeys.length; r += 5) rows += '<div class="srow">' + allKeys.slice(r, r + 5).map((t, i) => (keys.includes(t) ? cell(t, r + i) : lockedCell(t, r + i))).join('') + '</div><div class="plank"></div>';
   el.shelf.innerHTML = rows;
   const pw = el.pickBasket.clientWidth || 360, sk = pw / 360, cw = pw * 0.5, COLS = 4, pcell = cw / COLS, rowStep = 15 * sk;
   const pile = sc.picked.map((it, i) => {
@@ -3930,7 +3937,9 @@ el.sheet.addEventListener('click', (e) => {
 el.shelf.addEventListener('click', (e) => {
   const m = e.target.closest('[data-minus]');
   if (m) { removeItem(m.dataset.minus); return; }
-  const b = e.target.closest('.basket'); if (b) openBasket(b.dataset.type);
+  const b = e.target.closest('.basket');
+  if (b && b.classList.contains('locked')) { showShop(() => { if (state.phase === 'shelf') renderShelf(); }, b.dataset.shop); return; }
+  if (b) openBasket(b.dataset.type);
 });
 function goToShelf() {
   VO.say('shelfIntro');
