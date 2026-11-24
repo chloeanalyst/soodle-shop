@@ -2609,10 +2609,11 @@ const VO = (() => {
   const synth = window.speechSynthesis;
   const pickVoice = () => { if (!synth) return; const en = synth.getVoices().filter((v) => /^en/i.test(v.lang)); voice = null; let saved = ''; try { saved = localStorage.getItem('luckyScoopsVoiceName') || ''; } catch (_) {} voice = en.find((v) => v.name === saved) || null; if (!voice) for (const r of [/samantha/i, /karen/i, /serena/i, /google uk english female/i, /moira/i, /tessa/i, /fiona/i, /female/i]) { voice = en.find((v) => r.test(v.name)); if (voice) break; } voice = voice || en.find((v) => /^en-(GB|US)/i.test(v.lang)) || en[0] || null; };
   if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
-  const rnd = (a) => a[Math.floor(Math.random() * a.length)];
+  const recent = [], said = []; // what was picked and spoken lately, so the same thing is not said again close by
+  const rnd = (a) => { let c = a.filter((x) => !recent.includes(x)); if (!c.length) c = a.filter((x) => x !== recent[recent.length - 1]); if (!c.length) c = a; const x = c[Math.floor(Math.random() * c.length)]; recent.push(x); if (recent.length > 30) recent.shift(); return x; };
   const nextVoice = () => { if (!synth) return ''; const en = synth.getVoices().filter((v) => /^en/i.test(v.lang)); if (!en.length) return ''; voice = en[(en.indexOf(voice) + 1) % en.length]; try { localStorage.setItem('luckyScoopsVoiceName', voice.name); } catch (_) {} return voice.name; };
-  const say = (text) => { last = text; lastAt = Date.now(); if (!on || !synth || navigator.webdriver) return; try { synth.cancel(); const u = new SpeechSynthesisUtterance(text); if (voice) { u.voice = voice; u.lang = voice.lang; } u.pitch = 1.8; u.rate = 0.86; synth.speak(u); } catch (_) {} };
-  const chat = (text, p) => { if (Math.random() < (p == null ? 1 : p) && Date.now() - lastAt > 1200) say(text); }; // extra chatter: skipped sometimes, and never talks over the last line
+  const say = (text) => { last = text; lastAt = Date.now(); said.push(text); if (said.length > 10) said.shift(); if (!on || !synth || navigator.webdriver) return; try { synth.cancel(); const u = new SpeechSynthesisUtterance(text); if (voice) { u.voice = voice; u.lang = voice.lang; } u.pitch = 1.8; u.rate = 0.86; synth.speak(u); } catch (_) {} };
+  const chat = (text, p) => { if (said.includes(text)) return; if (Math.random() < (p == null ? 1 : p) && Date.now() - lastAt > 1200) say(text); }; // extra chatter: skipped sometimes, and never talks over the last line
   const plural = (n, c) => { const w = TYPES[n] ? TYPES[n].name.toLowerCase() : n; return c === 1 || /s$/.test(w) ? w : w + 's'; };
   const list = (a) => (a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
   const orderLine = (o) => { const pos = Math.min(ORDERS_PER_MONTH, run.orders.filter((e) => e.n !== state.n).length + 1); return (pos === 1 ? rnd(['Level ' + run.month + '! Come pack orders with me!', 'POV: you run a tiny bead shop, and it is level ' + run.month + '.', 'Level ' + run.month + ', let us gooo!']) : rnd(['Ooh, a new order!', 'Okay, order number ' + pos + '!', 'Yay, another order!', 'Come pack this one with me!', 'Packing orders, but make it cute!', 'Order number ' + pos + ' of the day!'])) + ' ' +  (o.scoops === 1 ? 'Just one scoop' : o.scoops + ' scoops') + ' this time. They love ' + list(o.theme.loves.map((t) => plural(t, 2))) + '.' + (o.dislikes.length ? ' And please, no ' + list(o.dislikes.map((t) => plural(t, 2))) + '.' : '') + (o.colour ? ' They also want something ' + o.colour.name.toLowerCase() + '.' : '') + (o.swap ? ' And they want a different ' + TYPES[o.swap.type].name.toLowerCase() + ' this time.' : '') + ' ' + rnd(["Let's go!", 'This is going to be so satisfying.', 'Okay, scoop time!', 'Pack with me!']); };
@@ -3184,13 +3185,13 @@ function toggleMod() {
   if (state.phase !== 'pack') return;
   const it = state.sel && byId(state.sel), mods = it && TYPES[it.type].mods; if (!mods) return;
   const key = Object.keys(mods)[0], on = !it.mod;
-  reshape(it, (o) => { o.mod = on ? key : null; }, on ? (VO.say('Folding it up nice and small!'), TYPES[it.type].name + ' ' + mods[key].done + '. Much smaller!') : TYPES[it.type].name + ' back to full size.');
+  reshape(it, (o) => { o.mod = on ? key : null; }, on ? (VO.say(VO.rnd(['Folding it up nice and small!', 'Fold, fold, tiny!', 'Folding this so it fits.'])), TYPES[it.type].name + ' ' + mods[key].done + '. Much smaller!') : TYPES[it.type].name + ' back to full size.');
 }
 function toggleWrap() {
   if (state.phase !== 'pack') return;
   const it = state.sel && byId(state.sel); if (!it) return;
   const on = !it.wrap;
-  reshape(it, (o) => { o.wrap = on; }, on ? (VO.say('Wrapping it up with a bow!'), 'Wrapped in paper with a ribbon. It looks lovely!') : 'Unwrapped.');
+  reshape(it, (o) => { o.wrap = on; }, on ? (VO.say(VO.rnd(['Wrapping it up with a bow!', 'Paper, ribbon, bow, done!', 'A little gift wrap, so fancy.'])), 'Wrapped in paper with a ribbon. It looks lovely!') : 'Unwrapped.');
 }
 
 function turnSelected() {
@@ -3239,7 +3240,7 @@ function undo() {
   restoreSnap(state.history.pop()); state.sel = null; render(); setMsg(defaultMsg());
 }
 function resetBox() {
-  VO.say('Okay, fresh start! Everything back out.');
+  VO.say(VO.rnd(['Okay, fresh start! Everything back out.', 'Let us start over, tipping it all out.']));
   if (state.phase !== 'pack') return;
   for (const it of state.items) { it.placed = null; it.ang = 0; }
   state.stack = []; state.history = []; state.sel = null; render(); setMsg(defaultMsg());
@@ -3553,7 +3554,7 @@ function renderScoop() {
 }
 // Un-count a bead you tapped by mistake: it goes back on the mat.
 function uncount(type) {
-  VO.chat('Oops, putting that one back.', 1);
+  VO.chat(VO.rnd(['Oops, putting that one back.', 'Changed my mind, back it goes.']), 1);
   const c = state.order.counted;
   if (state.phase !== 'scoop' || !c[type]) return false;
   c[type]--; phys.putBack(state.order.beads[type]); renderScoop(); scoopMsg(TYPES[type].name + ' put back on the mat.'); return true;
@@ -3822,11 +3823,11 @@ function seal() {
   if (analyse(placedRects()).maxDepth > DEPTH) { showBlocked(); return; } // piled too high: the lid will not shut
   state.phase = 'sealing'; state.sel = null; render();
   const r = scoreOrder(); state.result = r;
-  el.board.classList.add('sealing'); VO.say('Lid on, tape tape tape, and off it goes!');
+  el.board.classList.add('sealing'); VO.say(VO.rnd(['Lid on, tape tape tape, and off it goes!', 'Closing it up, and sealing it with tape!', 'Sealed with love. Off it goes!']));
   setTimeout(() => showResult(r), 1500);
 }
 function showBlocked() {
-  VO.say('Oh no, the lid will not close! It is piled up too high.');
+  VO.say(VO.rnd(['Oh no, the lid will not close! It is piled up too high.', 'Hmm, the lid will not shut. Too much stacked up!']));
   state.phase = 'blocked'; state.sel = null; el.board.dataset.lid = 'blocked'; render();
   el.lidsheet.innerHTML = '<div class="vcard" role="dialog" aria-label="The lid will not close"><div style="font-size:34px">⚠️</div><h3>The lid won&rsquo;t close</h3>' +
     '<p>Something is bulging out of the top. You can rearrange the box, or ship it as it is and hope for the best.</p>' +
@@ -4021,7 +4022,7 @@ function onUp(e) {
   }
   if (!drag.moved) { // a tap: first tap selects, tapping the selected item again turns it
     if (state.sel !== it.id) { state.sel = it.id; VO.chat(VO.rnd(['Ooh, the ' + TYPES[it.type].name.toLowerCase() + '!', 'Okay, this one next.', 'Where should the ' + TYPES[it.type].name.toLowerCase() + ' go?']), 0.6); }
-    else if (drag.from === 'tray') { it.rot ^= 1; VO.chat('Let us turn it the other way.', 0.5); }
+    else if (drag.from === 'tray') { it.rot ^= 1; VO.chat(VO.rnd(['Let us turn it the other way.', 'A quick flip.', 'Rotating it a little.']), 0.5); }
     else turnInPlace(it);
     endDrag(); render(); return;
   }
@@ -4170,7 +4171,7 @@ const packOwned = (p) => p.keys.every((k) => isOwned(packTypeOf(p, k), k));
 function buyPack(id) {
   const p = PACK_DATA.packs.find((x) => x.id === id);
   if (!p || !run.owned || packOwned(p) || run.bank < p.price) return false;
-  VO.say('Yay, new looks!'); run.bank -= p.price; p.keys.forEach((k) => { const ty = packTypeOf(p, k); run.owned[ty] = Array.from(new Set((run.owned[ty] || []).concat([k]))); }); saveRun();
+  VO.say(VO.rnd(['Yay, new looks!', 'Ooh, new things for the shelf!', 'Bought! So cute.'])); run.bank -= p.price; p.keys.forEach((k) => { const ty = packTypeOf(p, k); run.owned[ty] = Array.from(new Set((run.owned[ty] || []).concat([k]))); }); saveRun();
   return true;
 }
 const lookName = (type, key) => { const e = variantsOf(type).find((v) => v.key === key); return e ? e.name : key; };
