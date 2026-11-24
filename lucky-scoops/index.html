@@ -2706,7 +2706,7 @@ const VO = (() => {
     if (navigator.webdriver && !/voicetest/.test(location.search)) return;
     AUD.tries++;
     const fail = () => { if (AUD.tries < 4) setTimeout(loadClips, 2500 * AUD.tries); else { AUD.state = 'failed'; refreshLabels(); } };
-    try { Promise.all([fetch('voice/voice.json?v=6').then((r) => { if (!r.ok) throw 0; return r.json(); }), fetch('voice/voice.mp3?v=6').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); })]).then(([j, b]) => { const C = window.AudioContext || window.webkitAudioContext; if (!AUD.ctx) AUD.ctx = new C(); return AUD.ctx.decodeAudioData(b).then((buf) => { AUD.buf = buf; AUD.map = j; AUD.ok = true; AUD.state = 'ok'; refreshLabels(); }); }).catch(fail); } catch (_) { fail(); }
+    try { Promise.all([fetch('voice/voice.json?v=7').then((r) => { if (!r.ok) throw 0; return r.json(); }), fetch('voice/voice.mp3?v=7').then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); })]).then(([j, b]) => { const C = window.AudioContext || window.webkitAudioContext; if (!AUD.ctx) AUD.ctx = new C(); return AUD.ctx.decodeAudioData(b).then((buf) => { AUD.buf = buf; AUD.map = j; AUD.ok = true; AUD.state = 'ok'; refreshLabels(); }); }).catch(fail); } catch (_) { fail(); }
   };
   loadClips();
   const wake = () => { try { if (AUD.ctx && AUD.ctx.state === 'suspended') AUD.ctx.resume(); } catch (_) {} };
