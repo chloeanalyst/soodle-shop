@@ -3179,7 +3179,7 @@ function layout() {
   const tw = landscape ? Math.max(200, vw - VIEW.bw - 60) : vw - 24;
   const maxDim = Math.max(...Object.values(TYPES).map((t) => Math.max(t.w, t.h)));
   trayScale = clamp(Math.floor(((tw - 20 - 24) / 4 - 10) / maxDim), 14, 40);
-  if (typeof phys !== 'undefined' && phys && phys.setLand) phys.setLand(landscape);
+  if (typeof phys !== 'undefined' && phys && phys.setLand) phys.setLand(landscape && !tl);
 }
 
 /* ---------- rendering ---------- */
