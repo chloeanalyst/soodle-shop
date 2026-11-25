@@ -2939,7 +2939,7 @@ const track = (event, props) => {
   try {
     if (navigator.webdriver || !/^https?:/.test(location.protocol) || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return; // tests and local previews stay out of the numbers
     fetch(ANALYTICS_URL, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', apikey: ANALYTICS_KEY, Prefer: 'return=minimal' },
-      body: JSON.stringify({ event, install_id: anon, session_id: sessionId, source: 'web', channel: 'lucky-scoops', app_version: 'v94', locale: (navigator.language || '').slice(0, 20), props: props || {} }) }).catch(() => {});
+      body: JSON.stringify({ event, install_id: anon, session_id: sessionId, source: 'web', channel: 'lucky-scoops', app_version: 'v95', locale: (navigator.language || '').slice(0, 20), props: props || {} }) }).catch(() => {});
   } catch (_) { /* never let counting break the game */ }
 };
 const state = { fill: 0, shipped: null, n: 1, items: [], stack: [], sel: null, history: [], refRatio: 0.6, phase: 'pack', result: null, order: null, scoop: { left: 0, total: 0, picked: [], need: {} } };
@@ -3291,11 +3291,16 @@ function makePiece(it, scale, gap, extra) {
 
 // Tray pictures are drawn in proportion to the room each item takes in the box, so a keyring looks small and a jumper large
 function trayDims(it, tall) { const m = modOf(it) || TYPES[it.type], u = tall ? 16 : 20; return [Math.min(tall ? 66 : 78, Math.max(24, m.w * u + 4)), Math.min(tall ? 56 : 66, Math.max(24, m.h * u + 4))]; }
+// The picture inside a box-sized sprite. A turned item keeps its picture turned (laid on its side) and as big as the box allows.
+function fitSpriteArt(p, it, w, h) {
+  const img = p.querySelector('img.art'); if (!img) return;
+  img.style.cssText = it.rot ? 'position:absolute;left:50%;top:50%;width:' + h + 'px;height:' + w + 'px;margin:' + (-w / 2) + 'px 0 0 ' + (-h / 2) + 'px;transform:rotate(90deg)' : 'width:100%;height:100%';
+}
 function makeSprite(it, w, h, extra) {
   if (isFill(it)) { const b = document.createElement('div'); b.className = 'item sprite fillr ' + TYPES[it.type].shape + ' ' + extra; b.dataset.id = it.id; b.title = TYPES[it.type].name; b.style.width = w + 'px'; b.style.height = h + 'px'; b.style.backgroundImage = 'url("' + tissueSvg(TYPES[it.type].shape, wadColour()) + '")'; return b; }
   const p = makePiece(it, 1, 0, 'sprite ' + extra);
   p.style.width = w + 'px'; p.style.height = h + 'px';
-  const img = p.querySelector('img.art'); if (img) img.style.cssText = 'width:100%;height:100%';
+  fitSpriteArt(p, it, w, h);
   const rb = p.querySelector('.rb'); if (rb) rb.className = 'rb ' + (w >= h ? 'h' : 'v');
   return p;
 }
@@ -3315,14 +3320,14 @@ function tissueSvg(shape, col) {
 const tissueTex = col => 'url("' + tissueSvg('ball', col) + '")';
 const wadColour = () => (TISSUES[(state.order && state.order.box || state.boxSel || {}).tissue] || TISSUES.none)[1] || '#fde8ee';
 function spriteBox(it, x, y, lvl) {
-  const f = fp(it), b = fpBase(it, 0), cx = x + f.w / 2, cy = y + f.h / 2;
+  const f = fp(it), cx = x + f.w / 2, cy = y + f.h / 2;
   if (isFill(it)) { // tissue lies flat and fills its whole patch of floor
     const q = [artP(cx - f.w / 2, cy - f.h / 2), artP(cx + f.w / 2, cy - f.h / 2), artP(cx - f.w / 2, cy + f.h / 2), artP(cx + f.w / 2, cy + f.h / 2)];
     const x0 = Math.min(...q.map(v => v.x)), x1 = Math.max(...q.map(v => v.x)), y0 = Math.min(...q.map(v => v.y)), y1 = Math.max(...q.map(v => v.y));
     return { left: x0 - 2 * lvl, top: y0 - lvl * 6 * VIEW.S, w: x1 - x0, h: y1 - y0, bottom: y1 };
   }
   const a = artP(cx - f.w / 2, cy + f.h / 2), c = artP(cx + f.w / 2, cy + f.h / 2);
-  const w = Math.min(Math.hypot(c.x - a.x, c.y - a.y) * 1.1, VIEW.bw * 0.5), h = Math.min(w * (b.h / b.w) * 0.95, VIEW.bw * 0.46), S = VIEW.S;
+  const w = Math.min(Math.hypot(c.x - a.x, c.y - a.y) * 1.1, VIEW.bw * 0.5), h = Math.min(w * (f.h / f.w) * 0.95, VIEW.bw * 0.46), S = VIEW.S;
   const midX = (a.x + c.x) / 2 + lvl * 10 * S, bottom = (a.y + c.y) / 2 - lvl * 20 * S;
   return { left: midX - w / 2, top: bottom - h, w, h, bottom: (a.y + c.y) / 2 };
 }
@@ -4333,8 +4338,8 @@ function updateGhost() {
   const at = drag.preview ? { x: drag.preview.x, y: drag.preview.y } : { x: t.fx, y: t.fy };
   let bx;
   if (drag.preview || (t.cx > -1 && t.cx < COLS + 1 && t.cy > -1 && t.cy < ROWS + 3)) bx = spriteBox(it, at.x, at.y, 1);
-  else { const f = fp(it), b = fpBase(it, 0), w = f.w * cell * 0.9, h = w * (b.h / b.w) * 0.95; bx = { left: drag.x - r.left - w / 2, top: drag.y - drag.offY - r.top - h / 2, w, h }; }
-  g.style.width = bx.w + 'px'; g.style.height = bx.h + 'px'; g.style.left = (r.left + bx.left) + 'px'; g.style.top = (r.top + bx.top) + 'px';
+  else { const f = fp(it), w = f.w * cell * 0.9, h = w * (f.h / f.w) * 0.95; bx = { left: drag.x - r.left - w / 2, top: drag.y - drag.offY - r.top - h / 2, w, h }; }
+  g.style.width = bx.w + 'px'; g.style.height = bx.h + 'px'; g.style.left = (r.left + bx.left) + 'px'; g.style.top = (r.top + bx.top) + 'px'; fitSpriteArt(g, it, bx.w, bx.h);
   g.style.setProperty('--ang', (it.ang || 0) + 'deg');
 }
 function updatePreview() {
