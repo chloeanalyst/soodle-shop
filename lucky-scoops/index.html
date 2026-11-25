@@ -578,8 +578,6 @@ body.landscape #shelfStage .cork{padding:8px 12px 6px}
 .bx-o.on{border-color:var(--pinkd);background:#fff0f5;box-shadow:0 0 0 3px rgba(214,63,124,.18)}
 .bx-n{font-size:14px;font-weight:800;line-height:1}
 .bx-s{font-size:12px;font-weight:800;color:#b0305f;line-height:1;min-height:12px}
-.bx-foot{display:flex;gap:10px;margin-top:auto}
-.bx-foot .btn{height:54px}.bx-foot #btnBoxBack{flex:0 0 auto;padding:0 20px}.bx-foot #btnBoxGo{flex:1}
 body.landscape #boxStage{flex-direction:row;margin:0}
 body.landscape .bx-card{flex:1 1 46%;align-self:stretch;justify-content:center;margin:0}
 body.landscape .bx-svg{max-height:60vh}
@@ -636,6 +634,23 @@ body.landscape #shelfStage .cork .ordtag{flex:0 0 124px}
 #btnHow{font-family:var(--frog);font-weight:800;font-size:22px;line-height:1;margin:0}
 header.top{padding-right:188px}
 #packed{display:none!important}
+
+/* the bead string: Scoop, Pick, Pack. It sits where the title used to be, so nothing else moves. */
+#steps{position:fixed;z-index:129;left:max(12px,env(safe-area-inset-left));top:calc(max(env(safe-area-inset-top),var(--inset,0px)) + 6px);width:min(176px,calc(100vw - 214px));height:50px;display:flex;justify-content:space-between;align-items:flex-start;padding:0 2px;box-sizing:border-box}
+#steps[hidden]{display:none}
+#steps .sthread{position:absolute;left:24px;right:24px;top:15px;height:4px;border-radius:2px;background:#cdbb9c}
+#steps .sb{appearance:none;border:0;background:none;padding:0;font:inherit;position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;width:46px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#steps .sb i{width:26px;height:26px;margin-top:3px;border-radius:50%;border:3px solid #fff;box-sizing:border-box;box-shadow:0 2px 5px rgba(60,40,60,.28);display:flex;align-items:center;justify-content:center;transition:width .2s,height .2s,margin .2s}
+#steps .sb:nth-of-type(1) i{background:#bfe0d2}#steps .sb:nth-of-type(2) i{background:#f6c3d4}#steps .sb:nth-of-type(3) i{background:#f06c9b}
+#steps .sb b{font-size:11.5px;font-weight:800;color:var(--ink);line-height:1.1;letter-spacing:.1px}
+#steps .sb.done i::after{content:'';width:5px;height:9px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+#steps .sb.cur i{width:34px;height:34px;margin-top:0;box-shadow:0 0 0 5px rgba(240,108,155,.25),0 3px 8px rgba(60,40,60,.28)}
+#steps .sb.cur b{color:var(--pinkd)}
+#steps .sb.off{opacity:.55}
+#steps .sb.next i{animation:stepnudge 1.3s ease-in-out infinite}
+@keyframes stepnudge{0%,100%{box-shadow:0 0 0 0 rgba(240,108,155,.55),0 2px 5px rgba(60,40,60,.28)}50%{box-shadow:0 0 0 7px rgba(240,108,155,0),0 2px 5px rgba(60,40,60,.28)}}
+@media (prefers-reduced-motion:reduce){#steps .sb.next i{animation:none}}
+body[data-stage="scoop"] header.top .title,body[data-stage="scoop"] header.top .sub,body[data-stage="box"] header.top .title,body[data-stage="box"] header.top .sub,body[data-stage="pack"] header.top .title,body[data-stage="pack"] header.top .sub{visibility:hidden}
 header.top .title{white-space:nowrap}header.top>div:first-child{min-width:0}header.top #packed{font-size:12.5px;padding:5px 9px;margin-right:-4px}@media (max-width:420px){header.top .title{font-size:24px}}
 body[data-stage="scoop"] header.top,body[data-stage="scoop"].hosttool header.top{position:static;min-height:52px;padding:0}
 .jar.locked{opacity:.75;cursor:pointer}.jar.locked .glass{background:linear-gradient(90deg,rgba(210,205,215,.8),rgba(190,185,200,.5) 40%,rgba(210,205,215,.7));display:flex;align-items:center;justify-content:center}.jar .lockic{font-size:20px}.jtag.locked{opacity:.7;padding-left:8px;cursor:pointer}
@@ -834,6 +849,7 @@ body.tl #start .sbot .btn.vbtn{font-size:14px;line-height:1.15}
   <div id="how" hidden></div>
   <div id="start" hidden></div>
   <div id="topbtns"><button id="btnHome" type="button" aria-label="Back to the home screen"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 31 32 10l24 21" fill="none" stroke="#2f6b6b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><path d="M14 28v26h13V40h10v14h13V28" fill="none" stroke="#2f6b6b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></svg></button><button id="btnShop" type="button" aria-label="Open the heart shop"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M9 10h46l5 15H4z" fill="#2f6b6b"/><path d="M4 25c0 4 3.200 6 6.600 6S17 29 17 25c0 4 3.200 6 7.500 6S32 29 32 25c0 4 3.200 6 7.500 6S47 29 47 25c0 4 3.200 6 6.600 6S60 29 60 25z" fill="#2f6b6b"/><path d="M11 35v19h42V35" fill="none" stroke="#2f6b6b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><rect x="18" y="39" width="12" height="15" rx="2" fill="#2f6b6b"/><rect x="36" y="39" width="11" height="8" rx="1.500" fill="#2f6b6b"/></svg></button><button id="btnMute" type="button" aria-label="Turn the voice off"></button><button id="btnHow" type="button" aria-label="How to play">?</button></div>
+  <nav id="steps" aria-label="Your steps" hidden><span class="sthread"></span><button type="button" class="sb" data-step="scoop"><i></i><b>Scoop</b></button><button type="button" class="sb" data-step="pick"><i></i><b>Pick</b></button><button type="button" class="sb" data-step="pack"><i></i><b>Pack</b></button></nav>
   <header class="top">
     <div><div id="orderTitle" class="title">Order</div><div class="sub" id="orderSub">Medium box · fits a stack 3 items high</div></div>
     <div id="packed">0 / 0 packed</div>
@@ -844,7 +860,7 @@ body.tl #start .sbot .btn.vbtn{font-size:14px;line-height:1.15}
     <div class="table">
       <p id="smsg" class="msg" role="status" aria-live="polite"></p>
       <div class="physwrap" id="physwrap"><canvas id="phys" aria-label="Bowl of beads, a scoop and a woven mat"></canvas></div>
-      <div class="scoopbtns"><button class="btn" id="btnScoopBack" type="button">Back</button><button class="btn" id="btnPeekOrder" type="button">Order</button><button class="btn" id="btnClearMat" type="button">Clear mat</button><button class="btn primary ready" id="btnStart" type="button" hidden>Start packing</button></div>
+      <div class="scoopbtns"><button class="btn" id="btnScoopBack" type="button">Back</button><button class="btn" id="btnPeekOrder" type="button">Order</button><button class="btn" id="btnClearMat" type="button">Clear mat</button></div>
     </div>
   </main>
   <main id="shelfStage" hidden>
@@ -853,7 +869,7 @@ body.tl #start .sbot .btn.vbtn{font-size:14px;line-height:1.15}
     <div class="shelf" id="shelf" aria-label="Shelf of baskets"></div>
     <div class="table" id="shelfTable">
       <div class="pickbasket" id="pickBasket" aria-label="Your basket"></div>
-      <div class="scoopbtns"><button class="btn" id="btnShelfBack" type="button">Back to the mat</button><button class="btn primary ready" id="btnShelfPack" type="button" disabled>Start packing</button></div>
+      
     </div>
   </main>
   <main id="boxStage" hidden></main>
@@ -2895,8 +2911,8 @@ const el = {
   app: $('#app'), board: $('#board'), pieces: $('#pieces'), preview: $('#preview'), tray: $('#tray'),
   msg: $('#msg'), packed: $('#packed'), title: $('#orderTitle'),
   rotate: $('#btnRotate'), left: $('#btnLeft'), right: $('#btnRight'), fwd: $('#btnFwd'), back: $('#btnBack'), undo: $('#btnUndo'), reset: $('#btnReset'), seal: $('#btnSeal'), mod: $('#btnMod'), wrap: $('#btnWrap'), fill: $('#btnFill'), fill2: $('#btnFillSheet'), fill3: $('#btnFillCover'), boxart: $('#boxart'), plane: $('#plane'), fillers: $('#fillers'), selname: $('#selname'), selang: $('#selang'), selimg: $('#selimg'), slider: $('#angSlider'), lidsheet: $('#lidsheet'),
-  modal: $('#modal'), sub: $('#orderSub'), packStage: $('#packStage'), scoopStage: $('#scoopStage'), shelfStage: $('#shelfStage'), noteCard: $('#noteCard'), shelf: $('#shelf'), pickBasket: $('#pickBasket'), shmsg: $('#shmsg'), sheet: $('#vsheet'), boxStage: $('#boxStage'), shelfBack: $('#btnShelfBack'), shelfPack: $('#btnShelfPack'), legend: $('#legend'),
-  orderStage: $('#orderStage'), orderCard: $('#orderCard'), begin: $('#btnBegin'), smsg: $('#smsg'), start: $('#btnStart'), clearMat: $('#btnClearMat'), phys: $('#phys')
+  modal: $('#modal'), sub: $('#orderSub'), packStage: $('#packStage'), scoopStage: $('#scoopStage'), shelfStage: $('#shelfStage'), noteCard: $('#noteCard'), shelf: $('#shelf'), pickBasket: $('#pickBasket'), shmsg: $('#shmsg'), sheet: $('#vsheet'), boxStage: $('#boxStage'), legend: $('#legend'),
+  orderStage: $('#orderStage'), orderCard: $('#orderCard'), begin: $('#btnBegin'), smsg: $('#smsg'), clearMat: $('#btnClearMat'), phys: $('#phys')
 };
 
 /* ---------- state ---------- */
@@ -2920,7 +2936,7 @@ const track = (event, props) => {
   try {
     if (navigator.webdriver || !/^https?:/.test(location.protocol) || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return; // tests and local previews stay out of the numbers
     fetch(ANALYTICS_URL, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', apikey: ANALYTICS_KEY, Prefer: 'return=minimal' },
-      body: JSON.stringify({ event, install_id: anon, session_id: sessionId, source: 'web', channel: 'lucky-scoops', app_version: 'v92', locale: (navigator.language || '').slice(0, 20), props: props || {} }) }).catch(() => {});
+      body: JSON.stringify({ event, install_id: anon, session_id: sessionId, source: 'web', channel: 'lucky-scoops', app_version: 'v94', locale: (navigator.language || '').slice(0, 20), props: props || {} }) }).catch(() => {});
   } catch (_) { /* never let counting break the game */ }
 };
 const state = { fill: 0, shipped: null, n: 1, items: [], stack: [], sel: null, history: [], refRatio: 0.6, phase: 'pack', result: null, order: null, scoop: { left: 0, total: 0, picked: [], need: {} } };
@@ -3564,7 +3580,7 @@ function showStage(which) {
   el.orderStage.hidden = which !== 'order'; el.scoopStage.hidden = which !== 'scoop'; el.shelfStage.hidden = which !== 'shelf'; el.boxStage.hidden = which !== 'box'; el.packStage.hidden = which !== 'pack';
   el.sub.textContent = which === 'order' ? 'Order ' + Math.min(ORDERS_PER_MONTH, run.orders.filter((e) => e.n !== state.n).length + 1) + ' of ' + ORDERS_PER_MONTH : which === 'scoop' ? 'Scoop and tip the beads onto the mat' : which === 'shelf' ? 'Pick your items from the shelf' : which === 'box' ? 'Choose and dress your box' : BOX_SIZES[(state.boxSel || {}).size || 'M'].name + ' box';
   document.body.dataset.stage = which;
-  layout();
+  layout(); if (typeof updateSteps === 'function') updateSteps();
 }
 
 
@@ -3737,7 +3753,7 @@ function renderBoxStep() {
   el.boxStage.innerHTML = '<div class="bx-card"><div class="bx-cost" id="bxCost"></div><div id="bxArt"></div><div class="bx-dim" id="bxDim"></div></div>' +
     '<div class="bx-sheet"><div class="bx-tabs" role="tablist">' + BOX_TABS.map((t) => '<button type="button" role="tab" class="bx-tab" data-tab="' + t[0] + '">' + t[1] + '</button>').join('') + '</div>' +
     '<div class="bx-row" id="bxRow"></div>' +
-    '<div class="bx-foot"><button class="btn" id="btnBoxBack" type="button">Shelf</button><button class="btn primary ready" id="btnBoxGo" type="button">Start packing</button></div></div>';
+    '</div>';
   fillBoxRow();
   updateBoxStep();
 }
@@ -3747,14 +3763,12 @@ function updateBoxStep() {
   const c = BOX_COLOURS[b.colour], t = TISSUES[b.tissue];
   document.getElementById('bxDim').textContent = BOX_SIZES[b.size].name + ' · ' + c[0] + ' · ' + BOX_PATTERNS[b.pattern][0] + ' · ' + (t[1] ? t[0] : 'No lining');
   document.getElementById('bxCost').innerHTML = heart(boxCostOf(b));
-  document.getElementById('btnBoxGo').textContent = 'Start packing';
   el.boxStage.querySelectorAll('.bx-o').forEach((x) => { const on = b[x.dataset.g] === x.dataset.id; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on); });
   el.boxStage.querySelectorAll('.bx-tab').forEach((x) => { const on = x.dataset.tab === state.boxTab; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); });
 }
 el.boxStage.addEventListener('click', (e) => {
   const x = e.target.closest('.bx-o'); if (x) { state.boxSel[x.dataset.g] = x.dataset.id; { const g = x.dataset.g, id = x.dataset.id; try { if (g === 'size') VO.say('boxSize', { size: BOX_SIZES[id].name.toLowerCase() }); else if (g === 'colour') VO.say('boxColour', { colour: BOX_COLOURS[id][0].toLowerCase() }); else if (g === 'pattern') VO.say('boxPattern', { pattern: BOX_PATTERNS[id][0].toLowerCase() }); else if (TISSUES[id][1]) VO.say('boxTissue', { tissue: TISSUES[id][0].toLowerCase() }); else VO.say('boxNoTissue'); } catch (_) {} } updateBoxStep(); if (x.dataset.g === 'colour') document.querySelectorAll('.bx-o[data-g="pattern"]').forEach(() => {}); return; }
   const tb = e.target.closest('.bx-tab'); if (tb) { state.boxTab = tb.dataset.tab; fillBoxRow(); updateBoxStep(); return; }
-  if (e.target.closest('#btnBoxBack')) backToShelf(); else if (e.target.closest('#btnBoxGo')) confirmBox();
 });
 function backToShelf() { if (state.phase !== 'box') return; state.phase = 'shelf'; showStage('shelf'); renderShelf(); }
 function confirmBox() {
@@ -3769,7 +3783,7 @@ function startPacking() {
   state.n = o.n; state.refRatio = o.refRatio;
   o.box = o.box || Object.assign({}, state.boxSel); applyBox(o.box);
   state.items = list.map((i) => ({ id: i.id, type: i.type, v: i.v || 0, rot: i.rot, ang: 0, placed: null }));
-  state.stack = []; state.history = []; state.sel = null; state.phase = 'pack'; state.result = null;
+  state.stack = []; state.history = []; state.sel = null; state.phase = 'pack'; state.result = null; state.packLive = true;
   el.board.classList.remove('sealing'); el.board.dataset.lid = 'open'; el.lidsheet.hidden = true; el.lidsheet.innerHTML = ''; state.fill = 0; state.shipped = null; el.modal.hidden = true; el.modal.innerHTML = '';
   showStage('pack'); render(); VO.say('packIntro');
   const counts = {}; for (const i of list) counts[i.type] = (counts[i.type] || 0) + 1;
@@ -3828,9 +3842,8 @@ function renderScoop() {
   const sc = state.scoop;
   el.title.textContent = 'Order #' + state.n;
   el.packed.textContent = 'Scoop and count'; el.packed.classList.remove('done');
-  el.start.hidden = countedTotal() === 0;
-  el.start.textContent = 'Go to the shelf';
   el.legend.innerHTML = jarShelves(); lastSig = JSON.stringify(state.order.counted) + sc.left;
+  updateSteps();
 }
 // Un-count a bead you tapped by mistake: it goes back on the mat.
 function uncount(type) {
@@ -3936,9 +3949,7 @@ function renderShelf() {
   }).join('');
   renderLedger();
   el.pickBasket.innerHTML = BASKET_BACK + '<div class="pb-items">' + pile + '</div>' + BASKET_FRONT + '<div class="pb-front"><span>' + (sc.picked.length ? 'Your basket · ' + sc.picked.length : 'Your basket') + '</span></div>';
-  el.shelfPack.disabled = sc.picked.length === 0;
-  el.shelfPack.textContent = 'Start packing (' + sc.picked.length + (sc.picked.length === 1 ? ' item' : ' items') + ')';
-  el.shelfBack.hidden = false;
+  updateSteps();
 }
 function shelfMsg(text, kind) { el.shmsg.textContent = kind === 'warn' ? text : ''; el.shmsg.className = 'msg' + (kind ? ' ' + kind : ''); }
 function renderLedger() {
@@ -4018,6 +4029,73 @@ function backToBowl() {
   closeBasket(); state.phase = 'scoop'; showStage('scoop'); phys.lock(state.scoop.left <= 0); renderScoop();
   scoopMsg('Tap beads to count them, or scoop again.');
 }
+
+/* ---------- the bead string: Scoop, Pick, Pack ---------- */
+const STEP_OF = { scoop: 0, shelf: 1, box: 2, pack: 2, sealing: 2 };
+let resumeN = 0;
+function stepReady(step) { // can this bead be used right now?
+  if (step === 'scoop') return true;
+  if (step === 'pick') return countedTotal() > 0 || state.scoop.picked.length > 0;
+  return state.scoop.picked.length > 0;
+}
+function updateSteps() {
+  const nav = document.getElementById('steps'); if (!nav) return;
+  const ph = state.phase, cur = STEP_OF[ph];
+  nav.hidden = cur === undefined || !state.order;
+  if (nav.hidden) return;
+  const next = ph === 'scoop' ? 'pick' : ph === 'shelf' || ph === 'box' ? 'pack' : '';
+  nav.querySelectorAll('.sb').forEach((b, i) => {
+    const st = b.dataset.step, ok = stepReady(st);
+    b.classList.toggle('cur', i === cur); b.classList.toggle('done', i < cur);
+    b.classList.toggle('off', i > cur && !ok);
+    b.classList.toggle('next', st === next && (ph === 'box' || ok));
+    b.setAttribute('aria-current', i === cur ? 'step' : 'false');
+    b.setAttribute('aria-label', (st === 'scoop' ? 'Scoop and count' : st === 'pick' ? 'Pick from the shelf' : ph === 'box' ? 'Start packing' : 'Pack the box'));
+  });
+}
+// Coming back to the box after visiting the shelf or the mat: keep what is already packed. Items you still have stay where they were,
+// items you took out of the basket leave the box, and new ones wait in the tray.
+function resumePacking() {
+  const sc = state.scoop, o = state.order, old = state.items.filter((i) => !isFill(i)), used = new Set(), keep = [];
+  for (const p of sc.picked) {
+    const m = old.find((i) => !used.has(i.id) && i.type === p.type && (i.v || 0) === (p.v || 0));
+    if (m) { used.add(m.id); keep.push(m); } else keep.push({ id: 'r' + (++resumeN) + '_' + p.type, type: p.type, v: p.v || 0, rot: p.rot || 0, ang: 0, placed: null });
+  }
+  const fills = state.items.filter(isFill), gone = new Set(old.filter((i) => !used.has(i.id)).map((i) => i.id));
+  state.items = keep.concat(fills);
+  state.stack = state.stack.filter((id) => !gone.has(id)); state.history = []; state.sel = null;
+  const need = Object.assign({}, o.counted), mc = matCounts();
+  for (const t of Object.keys(mc)) need[t] = (need[t] || 0) + mc[t];
+  o.needed = need; o.picked = sc.picked.slice();
+  state.phase = 'pack'; showStage('pack'); render(); setMsg(defaultMsg());
+}
+function stepTo(step) {
+  const ph = state.phase;
+  if (!state.order || STEP_OF[ph] === undefined || ph === 'sealing' || state.shipped || !el.modal.hidden || el.board.classList.contains('sealing')) return;
+  if (ph === 'pack' && step === 'pack') return;
+  if (ph === 'pack') { state.sel = null; state.phase = 'shelf'; } // leave the box as it is; it is picked up again on the way back
+  else if (ph === 'box') state.phase = 'shelf';
+  const from = state.phase === 'shelf' && (ph === 'pack' || ph === 'box') ? ph : state.phase;
+  if (step === 'scoop') {
+    if (state.phase === 'scoop') { updateSteps(); return; }
+    state.phase = 'shelf'; backToBowl(); return;
+  }
+  if (step === 'pick') {
+    if (state.phase === 'scoop') { if (!stepReady('pick')) { scoopMsg('Tap a bead on the mat to count it first.', 'warn'); return; } goToShelf(); return; }
+    if (from === 'pack' || from === 'box') { closeBasket(); showStage('shelf'); renderShelf(); shelfMsg(''); return; }
+    return;
+  }
+  // pack
+  if (state.phase === 'scoop') {
+    if (!stepReady('pick')) { scoopMsg('Tap a bead on the mat to count it first.', 'warn'); return; }
+    goToShelf(); if (!state.scoop.picked.length) { shelfMsg('Pick your items from the shelf, then tap Pack.', 'warn'); return; }
+  }
+  if (!state.scoop.picked.length) { shelfMsg('Pick something from the shelf first.', 'warn'); updateSteps(); return; }
+  if (ph === 'box') { state.phase = 'box'; confirmBox(); return; }
+  if (state.packLive && state.order.box) { resumePacking(); return; }
+  startFromShelf();
+}
+document.getElementById('steps').addEventListener('click', (e) => { const b = e.target.closest('.sb'); if (b) stepTo(b.dataset.step); });
 const TRACK_BEADS = ['heart:0', 'donut:1', 'star:0', 'barrel:0', 'donut:0']; // the month's bead string: one bead per order
 function monthTrack(cur) {
   return '<div class="mtrack" aria-label="Order ' + (cur + 1) + ' of ' + ORDERS_PER_MONTH + '"><span class="mthread"></span>' + TRACK_BEADS.map((k, i) => {
@@ -4047,7 +4125,7 @@ function slipHTML(o) {
 function beginOrder(n, salt = Math.floor(Math.random() * 1e6)) {
   state.order = makeOrder(n, salt); state.n = n;
   state.items = []; state.stack = []; state.history = []; state.sel = null; state.result = null;
-  state.phase = 'order';
+  state.phase = 'order'; state.packLive = false;
   state.scoop = { left: state.order.scoops, total: state.order.scoops, picked: [] };
   state.scoopLive = false; $('#btnBegin').textContent = 'Start scooping'; state.order.picked = null; state.order.counted = {}; state.order.needed = null; state.openBasket = null;
   el.board.classList.remove('sealing'); el.board.dataset.lid = 'open'; el.lidsheet.hidden = true; el.lidsheet.innerHTML = ''; state.fill = 0; state.shipped = null; el.modal.hidden = true; el.modal.innerHTML = '';
@@ -4377,14 +4455,11 @@ window.addEventListener('blur', abortDrag);
 document.addEventListener('visibilitychange', () => { if (document.hidden) abortDrag(); });
 el.app.addEventListener('contextmenu', (e) => e.preventDefault());
 el.clearMat.addEventListener('click', () => { if (phys) phys.clearMat(); VO.chat('clear', null, 1); });
-el.start.addEventListener('click', goToShelf);
-el.shelfBack.addEventListener('click', backToBowl);
 document.addEventListener('click', (e) => { const j = e.target.closest && e.target.closest('[data-shop]'); if (j && state.phase === 'scoop') showShop(() => { if (state.phase === 'scoop') renderScoop(); }, j.dataset.shop); });
 // the shop is always one tap away (not on the start screen); the scoop screen can go back to the order slip or peek at it
 $('#btnShop').addEventListener('click', () => { closeBasket(); showShop(() => { if (state.phase === 'shelf') renderShelf(); else if (state.phase === 'order') renderOrderCard(); }); });
 $('#btnScoopBack').addEventListener('click', () => { if (state.phase !== 'scoop') return; state.phase = 'order'; showStage('order'); renderOrderCard(); $('#btnBegin').textContent = 'Back to scooping'; });
 $('#btnPeekOrder').addEventListener('click', () => { if (state.phase !== 'scoop' || !state.order) return; el.modal.innerHTML = '<div class="card peek" role="dialog" aria-label="Your order"><div class="slipwrap">' + slipHTML(state.order) + '</div><div class="actions"><button class="btn primary" id="peekClose" type="button">Back to scooping</button></div></div>'; el.modal.hidden = false; $('#peekClose').addEventListener('click', () => { el.modal.hidden = true; el.modal.innerHTML = ''; }); });
-el.shelfPack.addEventListener('click', startFromShelf);
 el.begin.addEventListener('click', startScooping);
 el.rotate.addEventListener('click', turnSelected);
 el.mod.addEventListener('click', toggleMod);
