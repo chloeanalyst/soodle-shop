@@ -635,7 +635,7 @@ body.landscape #shelfStage .cork .ordtag{flex:0 0 124px}
 #btnShop svg,#btnHome svg,#btnMute svg{width:26px;height:26px}
 #btnHow{font-family:var(--frog);font-weight:800;font-size:22px;line-height:1;margin:0}
 header.top{padding-right:188px}
-body[data-stage="scoop"] #packed{display:none}
+#packed{display:none!important}
 header.top .title{white-space:nowrap}header.top>div:first-child{min-width:0}header.top #packed{font-size:12.5px;padding:5px 9px;margin-right:-4px}@media (max-width:420px){header.top .title{font-size:24px}}
 body[data-stage="scoop"] header.top,body[data-stage="scoop"].hosttool header.top{position:static;min-height:52px;padding:0}
 .jar.locked{opacity:.75;cursor:pointer}.jar.locked .glass{background:linear-gradient(90deg,rgba(210,205,215,.8),rgba(190,185,200,.5) 40%,rgba(210,205,215,.7));display:flex;align-items:center;justify-content:center}.jar .lockic{font-size:20px}.jtag.locked{opacity:.7;padding-left:8px;cursor:pointer}
@@ -4151,7 +4151,7 @@ function shipAnyway() {
 }
 
 // A picture of the order slip to post: stars, score and what the customer said. Shared with the phone's own share sheet, or saved as a picture.
-function shareCard(r, adj) {
+function shareCard(r, adj, wantCanvas) {
   const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
   const font = (px, w) => w + ' ' + px + 'px ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif';
   const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#fde3ec'); g.addColorStop(1, '#fff6ea'); x.fillStyle = g; x.fillRect(0, 0, W, H);
@@ -4170,6 +4170,7 @@ function shareCard(r, adj) {
   if (refunded) { x.save(); x.translate(W / 2, 880); x.rotate(-0.08); x.strokeStyle = '#d6527f'; x.lineWidth = 8; rr(-190, -52, 380, 104, 22); x.stroke(); x.fillStyle = '#d6527f'; x.font = font(64, 800); x.fillText('REFUNDED', 0, 22); x.restore(); }
   x.fillStyle = '#d6527f'; x.font = font(44, 800); x.fillText('Can you beat it? 🩷', W / 2, 1255);
   x.fillStyle = '#7a8a89'; x.font = font(36, 700); x.fillText('Play free at soodle.co.uk/lucky-scoops', W / 2, 1310);
+  if (wantCanvas) return c; // used by the video recorder to show the card
   c.toBlob(async (blob) => {
     if (!blob) return; const file = new File([blob], 'lucky-scoops-order.png', { type: 'image/png' });
     try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text: 'My Lucky Scoops order! soodle.co.uk/lucky-scoops' }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
