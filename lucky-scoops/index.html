@@ -2910,6 +2910,19 @@ const START_HEARTS = 150; // a welcome gift, so the shop is not empty on day one
 const run = { month: 1, orders: [], bank: 0, v: 0 }; // the shop's month: reviews and profit carry from order to order
 try { const r = JSON.parse(localStorage.getItem('luckyScoopsRun') || 'null'); if (r && Array.isArray(r.orders)) Object.assign(run, r); } catch (_) { /* private mode: keep it in memory */ }
 const saveRun = () => { try { localStorage.setItem('luckyScoopsRun', JSON.stringify(run)); } catch (_) { /* ignore */ } };
+/* ---------- anonymous play counts ---------- */
+// Only a random id made on this device, plus what level / order the player got to. No names, no accounts. Never blocks or breaks the game.
+const ANALYTICS_URL = 'https://ecbhotqthiyixlbmwjjz.supabase.co/rest/v1/events', ANALYTICS_KEY = 'sb_publishable_aZn6zfUcbiCMfnBkpSf2Pw_mp4pqObN';
+const rid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+const anon = (() => { let id = ''; try { id = localStorage.getItem('luckyScoopsId') || ''; if (!id) { id = 'ls_' + rid(); localStorage.setItem('luckyScoopsId', id); } } catch (_) { id = 'ls_' + rid(); } return id; })();
+const sessionId = 'ss_' + rid();
+const track = (event, props) => {
+  try {
+    if (navigator.webdriver || !/^https?:/.test(location.protocol) || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return; // tests and local previews stay out of the numbers
+    fetch(ANALYTICS_URL, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', apikey: ANALYTICS_KEY, Prefer: 'return=minimal' },
+      body: JSON.stringify({ event, install_id: anon, session_id: sessionId, source: 'web', channel: 'lucky-scoops', app_version: 'v92', locale: (navigator.language || '').slice(0, 20), props: props || {} }) }).catch(() => {});
+  } catch (_) { /* never let counting break the game */ }
+};
 const state = { fill: 0, shipped: null, n: 1, items: [], stack: [], sel: null, history: [], refRatio: 0.6, phase: 'pack', result: null, order: null, scoop: { left: 0, total: 0, picked: [], need: {} } };
 
 /* ---------- geometry ---------- */
@@ -4185,7 +4198,7 @@ function showResult(r) {
     '<div class="score">' + (r.econ ? 'Order score ' + r.overall + ' / 100' : 'Score ' + r.total + ' / 100') + '</div>' +
     '<div class="actions"><button class="btn" id="again" type="button">Repack this order</button><button class="btn primary" id="next" type="button">Next order</button></div><button class="btn sharebtn" id="shareScore" type="button">📸 Share this order</button></div></div>';
   el.modal.hidden = false;
-  if (r.econ) { const o = state.order, entry = { n: state.n, stars: r.stars, comment: r.comment, happiness: r.total, spent: r.econ.spent, cost: r.econ.cost, base: r.econ.profit, tip: adj.tip, refund: adj.refund, profit: adj.net, overall: r.overall }, k = run.orders.findIndex((x) => x.n === state.n); if (k >= 0) run.orders[k] = entry; else run.orders.push(entry); saveRun(); }
+  if (r.econ) { const o = state.order, entry = { n: state.n, stars: r.stars, comment: r.comment, happiness: r.total, spent: r.econ.spent, cost: r.econ.cost, base: r.econ.profit, tip: adj.tip, refund: adj.refund, profit: adj.net, overall: r.overall }, k = run.orders.findIndex((x) => x.n === state.n); if (k >= 0) run.orders[k] = entry; else { run.orders.push(entry); track('ls_order', { lvl: run.month, tot: state.n, st: r.stars, ref: refunded ? 1 : 0 }); } saveRun(); }
   const nb = $('#next'); if (r.econ && run.orders.length >= ORDERS_PER_MONTH) nb.textContent = 'See month summary';
   $('#again').addEventListener('click', () => repackOrder());
   $('#shareScore').addEventListener('click', () => shareCard(r, adj));
@@ -4213,7 +4226,7 @@ function showMonth() {
   el.modal.hidden = false;
   const settle = () => { if (!run.settled) { run.bank = bank; run.settled = true; (run.hist = run.hist || []).push({ month: run.month, score, stars: +avgStars.toFixed(1), profit }); saveRun(); } };
   $('#monthShop').addEventListener('click', () => { settle(); showShop(() => showMonth()); });
-  $('#nextMonth').addEventListener('click', () => { settle(); run.settled = false; run.month++; run.orders = []; saveRun(); beginOrder(state.n + 1); });
+  $('#nextMonth').addEventListener('click', () => { settle(); run.settled = false; run.month++; run.orders = []; saveRun(); track('ls_level', { lvl: run.month }); beginOrder(state.n + 1); });
 }
 
 /* ---------- dragging ---------- */
@@ -4529,7 +4542,7 @@ function showStart() {
     '<div class="sbot">' + progressHTML() + '<button class="btn primary" id="stPlay" type="button">Play</button><button class="btn" id="stHow" type="button">How to play</button><button class="btn vbtn" id="stVoice" type="button">' + voiceLabel() + '</button>' +
     '<div class="sbank">' + heart(run.bank) + ' in the shop bank</div></div>';
   st.hidden = false;
-  $('#stPlay').addEventListener('click', () => { st.hidden = true; st.innerHTML = ''; let first = false; try { first = !localStorage.getItem('luckyScoopsHow'); } catch (_) {} if (first) showHowTo(true); else if (state.phase === 'order' && state.order) VO.say(VO.orderLine(state.order)); });
+  $('#stPlay').addEventListener('click', () => { track('ls_play', { lvl: run.month, tot: state.n }); st.hidden = true; st.innerHTML = ''; let first = false; try { first = !localStorage.getItem('luckyScoopsHow'); } catch (_) {} if (first) showHowTo(true); else if (state.phase === 'order' && state.order) VO.say(VO.orderLine(state.order)); });
   $('#stHow').addEventListener('click', () => showHowTo(false)); bindVoice('#stVoice');
 }
 $('#btnHome').addEventListener('click', () => { closeBasket(); showStart(); });
